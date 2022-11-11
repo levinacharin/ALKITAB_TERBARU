@@ -16,6 +16,8 @@ class ProfilePageMenu extends StatefulWidget {
 
 class _ProfilePageMenuState extends State<ProfilePageMenu> {
 
+  bool gantipp = false;
+
   saveStatusLogin() async {
     globals.statusLogin = false;
     globals.emailUser = "";
@@ -27,12 +29,7 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
     prefs.setString("PasswordUser", globals.password);
     globals.idUser = "";
   }
-  
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +39,6 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);  
-            // Navigator.pop(context);
-            // Navigator.pop(context);
-            // Navigator.pop(context);
-            // Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)
@@ -60,7 +53,7 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                globals.gantipp == true
+              gantipp == true
                 ? ClipOval(
                   child: Image.asset(
                     'assets/images/ppdummy-image.jpg',
@@ -74,11 +67,6 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
                   size: 100,
                   color: Color(int.parse(globals.defaultcolor)),
                 ),
-                // Container(
-                //   width: 100,
-                //   height: 100,
-                //   child: Image.asset('assets/images/person_icon.png')
-                // )
               ],
             ),
             const SizedBox(height: 20,),
@@ -104,11 +92,17 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
             ),
             const SizedBox(height: 20,),
             ListTile(
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final data = await Navigator.push(
                   context, 
                   MaterialPageRoute(builder: (context) => const ProfilePage())
                 );
+
+                if (data == "refresh") {
+                  setState(() {
+                    gantipp = true; 
+                  });
+                }
               },
               // ignore: sized_box_for_whitespace
               leading: Container(

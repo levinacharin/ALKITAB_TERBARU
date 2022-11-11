@@ -106,11 +106,11 @@ class _EditProfileState extends State<EditProfile> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            globals.gantipp = true;
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const ProfilePage())
-            );
+            Navigator.pop(context);
+            // Navigator.push(
+            //   context, 
+            //   MaterialPageRoute(builder: (context) => const ProfilePage())
+            // );
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)
@@ -392,14 +392,10 @@ class _EditProfileState extends State<EditProfile> {
                 child: ElevatedButton(
                   onPressed: () {
                     // updateData();
-                    globals.gantipp = true;
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => ProfilePage())
-                    );
+                    Navigator.pop(context, "refresh");
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(int.parse(globals.defaultcolor)),
+                    backgroundColor: Color(int.parse(globals.defaultcolor)),
                     elevation: 10,
                     padding: const EdgeInsets.all(5),
                   ),

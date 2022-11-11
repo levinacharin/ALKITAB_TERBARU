@@ -40,6 +40,10 @@ class _ListCatatanState extends State<ListCatatan> {
     if (directoryExists || fileExists) {
       final contents = await File(path).readAsString();
       listDataCat = [];
+      itemAyatBacaan = [];
+      itemCatatan = [];
+      itemTagline = [];
+      listDataTemp = [];
       if (contents.isNotEmpty) {
         listDataCat = json.decode(contents);
         setState(() {
@@ -108,13 +112,7 @@ class _ListCatatanState extends State<ListCatatan> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            if (globals.buatcatatan == true) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-            }
+            Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)
@@ -260,12 +258,18 @@ class _ListCatatanState extends State<ListCatatan> {
                                           value: 2,
                                         ),
                                       ],
-                                      onSelected: (value) {
+                                      onSelected: (value) async {
                                         if (value == 1) {
-                                          Navigator.push(
+                                          final data = await Navigator.push(
                                             context, 
                                             MaterialPageRoute(builder: (context) => CatatanPage(status: 'edit', index: index))
                                           );
+
+                                          if (data == "refresh") {
+                                            setState(() {
+                                              readFile();
+                                            });
+                                          }
                                         } else if (value == 2) {
                                           deleteData(index);
                                         }

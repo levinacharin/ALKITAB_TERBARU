@@ -13,6 +13,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool gantipp = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,12 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePageMenu())
-            );
-            // Navigator.pop(context);
-            // Navigator.pop(context);
+            Navigator.pop(context, "refresh");
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)
@@ -51,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  globals.gantipp == true
+                  gantipp == true
                   ? ClipOval(
                     child: Image.asset(
                       'assets/images/ppdummy-image.jpg',
@@ -94,14 +91,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(5),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.5),
-                            //     spreadRadius: 1,
-                            //     blurRadius: 2,
-                            //     offset: Offset(0, 2), // changes position of shadow
-                            //   ),
-                            // ],
                           ),
                           child: Text(
                             globals.namaDepanUser,
@@ -141,14 +130,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(5),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.5),
-                            //     spreadRadius: 1,
-                            //     blurRadius: 2,
-                            //     offset: Offset(0, 2), // changes position of shadow
-                            //   ),
-                            // ],
                           ),
                           child: Text(
                             globals.namaBelakangUser,
@@ -186,14 +167,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(5),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.grey.withOpacity(0.5),
-                  //     spreadRadius: 1,
-                  //     blurRadius: 2,
-                  //     offset: Offset(0, 2), // changes position of shadow
-                  //   ),
-                  // ],
                 ),
                 child: Text(
                   globals.emailUser,
@@ -226,14 +199,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(5),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.grey.withOpacity(0.5),
-                  //     spreadRadius: 1,
-                  //     blurRadius: 2,
-                  //     offset: Offset(0, 2), // changes position of shadow
-                  //   ),
-                  // ],
                 ),
                 child: Text(
                   globals.deskripsiUser,
@@ -250,12 +215,20 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 50,
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => const EditProfile()));
+                  onPressed: () async {
+                    final data = await Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => const EditProfile())
+                    );
+
+                    if (data == "refresh") {
+                      setState(() {
+                        gantipp = true;
+                      });
+                    }
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(int.parse(globals.defaultcolor)),
+                    backgroundColor: Color(int.parse(globals.defaultcolor)),
                     elevation: 10,
                     padding: const EdgeInsets.all(5),
                   ),
