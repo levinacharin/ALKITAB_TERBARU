@@ -22,7 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
-<<<<<<< HEAD
   audio_session:
     dependency: transitive
     description:
@@ -79,8 +78,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-=======
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   boolean_selector:
     dependency: transitive
     description:
