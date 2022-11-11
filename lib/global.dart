@@ -17,6 +17,8 @@ List<AyatPembanding> listAyatPembanding = [];
 List<DataAyatPembanding> listDataPembanding = [];
 List alkitab = [];
 
+double sizeStickerLay = 0.0;
+
 // akun profile user
 String idUser = ""; // diambil dari email untuk upload di foto
 String emailUser = "";
