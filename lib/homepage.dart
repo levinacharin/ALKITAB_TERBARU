@@ -2509,7 +2509,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   //   // final player = AudioCache(prefix:'assets/lagu');
   //   // final url = await player.load('hereimtoworship.mp3');
-
   //   audioPlayer.setSourceAsset('assets/lagu/hereimtoworship.mp3');
 
   // }
@@ -2524,7 +2523,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     readFileHeightLayout();
 
-    globals.gantipp = false;
     globals.buatkomunitas = false;
     globals.buatcatatan = false;
     globals.buatrenungan = false;

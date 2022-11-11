@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
@@ -317,10 +318,7 @@ class _CatatanPageState extends State<CatatanPage> {
 
     globals.buatcatatan = true;
     // ignore: use_build_context_synchronously
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => DetailCatatan(index: widget.index, status: widget.status, shouldpop: 'false',))
-    );
+    // Navigator.pop(context, "refresh");
   }
 
   void updateData() async {
@@ -401,10 +399,6 @@ class _CatatanPageState extends State<CatatanPage> {
                         width: 1, color: Color(int.parse(globals.defaultcolor))),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 1, color: Color(int.parse(globals.defaultcolor))),
-                  ),
-                  disabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                         width: 1, color: Color(int.parse(globals.defaultcolor))),
                   ),
@@ -526,7 +520,7 @@ class _CatatanPageState extends State<CatatanPage> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     writeData();
                   },
                   style: ElevatedButton.styleFrom(

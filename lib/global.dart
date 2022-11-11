@@ -34,7 +34,6 @@ int lastIdRenunganUser = 1;  // untuk detail renungan setelah add
 
 bool call = true;
 
-bool gantipp = false;
 bool buatkomunitas = false;
 bool buatcatatan = false;
 bool buatrenungan = false;

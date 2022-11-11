@@ -586,7 +586,7 @@ class _ListRenunganState extends State<ListRenungan> {
                                                             child: Column(
                                                               children: [
                                                                 Icon(
-                                                                  Icons.whatsapp,
+                                                                  Icons.contact_phone,
                                                                   size: 40,
                                                                 ),
                                                                 const SizedBox(height: 5,),
@@ -703,7 +703,7 @@ class _ListRenunganState extends State<ListRenungan> {
                                                             child: Column(
                                                               children: [
                                                                 Icon(
-                                                                  Icons.whatsapp,
+                                                                  Icons.contact_phone,
                                                                   size: 40,
                                                                 ),
                                                                 const SizedBox(height: 5,),
