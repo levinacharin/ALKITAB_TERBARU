@@ -342,9 +342,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   late Color screenPickerColor;
   // Color for the picker in a dialog using onChanged.
-  late Color dialogPickerColor;
+  //late Color dialogPickerColor;
   // Color for picker using the color select dialog.
-  late Color dialogSelectColor;
+  //late Color dialogSelectColor;
   String getNamaKitab(int indexkitab) {
     String namakitabtemp = "lala";
     //int countindexbaru = 0;
@@ -387,6 +387,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   List ayatPerPasal = [];
 
   String kitabsebelumnya = "";
+
+  late Color mycolor;
 
   // ignore: non_constant_identifier_names, unnecessary_new
   cKitab Kitab_ = new cKitab();
@@ -1620,7 +1622,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     
   }
 
-  Color mycolor = Colors.purple;
+  
   // double panjanglayar=-99;
   // final keylayoutbuilderaddpages = GlobalKey();
 
@@ -2534,27 +2536,9 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
     super.initState();
     setLagu(backsound_mode);
 
-    // setAudio();
-
-    // audioPlayer.onPlayerStateChanged.listen(((state) {
-    //   setState(() {
-    //     isPlaying = state == PlayerState.playing;
-    //   });
-    // }));
 
     readFileHeightLayout();
 
-    
-
-    // WidgetsBinding.instance.addPostFrameCallback(
-    //     (_) => layoutbuilderheight.value = keyheight.currentContext!.size!.height);
-       
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   setState(() {
-    //     _sizeOfListview = keyheight.currentContext!.size!.height;
-    //   });
-    // });
 
     globals.gantipp = false;
     globals.buatkomunitas = false;
@@ -2564,9 +2548,13 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
 
     pagesekarang = 0;
     WidgetsBinding.instance.addObserver(this);
-    screenPickerColor = Colors.blue.withOpacity(0.25); // Material blue.
-    dialogPickerColor = Colors.red; // Material red.
-    dialogSelectColor = const Color(0xFFA239CA); // A purple color.
+
+    
+    screenPickerColor = Colors.yellow; // Material blue.
+    mycolor = screenPickerColor;
+    
+    //dialogPickerColor = Colors.red; // Material red.
+    //dialogSelectColor = const Color(0xFFA239CA); // A purple color.
     // getBoolValueSF();
     //readFile();
 
@@ -3738,6 +3726,7 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
                           child: Icon(Icons.skip_previous),
                         ),
                       ),
+                      (sticker_mode? 
                       Expanded(
                         flex: 3,
                         child: Container(
@@ -3829,36 +3818,13 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
                                         addPages("sticker");
                                       });
                                     }),
-                                //     SizedBox(width:100),
-                                // IconButton(
-                                //     icon: Image.asset("assets/flower3.png"),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         stickerselected = "assets/flower3.png";
-                                //         fabopenicon = "assets/flower3.png";
-                                //       });
-                                //     }),
-                                //     SizedBox(width:100),
-                                // IconButton(
-                                //     icon: Image.asset("assets/flower4.png"),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         stickerselected = "assets/flower4.png";
-                                //         fabopenicon = "assets/flower4.png";
-                                //       });
-                                //     }),
-                                //     SizedBox(width:100),
-                                // IconButton(
-                                //     icon: Image.asset("assets/pita.png"),
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         stickerselected = "assets/pita.png";
-                                //         fabopenicon = "assets/pita.png";
-                                //       });
-                                //     })
+                               
                               ]),
                         ),
-                      ),
+                      ) :
+                      SizedBox(width: 235,)
+                      )
+                      ,
                       Expanded(
                         flex: 1,
                         child: FloatingActionButton(
