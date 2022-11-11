@@ -358,7 +358,6 @@ packages:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.1.5"
   measured_size:
     dependency: "direct main"
@@ -367,9 +366,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-=======
-    version: "0.2.0"
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   meta:
     dependency: transitive
     description:
@@ -377,7 +373,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-<<<<<<< HEAD
   ordered_set:
     dependency: transitive
     description:
@@ -385,8 +380,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
-=======
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   path:
     dependency: "direct main"
     description:
@@ -594,11 +587,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "1.9.0"
-=======
-    version: "1.9.1"
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   stack_trace:
     dependency: transitive
     description:
@@ -620,7 +609,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-<<<<<<< HEAD
   synchronized:
     dependency: transitive
     description:
@@ -628,8 +616,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0+3"
-=======
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   term_glyph:
     dependency: transitive
     description:
@@ -643,11 +629,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.4.12"
-=======
-    version: "0.4.13"
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   typed_data:
     dependency: transitive
     description:
@@ -731,7 +713,6 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "2.7.0"
   word_selectable_text:
     dependency: "direct main"
@@ -740,9 +721,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
-=======
-    version: "3.0.1"
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   xdg_directories:
     dependency: transitive
     description:
@@ -751,9 +729,5 @@ packages:
     source: hosted
     version: "0.2.0+2"
 sdks:
-<<<<<<< HEAD
   dart: ">=2.17.5 <3.0.0"
-=======
-  dart: ">=2.18.0 <3.0.0"
->>>>>>> d41b16616d6371fccacb2cff35651c0ea97ddc28
   flutter: ">=3.3.0"
