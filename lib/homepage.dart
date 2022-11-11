@@ -1676,7 +1676,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children:[
                   MeasuredSize(
                     onChange: (Size size){
-
+                                log("ceking ganti - ${size.height}");
                                   //BUAT WRITE ULANG LAYOUTHEIGHT
                                   // setState(() {
                                   //   wsize = size;
@@ -1819,10 +1819,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               }),
                       
                   ),
-                  
                   // Container(
                   //   child: 
-                    stickerlayoutwidget(i, namakitabdicari,wsize)
+                  stickerlayoutwidget(i, namakitabdicari,cariHeightLayout(namakitabdicari,i.toString()))
                    // )
                   
                 ],
@@ -1867,6 +1866,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       onPageChanged: (page) {
         setState(() {
           pagesekarang = page;
+          
           //height = _globalKey.currentContext!.size!.height;
         });
       },
@@ -2143,17 +2143,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // read data
   Future<void> readFile() async {
-    final file = await _localFile;
+    String path =  '/storage/emulated/0/Download/listHighlightUser.txt';
+    bool directoryExists = await Directory(path).exists();
+    bool fileExists = await File(path).exists();
+    
+      if (directoryExists || fileExists) {
+      final file = await _localFile;
 
     // Read the file-
-    final contents = await file.readAsString();
-    // log("Hasil log highlight - $contents");
+      final contents = await file.readAsString();
+      // log("Hasil log highlight - $contents");
 
-    if (contents.isNotEmpty) {
-      setState(() {
-        listTempHighlightData = json.decode(contents);
-      });
+      if (contents.isNotEmpty) {
+        setState(() {
+          listTempHighlightData = json.decode(contents);
+        });
+      }
     }
+    
+    
+    
   }
 //END HIGHLIGHT DATA
 
@@ -2463,17 +2472,27 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // read data
   Future<void> readFileHeightLayout() async {
     // List templistheightlayout = [];
+
+    // String textasset = "assets/textfiles/file.txt"; //path to text file asset
+// String text = await rootBundle.loadString(textasset);
+// print(text);
+
+    // String path = 'assets/textfiles/file.txt';
+    // final file = await _localFileListHeightLayout;
+    // // Read the file-
     
-    final file = await _localFileListHeightLayout;
-    // Read the file-
-    final contents = await file.readAsString();
-    
-    if (contents.isNotEmpty ) {
+
+    // bool directoryExists = await Directory(path).exists();
+    // bool fileExists = await File(path).exists();
+
+   // if (directoryExists || fileExists) {
+     // final contents = await file.readAsString();
+    // if (contents.isNotEmpty ) {
       //listUnderlinedKalimat.clear();
-      setState(() {
-        listHeightLayoutJson = json.decode(contents);
+      setState(() async {
+        listHeightLayoutJson = jsonDecode(await rootBundle.loadString('assets/HeightLayout.txt'));
+        log("hasilllll - $listHeightLayoutJson");
         listLayoutHeight.clear();
-    
         log("hasil baca lengkap ${listHeightLayoutJson}");
 
           for (int i = 0; i < listHeightLayoutJson.length; i++) {
@@ -2500,19 +2519,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         
       });
 
-      // int indekss = 1;
-      // for (int i = 0; i < listLayoutHeight.length; i++) {
-      //   log("hasil baca json KE- ${indekss}");
-      //   log("hasil baca json namakitab- ${listLayoutHeight[i]}");
-      //   log("hasil baca json pasal- ${listLayoutHeight[i+1]}");
-      //   log("hasil baca json height- ${listLayoutHeight[i+2]}");
-      //   i=i+2;
-      //   indekss++;
+      
 
-            
-      // }
-
-    } 
+   // } 
+   // }
+    
+    
 
     
     
@@ -2534,8 +2546,8 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
   @override
   void initState() {
     super.initState();
-    setLagu(backsound_mode);
 
+    setLagu(backsound_mode);
 
     readFileHeightLayout();
 
@@ -2544,7 +2556,7 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
     globals.buatkomunitas = false;
     globals.buatcatatan = false;
     globals.buatrenungan = false;
-    print("id renungan user : ${globals.lastIdRenunganUser}");
+   // print("id renungan user : ${globals.lastIdRenunganUser}");
 
     pagesekarang = 0;
     WidgetsBinding.instance.addObserver(this);
@@ -2651,14 +2663,12 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
     return height;
   }
 
-  Widget stickerlayoutwidget(int indexpage, String namakitab, Size panjanglayout) {
+  Widget stickerlayoutwidget(int indexpage, String namakitab, double panjanglayout) {
     
     return 
     
       LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-           
-      
             if (listposition.isNotEmpty && sticker_mode == true) {
               //log("dapet wsizes - ${textComposerWidgetHeight}");
               return
@@ -2674,8 +2684,8 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
                 //height:bounds.height * 2,
                // height:keyheight.height,
                 // height: double.infinity,
-                height: cariHeightLayout(namakitab,indexpage.toString()),
-                //height:4000,
+                height: panjanglayout,
+               // height:4000,
                 //height: wsize.height,
                 //height: (panjanglayar==-99)?100:panjanglayar,
                 child: Stack(children: [
@@ -2781,6 +2791,14 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
     SharedPreferences bookmarkedSP = await SharedPreferences.getInstance();
     listindexbookmarked = bookmarkedSP.getStringList('ListIndexKitab') ?? [];
     log("infoo masuk addbook get $listindexbookmarked");
+    if(listindexbookmarked.isEmpty){
+      listindexbookmarked.add(0.toString());
+      listindexbookmarked.add(1.toString());
+      listindexbookmarked.add(0.toString());
+      listindexbookmarked.add("Kejadian");
+      addBookMarkedSP(indexKitabDiCari.toString(),pasalkitab, ayatkitab, namakitabdicari);
+    }
+    
   }
 
   //SHARED PREFERENCES LISTUKURANLAYAR
@@ -3206,27 +3224,27 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
     switch (state) {
       case AppLifecycleState.inactive:
         setState(() {
-          backsound_mode = false;
-          setLagu(backsound_mode);
+          //backsound_mode = false;
+          setLagu(false);
         });
         break;
       case AppLifecycleState.resumed:
         setState(() {
-          backsound_mode = true;
+          // backsound_mode = true;
           setLagu(backsound_mode);
         });
         break;
       case AppLifecycleState.paused:
         setState(() {
-          backsound_mode = false;
-          setLagu(backsound_mode);
+          //backsound_mode = false;
+          setLagu(false);
         });
 
         break;
       case AppLifecycleState.detached:
         setState(() {
-          backsound_mode = false;
-          setLagu(backsound_mode);
+          //backsound_mode = false;
+          setLagu(false);
         });
         break;
     }
@@ -3660,9 +3678,12 @@ final ValueNotifier<double> layoutbuilderheight = ValueNotifier<double>(-1);
                             controller: pageController,
                             itemCount: page.length,
                             itemBuilder: (context, index) {
+                              
+                              
                               return page[index];
                             },
                             onPageChanged: (page) {
+                              log("haduh - ${cariHeightLayout(namakitabdicari,index.toString())}");
                               setState(() {
                                 int pasalsekarang = page + 1;
                                 pasalkitab = pasalsekarang.toString();
