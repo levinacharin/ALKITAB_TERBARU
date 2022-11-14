@@ -2644,12 +2644,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         builder: (BuildContext context, BoxConstraints constraints) {
           final keyContext = keyheight[indexpage].currentContext;
           final box = keyContext!.findRenderObject() as RenderBox;
+
+
+
           // final pos = box.localToGlobal(Offset.zero);
           // log("ceking ganti selected ayat media query- ${MediaQuery.of(context).size.height}");
           if (listposition.isNotEmpty && sticker_mode == true) {
             //log("dapet wsizes - ${textComposerWidgetHeight}");
             return Container(
-              color: Colors.transparent,
+              // color: Colors.transparent,
               // constraints: BoxConstraints(
               //   maxHeight: min,
               // ),
