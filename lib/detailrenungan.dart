@@ -55,7 +55,7 @@ class _DetailRenunganState extends State<DetailRenungan> {
         setState(() {
           itemTanggal = listData[index]['Tanggal'].toString();
           itemJudul = listData[index]['Judul'].toString();
-          itemaBacaan = listData[index]['Ayat Bacaan'].toString().replaceAll("<br>", "\n"); // yang Ayat Bacaan harusnya
+          itemaBacaan = listData[index]['Kitab'].toString().replaceAll("<br>", "\n"); // yang Ayat Bacaan harusnya
           itemaBerkesan = listData[index]['Ayat Berkesan'].toString().replaceAll("<br>", "\n");
           itemRenungan = listData[index]['Isi Renungan'].toString();
           itemTindakan = listData[index]['Tindakan Saya'].toString();

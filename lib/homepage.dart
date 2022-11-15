@@ -173,6 +173,7 @@ class cSelected {
   Color? indxColor;
   String? konten;
   String? namaKitab;
+  int? ayatAsli;
 
   cSelected(
       {this.indxKitab,
@@ -180,7 +181,8 @@ class cSelected {
       this.indxAyat,
       this.indxColor,
       this.konten,
-      this.namaKitab});
+      this.namaKitab,
+      this.ayatAsli});
 
   void setColor(Color indexColor) {
     indxColor = indexColor;
@@ -193,6 +195,10 @@ class cSelected {
 
   int? get getindexkitab {
     return indxKitab;
+  }
+
+  int? get getayatasli {
+    return ayatAsli;
   }
 
   int? get getindexpasal {
@@ -525,7 +531,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   //ScrollController scrollController = ScrollController();
   bool fabIsVisible = true;
 
-  late int counttitleuntukscrollviewayat;
+  // late int counttitleuntukscrollviewayat;
   int lastpasal = 0;
   int indexmulaikitab = 0;
 
@@ -830,59 +836,59 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return pasalperkitab;
   }
 
-  List getJumlahTitlePerPasalKitab(String namakitab) {
-    List titleperpasal = [];
-    int counttitle = 0;
-    int pasalsekarang = 1;
-    int countlast = 0;
-    getjumlahdataperkitab(namakitab);
-    getjumlahpasalkitab(namakitab);
+  // List getJumlahTitlePerPasalKitab(String namakitab) {
+  //   List titleperpasal = [];
+  //   int counttitle = 0;
+  //   int pasalsekarang = 1;
+  //   int countlast = 0;
+  //   getjumlahdataperkitab(namakitab);
+  //   getjumlahpasalkitab(namakitab);
 
-    for (int i = indexmulaikitab; i < dataperkitab + indexmulaikitab; i++) {
-      if (alkitab[i]['type'].toString() == 't') {
-        counttitle++;
-      }
+  //   for (int i = indexmulaikitab; i < dataperkitab + indexmulaikitab; i++) {
+  //     if (alkitab[i]['type'].toString() == 't') {
+  //       counttitle++;
+  //     }
 
-      if (alkitab[i]['book'] != 'Wahyu') {
-        if (alkitab[i]['book'] != alkitab[i + 1]['book']) {
-          titleperpasal.add(counttitle);
+  //     if (alkitab[i]['book'] != 'Wahyu') {
+  //       if (alkitab[i]['book'] != alkitab[i + 1]['book']) {
+  //         titleperpasal.add(counttitle);
 
-          counttitle = 0;
-          pasalsekarang++;
-          break;
-        }
+  //         counttitle = 0;
+  //         pasalsekarang++;
+  //         break;
+  //       }
 
-        if (pasalsekarang.toString() != alkitab[i + 1]['chapter'].toString()) {
-          titleperpasal.add(counttitle);
-          //titleperpasal.add(counttitle);
-          //counttitle=0;
-          counttitle = 0;
-          pasalsekarang++;
-        }
-      } else {
-        //WAHYU
-        if (pasalsekarang.toString() == "22") {
-          countlast++;
-          if (countlast == 23) {
-            titleperpasal.add(counttitle);
-            //titleperpasal.add(counttitle);
-            //counttitle = 0;
-            counttitle = 0;
-            break;
-          }
-        }
-        if (pasalsekarang.toString() != alkitab[i + 1]['chapter'].toString()) {
-          titleperpasal.add(counttitle);
-          //titleperpasal.add(counttitle);
-          //counttitle=0;
-          counttitle = 0;
-          pasalsekarang++;
-        }
-      }
-    }
+  //       if (pasalsekarang.toString() != alkitab[i + 1]['chapter'].toString()) {
+  //         titleperpasal.add(counttitle);
+  //         //titleperpasal.add(counttitle);
+  //         //counttitle=0;
+  //         counttitle = 0;
+  //         pasalsekarang++;
+  //       }
+  //     } else {
+  //       //WAHYU
+  //       if (pasalsekarang.toString() == "22") {
+  //         countlast++;
+  //         if (countlast == 23) {
+  //           titleperpasal.add(counttitle);
+  //           //titleperpasal.add(counttitle);
+  //           //counttitle = 0;
+  //           counttitle = 0;
+  //           break;
+  //         }
+  //       }
+  //       if (pasalsekarang.toString() != alkitab[i + 1]['chapter'].toString()) {
+  //         titleperpasal.add(counttitle);
+  //         //titleperpasal.add(counttitle);
+  //         //counttitle=0;
+  //         counttitle = 0;
+  //         pasalsekarang++;
+  //       }
+  //     }
+  //   }
 
-    return titleperpasal;
-  }
+  //   return titleperpasal;
+  // }
 
   List<List> getjumlahtitle(String namakitab) {
     List<List> titlepasal = [];
@@ -911,6 +917,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
       if (alkitab[i]['type'].toString() == 't') {
         titlepasal[pasalsekarang - 1].add(alkitab[i + 1]['verse']);
+        // log("titlepasal - ${titlepasal}");
         // print("verse - ${titlepasal[pasalsekarang-1]}");
       }
 
@@ -1146,41 +1153,41 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return jumlahAyat;
   }
 
-  int getJumlahTitlePadaPasalTertentu(
-      String parameterNamaKitab, int pasalDicari) {
-    int pasalsekarang = pasalDicari;
-    int jumlahtitle = 0;
-    getjumlahdataperkitab(parameterNamaKitab);
-    getjumlahpasalkitab(parameterNamaKitab);
+  // int getJumlahTitlePadaPasalTertentu(
+  //     String parameterNamaKitab, int pasalDicari) {
+  //   int pasalsekarang = pasalDicari;
+  //   int jumlahtitle = 0;
+  //   getjumlahdataperkitab(parameterNamaKitab);
+  //   getjumlahpasalkitab(parameterNamaKitab);
 
-    for (int i = indexmulaikitab; i < dataperkitab + indexmulaikitab; i++) {
-      if (parameterNamaKitab == "Wahyu") {
-        if (alkitab[i]['type'].toString() == 't' &&
-            alkitab[i]['chapter'] == pasalsekarang) {
-          jumlahtitle++;
-        }
+  //   for (int i = indexmulaikitab; i < dataperkitab + indexmulaikitab; i++) {
+  //     if (parameterNamaKitab == "Wahyu") {
+  //       if (alkitab[i]['type'].toString() == 't' &&
+  //           alkitab[i]['chapter'] == pasalsekarang) {
+  //         jumlahtitle++;
+  //       }
 
-        if (alkitab[i]['chapter'] == 22 && alkitab[i]['verse'] == 21) {
-          break;
-        } else {
-          if (alkitab[i + 1]['chapter'] > pasalsekarang) {
-            break;
-          }
-        }
-      } else {
-        if (alkitab[i]['type'].toString() == 't' &&
-            alkitab[i]['chapter'] == pasalsekarang) {
-          jumlahtitle++;
-        }
+  //       if (alkitab[i]['chapter'] == 22 && alkitab[i]['verse'] == 21) {
+  //         break;
+  //       } else {
+  //         if (alkitab[i + 1]['chapter'] > pasalsekarang) {
+  //           break;
+  //         }
+  //       }
+  //     } else {
+  //       if (alkitab[i]['type'].toString() == 't' &&
+  //           alkitab[i]['chapter'] == pasalsekarang) {
+  //         jumlahtitle++;
+  //       }
 
-        if (alkitab[i + 1]['chapter'] > pasalsekarang) {
-          break;
-        }
-      }
-    }
+  //       if (alkitab[i + 1]['chapter'] > pasalsekarang) {
+  //         break;
+  //       }
+  //     }
+  //   }
 
-    return jumlahtitle;
-  }
+  //   return jumlahtitle;
+  // }
 
   void cariKitabTertentu(String inputNamaKitab, String inputPasal,
       String inputAyatAwal, String inputAyatAkhir) {
@@ -1237,14 +1244,44 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   //BUKAN KELOMPOK, SATU SATU
   void selecttext(int indexKitab, int indexPasal, int indexAyat,
       Color indexcolor, String konten, String mauapa) {
-    //print("selectednih - ${getNamaKitab(indexKitab)} $indexPasal $indexAyat");
+    print("title index ke selectednih - ${getNamaKitab(indexKitab)} $indexPasal $indexAyat");
 
+    List<List> titlepasal = getjumlahtitle(namakitabdicari);
+    //log("title index ke ${titlepasal[indexPasal][0]}");
+
+    late int ayataslii;
+    int hitunglewattitle=0;
+
+    for(int i=0;i<titlepasal[indexPasal].length;i++){
+      if(titlepasal[indexPasal][i]>indexAyat){
+        
+        break;
+      }
+      hitunglewattitle++;
+
+    }
+
+    log("title index ke adatitle sebelumnya $hitunglewattitle");
+    
+    // if(hitunglewattitle==0){
+      
+      ayataslii = indexAyat-hitunglewattitle+1;
+    // }
+    // else{
+      // ayataslii = indexAyat-hitunglewattitle+1;
+   // }
+   
+    log("title index ke AYAT ASLI $ayataslii");
+    
+    
     // ignore: non_constant_identifier_names
     cSelected SelectedC = cSelected();
 
     bool sudahada = false;
 
     if (selectedAyat.isEmpty) {
+      
+      log("selectednih 1 - masuk isempty");
       //selectedAyat = newObject();
       for (int i = 0; i < listTempHighlightData.length; i++) {
         for (int j = 0;
@@ -1267,7 +1304,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         }
       }
 
+      if(sudahada==true && mauapa!="unselect"){
+        selectedAyat.add([]);
+        SelectedC.indxKitab = indexKitab;
+        SelectedC.indxPasal = indexPasal;
+        SelectedC.indxAyat = indexAyat;
+        SelectedC.indxColor = indexcolor;
+        SelectedC.konten = konten;
+        SelectedC.namaKitab = listSemuaNamaKitab[indexKitab];
+        SelectedC.ayatAsli = ayataslii;
+
+        //selectedAyat.insert(jumlahayatdiselect, SelectedC);
+        selectedAyat[jumlahayatdiselect] = SelectedC;
+        //selectedAyat[jumlahayatdiselect] = SelectedC;
+        jumlahayatdiselect++;
+      }
+
       if (sudahada == false) {
+        log("selectednih 2 - masuk belum ada");
         selectedAyat = [];
         selectedAyat.add([]);
         SelectedC.indxKitab = indexKitab;
@@ -1276,16 +1330,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         SelectedC.indxColor = indexcolor;
         SelectedC.konten = konten;
         SelectedC.namaKitab = listSemuaNamaKitab[indexKitab];
+        SelectedC.ayatAsli = ayataslii;
 
         //selectedAyat.insert(jumlahayatdiselect, SelectedC);
         selectedAyat[jumlahayatdiselect] = SelectedC;
         jumlahayatdiselect++;
       }
     } else {
+      log("selectednih 1- masuk noempty");
       for (int i = 0; i < selectedAyat.length; i++) {
         if (selectedAyat[i].getindexkitab == indexKitab &&
             selectedAyat[i].getindexpasal == indexPasal &&
             selectedAyat[i].getindexayat == indexAyat) {
+              log("selectednih 3 - masuk list lokal");
           sudahada = true;
           if (mauapa == "unselect") {
             unselecttext(indexKitab, indexPasal, indexAyat);
@@ -1304,6 +1361,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   indexPasal.toString() &&
               listTempHighlightData[i]["KelompokHighlight"][j]["IndexAyat"] ==
                   indexAyat.toString()) {
+                    log("selectednih 3 - masuk list file");
             sudahada = true;
             if (mauapa == "unselect") {
               deleteHighlightData(indexKitab, indexPasal, indexAyat);
@@ -1315,7 +1373,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         }
       }
 
-      if (sudahada == false) {
+      if(sudahada==true && mauapa!="unselect"){
         selectedAyat.add([]);
         SelectedC.indxKitab = indexKitab;
         SelectedC.indxPasal = indexPasal;
@@ -1323,6 +1381,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         SelectedC.indxColor = indexcolor;
         SelectedC.konten = konten;
         SelectedC.namaKitab = listSemuaNamaKitab[indexKitab];
+        SelectedC.ayatAsli = ayataslii;
+
+        //selectedAyat.insert(jumlahayatdiselect, SelectedC);
+        selectedAyat[jumlahayatdiselect] = SelectedC;
+        //selectedAyat[jumlahayatdiselect] = SelectedC;
+        jumlahayatdiselect++;
+      }
+
+      if (sudahada == false) {
+        log("selectednih 2 - masuk belum ada");
+        selectedAyat.add([]);
+        SelectedC.indxKitab = indexKitab;
+        SelectedC.indxPasal = indexPasal;
+        SelectedC.indxAyat = indexAyat;
+        SelectedC.indxColor = indexcolor;
+        SelectedC.konten = konten;
+        SelectedC.namaKitab = listSemuaNamaKitab[indexKitab];
+        SelectedC.ayatAsli = ayataslii;
 
         //selectedAyat.insert(jumlahayatdiselect, SelectedC);
         selectedAyat[jumlahayatdiselect] = SelectedC;
@@ -1646,16 +1722,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     pasalkitab = listindexbookmarked[1];
     ayatkitab = listindexbookmarked[2];
     namakitabdicari = listindexbookmarked[3];
+
+    
     // indexKitabDiCari = 1;
 
     log("infoo - $indexKitabDiCari $pasalkitab $ayatkitab $namakitabdicari");
 
     //late var panjangLayout;
     int jumlahpasal = getjumlahayatperpasalkitab(namakitabdicari).length;
-    counttitleuntukscrollviewayat = 0;
+    // counttitleuntukscrollviewayat = 0;
     getkitabperpasal(namakitabdicari);
 
     for (int i = 0; i < jumlahpasal; i++) {
+      
       setState(() {
         keyheight.add(GlobalKey());
         page.add(
@@ -1666,20 +1745,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             child: Stack(
               // fit: StackFit.loose,
               children: [
-                // MeasuredSize(
-                //     onChange: (Size size) {
-                //       log("ceking ganti - ${size.height}");
-                //       //   //BUAT WRITE ULANG LAYOUTHEIGHT
-                //       setState(() {
-                //         // leyoutheight = size.height;
-                //         //globals.sizeStickerLay = size.height;
-                //         //wsize = size;
-                //         //addListLayoutHeight(namakitabdicari,i,size.height);
-                //       });
-                //     },
-                //     child:
-                        // Stack(
-                        //   children: [
+               
                         ListView.builder(
                             key: keyheight[i],
                             //key:keyheight,
@@ -1853,7 +1919,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (darimana != "selectayat" &&
         darimana != "bookmarked" &&
         darimana != "sticker" &&
-        darimana != "underlined") {
+        darimana != "underlined" && darimana != "deleteunderline") {
       //jump to sesuai pasal
       log("masuk sini start");
       // pageController.
@@ -1973,10 +2039,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         });
   }
 
+  // List benerinIndexAyatSebelumPassingList(List listisiayat){
+  //   List tempbenerin = listisiayat;
+
+  //   log("listisiayat - $tempbenerin");
+
+  //   return tempbenerin;
+  // }
+
   void functionMenu(String pilihanMenu, List selectedAyat) {
     if (pilihanMenu == "Highlight") {
       highlightMenu(selectedAyat);
     } else if (pilihanMenu == "Catatan") {
+      // List passinglistini = benerinIndexAyatSebelumPassingList(selectedAyat);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -1986,6 +2061,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   listHighlight: selectedAyat,
                   darimana: "homepage")));
     } else if (pilihanMenu == "Renungan") {
+      // List passinglistini = benerinIndexAyatSebelumPassingList(selectedAyat);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -2478,9 +2554,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     listHeightLayoutJson =
         jsonDecode(await rootBundle.loadString('assets/HeightLayout.txt'));
-    log("hasilllll - $listHeightLayoutJson");
+    // log("hasilllll - $listHeightLayoutJson");
     listLayoutHeight.clear();
-    log("hasil baca lengkap ${listHeightLayoutJson}");
+    // log("hasil baca lengkap ${listHeightLayoutJson}");
 
     for (int i = 0; i < listHeightLayoutJson.length; i++) {
       // log("hasil baca json KE- ${i+1}");

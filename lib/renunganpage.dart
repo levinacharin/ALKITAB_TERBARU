@@ -583,6 +583,22 @@ class _RenunganPageState extends State<RenunganPage> {
     
   }
   Future<void> selectAyatBerkesan(String namakitab, String pasal, String ayat, String isi) async {
+  //   List? tempaja = widget.listHighlight;
+  //   int ayatasli = 0;
+
+  // //    int? indxKitab;
+  // // int? indxPasal;
+  // // int? indxAyat;
+  // // Color? indxColor;
+  // // String? konten;
+  // // String? namaKitab;
+  // // int? ayatAsli;
+
+  //   for(int i=0;i<tempaja!.length;i++){
+  //     if(tempaja[i].namaKitab == namakitab && tempaja[i].indxPasal == int.parse(pasal) && tempaja[i].indxAyat == int.parse(ayat) && tempaja[i].konten == isi){
+  //       ayatasli = tempaja[i].ayatAsli;
+  //     }
+  //   }
     // if(reset==true){
     //   ayatberkesan.clear();
     // }
@@ -594,6 +610,7 @@ class _RenunganPageState extends State<RenunganPage> {
       SelectedC.indxPasal = int.parse(pasal);
       SelectedC.indxAyat = int.parse(ayat);
       SelectedC.konten = isi;
+      //SelectedC.ayatAsli = ayatasli;
       ayatberkesan.add(SelectedC);
     }else{
       for(int i=0;i<ayatberkesan.length;i++){
@@ -608,6 +625,7 @@ class _RenunganPageState extends State<RenunganPage> {
           SelectedC.indxPasal = int.parse(pasal);
           SelectedC.indxAyat = int.parse(ayat);
           SelectedC.konten = isi;
+          //SelectedC.ayatAsli = ayatasli;
           ayatberkesan.add(SelectedC);
       }
     }
@@ -857,7 +875,7 @@ class _RenunganPageState extends State<RenunganPage> {
         // ignore: prefer_interpolation_to_compose_strings
         isi_ayatdipilih = isi_ayatdipilih +
             '[' +
-            selectedAyat![i].getindexayat.toString() +
+            selectedAyat![i].getayatasli.toString() +
             "] " +
             selectedAyat![i].getkonten.toString() +
             "\n";
@@ -869,14 +887,14 @@ class _RenunganPageState extends State<RenunganPage> {
               ' ' +
               ((selectedAyat![i].getindexpasal) + 1).toString() +
               ':' +
-              ((selectedAyat![i].getindexayat)).toString();
+              ((selectedAyat![i].getayatasli)).toString();
 
           }else{
             gantikitab=false;
             // kitabPasal =
             //   kitabPasal + ',' + ((selectedAyat![i].getindexayat)).toString();
             // ignore: prefer_interpolation_to_compose_strings
-            temp_ayatdipilih = ', '+((selectedAyat![i].getindexayat)).toString();
+            temp_ayatdipilih = ', '+((selectedAyat![i].getayatasli)).toString();
           }
 
           if (i != selectedAyat!.length - 1) {
@@ -925,6 +943,7 @@ class _RenunganPageState extends State<RenunganPage> {
             //log("data renungan b : $text_highlight");
         //prosesListhighlightJadiRange(ayatdipilih);
         ctr_abacaan.text = ayatdipilih;
+        log("ayatdipilih - $text_highlight");
 
 
         

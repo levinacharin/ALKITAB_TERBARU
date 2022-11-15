@@ -59,12 +59,10 @@ class _CatatanPageState extends State<CatatanPage> {
     } else if (widget.status == 'tambah') {
       edited = true;
     }
-    List? selectedAyat = widget.listHighlight;
-    //if(widget.listHighlight!.isNotEmpty){
-
     
-
-    if (widget.darimana == "homepage") {
+    List? selectedAyat = widget.listHighlight;
+    if(widget.listHighlight!.isNotEmpty){
+      if (widget.darimana == "homepage") {
       //SORTING
     selectedAyat!.sort((a, b) {
       return a.getindexpasal.compareTo(b.getindexpasal);
@@ -137,12 +135,12 @@ class _CatatanPageState extends State<CatatanPage> {
               ' ' +
               ((selectedAyat![i].getindexpasal) + 1).toString() +
               ":" +
-              ((selectedAyat![i].getindexayat)).toString();
+              ((selectedAyat![i].getayatasli)).toString();
         } else {
           gantikitab = false;
           kitabPasal =
               // ignore: prefer_interpolation_to_compose_strings
-              kitabPasal + ',' + ((selectedAyat![i].getindexayat)).toString();
+              kitabPasal + ',' + ((selectedAyat![i].getayatasli)).toString();
         }
 
         if (i != selectedAyat!.length - 1) {
@@ -165,7 +163,7 @@ class _CatatanPageState extends State<CatatanPage> {
               ' ' +
               ((selectedAyat![i].getindexpasal) + 1).toString() +
               "\n" +
-              ((selectedAyat![i].getindexayat)).toString() +
+              ((selectedAyat![i].getayatasli)).toString() +
               '. ' +
               selectedAyat![i].getkonten +
               ' ';
@@ -173,12 +171,17 @@ class _CatatanPageState extends State<CatatanPage> {
         } else {
           // ignore: prefer_interpolation_to_compose_strings
           text_highlight = text_highlight +
-              ((selectedAyat![i].getindexayat)).toString() +
+              ((selectedAyat![i].getayatasli)).toString() +
               '. ' +
               selectedAyat![i].getkonten +
               ' ';
         }
       }
+    }
+
+    
+
+    
 
       if (selectedAyat!.isNotEmpty) {
         log("data catatan b : $text_highlight");
