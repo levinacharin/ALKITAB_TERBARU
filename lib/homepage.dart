@@ -1337,6 +1337,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         jumlahayatdiselect++;
       }
     } else {
+      bool diselectlokalada = false;
       log("selectednih 1- masuk noempty");
       for (int i = 0; i < selectedAyat.length; i++) {
         if (selectedAyat[i].getindexkitab == indexKitab &&
@@ -1344,6 +1345,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             selectedAyat[i].getindexayat == indexAyat) {
               log("selectednih 3 - masuk list lokal");
           sudahada = true;
+          diselectlokalada = true;
           if (mauapa == "unselect") {
             unselecttext(indexKitab, indexPasal, indexAyat);
           }
@@ -1373,7 +1375,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         }
       }
 
-      if(sudahada==true && mauapa!="unselect"){
+      if(sudahada==true && mauapa!="unselect" && diselectlokalada==false){
         selectedAyat.add([]);
         SelectedC.indxKitab = indexKitab;
         SelectedC.indxPasal = indexPasal;

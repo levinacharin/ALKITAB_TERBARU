@@ -582,7 +582,9 @@ class _RenunganPageState extends State<RenunganPage> {
 
     
   }
-  Future<void> selectAyatBerkesan(String namakitab, String pasal, String ayat, String isi) async {
+  Future<void> selectAyatBerkesan(String namakitab, String pasal, String ayat, String isi, int ayatasli) async {
+    log("bukan ayataslii - $ayat");
+    log("ayataslii - $ayatasli");
   //   List? tempaja = widget.listHighlight;
   //   int ayatasli = 0;
 
@@ -610,7 +612,7 @@ class _RenunganPageState extends State<RenunganPage> {
       SelectedC.indxPasal = int.parse(pasal);
       SelectedC.indxAyat = int.parse(ayat);
       SelectedC.konten = isi;
-      //SelectedC.ayatAsli = ayatasli;
+      SelectedC.ayatAsli = ayatasli;
       ayatberkesan.add(SelectedC);
     }else{
       for(int i=0;i<ayatberkesan.length;i++){
@@ -625,7 +627,7 @@ class _RenunganPageState extends State<RenunganPage> {
           SelectedC.indxPasal = int.parse(pasal);
           SelectedC.indxAyat = int.parse(ayat);
           SelectedC.konten = isi;
-          //SelectedC.ayatAsli = ayatasli;
+          SelectedC.ayatAsli = ayatasli;
           ayatberkesan.add(SelectedC);
       }
     }
@@ -640,7 +642,7 @@ class _RenunganPageState extends State<RenunganPage> {
   bool adadilistayatberkesan(String namakitab, String pasal, String ayat){
     bool adapaga=false;
     for(int i=0;i<ayatberkesan.length;i++){
-        if(ayatberkesan[i].getnamakitab==namakitab && ayatberkesan[i].getindexpasal==int.parse(pasal) && ayatberkesan[i].getindexayat==int.parse(ayat)){
+        if(ayatberkesan[i].getnamakitab==namakitab && ayatberkesan[i].getindexpasal==int.parse(pasal) && ayatberkesan[i].getayatasli==int.parse(ayat)){
           adapaga=true;
           break;
         }
@@ -723,10 +725,10 @@ class _RenunganPageState extends State<RenunganPage> {
         
           if(gantikitab==true){
               // ignore: prefer_interpolation_to_compose_strings
-              hemtexthighlight = hemtexthighlight +ayatberkesan[i].getnamakitab.toString()+ ' '+(ayatberkesan[i].getindexpasal).toString()+"\n"+((ayatberkesan[i].getindexayat)).toString() + '. ' + ayatberkesan[i].getkonten.toString() + ' ';
+              hemtexthighlight = hemtexthighlight +ayatberkesan[i].getnamakitab.toString()+ ' '+(ayatberkesan[i].getindexpasal).toString()+"\n"+((ayatberkesan[i].getayatasli)).toString() + '. ' + ayatberkesan[i].getkonten.toString() + ' ';
             }else{
               // ignore: prefer_interpolation_to_compose_strings
-              hemtexthighlight = hemtexthighlight + ((ayatberkesan[i].getindexayat)).toString() + '. ' + ayatberkesan[i].getkonten.toString() + ' ';
+              hemtexthighlight = hemtexthighlight + ((ayatberkesan[i].getayatasli)).toString() + '. ' + ayatberkesan[i].getkonten.toString() + ' ';
 
             }
           
@@ -783,11 +785,18 @@ class _RenunganPageState extends State<RenunganPage> {
     ayatberkesan.clear();
     for (int i = 0; i < selectedAyat!.length; i++) {
       if (selectedAyat!.isNotEmpty) {
+        // selectAyatBerkesan(
+        //     selectedAyat![i].getnamakitab,
+        //     (selectedAyat![i].getindexpasal + 1).toString(),
+        //     (selectedAyat![i].getindexayat).toString(),
+        //     selectedAyat![i].getkonten);
+
         selectAyatBerkesan(
             selectedAyat![i].getnamakitab,
             (selectedAyat![i].getindexpasal + 1).toString(),
             (selectedAyat![i].getindexayat).toString(),
-            selectedAyat![i].getkonten);
+            selectedAyat![i].getkonten,
+            selectedAyat![i].getayatasli);
       }
     }
 
@@ -808,6 +817,8 @@ class _RenunganPageState extends State<RenunganPage> {
 
     
   List? selectedAyat = widget.listHighlight;
+  List ayatpilihantemp = [];
+  String tempneh="";
   
     
     //String kitabPasal="";
@@ -867,6 +878,56 @@ class _RenunganPageState extends State<RenunganPage> {
       // print("data catatan - masuk sini");
       updateAyatBerkesan(selectedAyat!);
       for (int i = 0; i < selectedAyat!.length; i++) {
+
+        if(i==selectedAyat!.length-1 && selectedAyat!.length!=1){
+          ayatpilihantemp.add(selectedAyat![i].getayatasli);
+          
+         log("keluar hasil split if awal - $ayatpilihantemp");
+            bool udahdash = false;
+            for (int h = 0; h < ayatpilihantemp.length; h++) {
+              if (h == 0) {
+                tempneh = tempneh + ayatpilihantemp[h].toString();
+              } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] != 1) {
+                if (udahdash == true) {
+                  tempneh = tempneh +
+                      ayatpilihantemp[h - 1].toString() +
+                      "," +
+                      ayatpilihantemp[h].toString();
+                  udahdash = false;
+                } else {
+                  tempneh = tempneh + "," + ayatpilihantemp[h].toString();
+                }
+              } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] == 1) {
+               
+                if (udahdash == false) {
+                  if (h == (ayatpilihantemp.length - 1)) {
+                    tempneh = tempneh + "-" + ayatpilihantemp[h].toString();
+                    //udahdash = true;
+                  } else {
+                    tempneh = tempneh + "-";
+                    udahdash = true;
+                    continue;
+                  }
+                }else{
+                  if (h == (ayatpilihantemp.length - 1)) {
+                    tempneh = tempneh +ayatpilihantemp[h].toString();
+                    //udahdash = true;
+                  }else {
+                    
+                    continue;
+                  }
+
+                }
+                
+              }
+            }
+
+            log("keluar hasil split akhir $tempneh");
+            ayatpilihantemp.clear();
+            ayatdipilih = ayatdipilih + tempneh;
+            // kitabPasal = "$kitabPasal$tempneh";
+            tempneh="";
+        }
         // if(selectedAyat!.isNotEmpty){
         //   selectAyatBerkesan(selectedAyat![i].getnamakitab,(selectedAyat![i].getindexpasal+1).toString(),(selectedAyat![i].getindexayat).toString(),selectedAyat![i].getkonten);
 
@@ -886,15 +947,21 @@ class _RenunganPageState extends State<RenunganPage> {
             temp_ayatdipilih = selectedAyat![i].getnamakitab +
               ' ' +
               ((selectedAyat![i].getindexpasal) + 1).toString() +
-              ':' +
-              ((selectedAyat![i].getayatasli)).toString();
+              ':' 
+              // +
+              // ((selectedAyat![i].getayatasli)).toString()
+              ;
+              if(i==selectedAyat!.length-1 && selectedAyat!.length==1){
+                temp_ayatdipilih = "$temp_ayatdipilih${selectedAyat![i].getayatasli}";
+              }
+              
 
           }else{
             gantikitab=false;
             // kitabPasal =
             //   kitabPasal + ',' + ((selectedAyat![i].getindexayat)).toString();
             // ignore: prefer_interpolation_to_compose_strings
-            temp_ayatdipilih = ', '+((selectedAyat![i].getayatasli)).toString();
+            // temp_ayatdipilih = ', '+((selectedAyat![i].getayatasli)).toString();
           }
 
           if (i != selectedAyat!.length - 1) {
@@ -920,17 +987,65 @@ class _RenunganPageState extends State<RenunganPage> {
 
         if (ayatdipilih.isNotEmpty) {
             if(gantikitab==true){
-              // ignore: prefer_interpolation_to_compose_strings
-              ayatdipilih = ayatdipilih + "; " + temp_ayatdipilih;
-            }else{
-              ayatdipilih = ayatdipilih + temp_ayatdipilih;
+              log("keluar hasil split if awal - $ayatpilihantemp");
+            bool udahdash = false;
+            for (int h = 0; h < ayatpilihantemp.length; h++) {
+              if (h == 0) {
+                tempneh = tempneh + ayatpilihantemp[h].toString();
+              } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] != 1) {
+                if (udahdash == true) {
+                  tempneh = tempneh +
+                      ayatpilihantemp[h - 1].toString() +
+                      "," +
+                      ayatpilihantemp[h].toString();
+                  udahdash = false;
+                } else {
+                  tempneh = tempneh + "," + ayatpilihantemp[h].toString();
+                }
+              } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] == 1) {
+               
+                if (udahdash == false) {
+                  if (h == (ayatpilihantemp.length - 1)) {
+                    tempneh = tempneh + "-" + ayatpilihantemp[h].toString();
+                    //udahdash = true;
+                  } else {
+                    tempneh = tempneh + "-";
+                    udahdash = true;
+                    continue;
+                  }
+                }else{
+                  if (h == (ayatpilihantemp.length - 1)) {
+                    tempneh = tempneh +ayatpilihantemp[h].toString();
+                    //udahdash = true;
+                  }else {
+                    
+                    continue;
+                  }
 
+                }
+                
+              }
             }
+
+            log("keluar hasil split akhir $tempneh");
+            ayatpilihantemp.clear();
+            ayatdipilih = ayatdipilih + tempneh+"; " + temp_ayatdipilih;
+            // kitabPasal = "$kitabPasal$tempneh";
+            tempneh="";
+              // ignore: prefer_interpolation_to_compose_strings
+              
+            }
+            // else{
+            //   ayatdipilih = ayatdipilih + temp_ayatdipilih;
+
+            // }
             
 
           } else {
             ayatdipilih = temp_ayatdipilih;
           }
+
+          ayatpilihantemp.add(selectedAyat![i].getayatasli);
 
           
       }
@@ -939,11 +1054,14 @@ class _RenunganPageState extends State<RenunganPage> {
       setState(() {
         text_highlight =
             // ignore: prefer_interpolation_to_compose_strings
-            text_highlight + ayatdipilih + "\n" + '\n' + isi_ayatdipilih;
+            text_highlight + ayatdipilih + "\n" + '\n' 
+            // + isi_ayatdipilih
+            ;
             //log("data renungan b : $text_highlight");
         //prosesListhighlightJadiRange(ayatdipilih);
         ctr_abacaan.text = ayatdipilih;
-        log("ayatdipilih - $text_highlight");
+        //log("ayatdipilih - $text_highlight");
+        log("keluar hasil akhir - $text_highlight");
 
 
         
@@ -1298,7 +1416,7 @@ class _RenunganPageState extends State<RenunganPage> {
                             ),
                               child: ListTile(
                                 onTap: () {
-                                  selectAyatBerkesan(ayatbacaterpilih.elementAt(index).bacaan.kitab,ayatbacaterpilih.elementAt(index).bacaan.pasal,ayatbacaterpilih.elementAt(index).bacaan.ayat,ayatbacaterpilih.elementAt(index).isi);
+                                  selectAyatBerkesan(ayatbacaterpilih.elementAt(index).bacaan.kitab,ayatbacaterpilih.elementAt(index).bacaan.pasal,ayatbacaterpilih.elementAt(index).bacaan.ayat,ayatbacaterpilih.elementAt(index).isi,int.parse(ayatbacaterpilih.elementAt(index).bacaan.ayat));
                                   Navigator.pop(context);
                                   _showMyDialog();
                                   // ScaffoldMessenger.of(context).showSnackBar(

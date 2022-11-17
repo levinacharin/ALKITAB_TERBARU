@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -96,6 +98,7 @@ class _ListAyatState extends State<ListAyat> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
+                log("pencet kitab - ${widget.indexKitab} ${widget.indexPasalKitab} $index");
                 Navigator.push(
                   context, 
                   MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: widget.indexKitab, pasalKitabdicari: widget.indexPasalKitab, ayatKitabdicari: index, daripagemana: "listayat",))
