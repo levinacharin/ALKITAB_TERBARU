@@ -29,9 +29,10 @@ import './global.dart' as globals;
 import './profilepage.dart';
 import 'dart:math' as mat;
 import 'package:custom_selectable_text/custom_selectable_text.dart';
-import 'package:measured_size/measured_size.dart';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:measured_size/measured_size.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter_share/flutter_share.dart';
 
 class Stiker {}
 
@@ -326,7 +327,9 @@ class cKitab {
 // cKitab kitabC = cKitab();
 // List<cKitab> listNamaKitab = [];
 
+// enum MenuSelected { Highlight, Catatan, Renungan, Share }
 enum MenuSelected { Highlight, Catatan, Renungan }
+
 
 class HomePage extends StatefulWidget {
   final int? indexKitabdicari;
@@ -2049,7 +2052,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   //   return tempbenerin;
   // }
 
-  void functionMenu(String pilihanMenu, List selectedAyat) {
+  Future<void> functionMenu(String pilihanMenu, List selectedAyat) async {
     if (pilihanMenu == "Highlight") {
       highlightMenu(selectedAyat);
     } else if (pilihanMenu == "Catatan") {
@@ -2073,6 +2076,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   listHighlight: selectedAyat,
                   darimana: "homepage")));
     }
+    // else if (pilihanMenu == "Share") {
+    //   await FlutterShare.share(
+    //     title: 'Share Renungan',
+    //     text: 'Example share text',
+    //     //linkUrl: 'https://flutter.dev/',
+    //     //chooserTitle: 'Example Chooser Title'
+    //     );
+    //   // List passinglistini = benerinIndexAyatSebelumPassingList(selectedAyat);
+    //   //Navigator.push(
+    //   //     context,
+    //   //     MaterialPageRoute(
+    //   //         builder: (context) => RenunganPage(
+    //   //             status: "tambah",
+    //   //             index: 0,
+    //   //             listHighlight: selectedAyat,
+    //   //             darimana: "homepage")));
+    // }
   }
 
 //HIGHLIGHT FILE
@@ -3379,6 +3399,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           value: MenuSelected.Renungan,
                           child: Text('Renungan'),
                         )
+                        // ,
+                        // const PopupMenuItem<MenuSelected>(
+                        //   value: MenuSelected.Share,
+                        //   child: Text('Share'),
+                        // )
                       ])
             ],
           ),

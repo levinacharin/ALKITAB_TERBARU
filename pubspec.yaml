@@ -37,6 +37,7 @@ dependencies:
   flex_color_picker: null
   flutter:
     sdk: flutter
+  flutter_share: ^2.0.0
   flutter_switch: ^0.3.2
   get: ^4.6.5
   google_fonts: ^3.0.1
