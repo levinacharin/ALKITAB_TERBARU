@@ -71,6 +71,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
   Future<void>getAllAkunKomunitas() async {
     AkunKomunitas.getAllData().then((value) async {
       setState(() {
+        listKomunitasAll = [];
         listKomunitasAll= value;
         getCountMember();  // get jumlah anggota semua list
       });
@@ -80,6 +81,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
   Future<void> getCountMember() async {
     DetailCountMembers.getCountMembers().then((value) async {
       setState(() {
+        listCountMembersAll = [];
         listCountMembersAll = value;
         for (int i = 0; i < listCountMembersAll.length; i++) {
           listKomunitasAll[i].jumlahanggota = listCountMembersAll[i].jumlahanggota;
@@ -95,6 +97,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
   Future<void> getKomunitasUserAll() async {
     DetailKomunitasUser.getData(int.parse(globals.idUser)).then((value) async {
       setState(() {
+        listKomunitasku = [];
         int index = 0;
         for (int i = 0; i < value.length; i++) {
           for (int j = 0 ; j < listKomunitasAll.length; j++) {
@@ -314,6 +317,23 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
 
     _tabController = TabController(length: 2, vsync: this);
   }
+
+
+  Future reloadPage() async {
+    getAllAkunKomunitas();  // untuk list komunitasku
+    setState(() {
+      globals.idkomunitas = "";
+      globals.namakomunitas = "";
+      globals.statuskomunitas = "";
+      globals.deskripsikomunitas = "";
+      globals.passwordkomunitas = "";
+      globals.tanggalpembuatan = "";
+      globals.jumlahanggota = "";
+      globals.roleuser = "";
+
+      _tabController = TabController(length: 2, vsync: this);
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -329,20 +349,41 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
             color: Color.fromARGB(255, 113, 9, 49)
           )
         ),
+        title: Center(
+          child: Text(
+            "Komunitas",
+            style: GoogleFonts.nunito(
+              textStyle: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Color.fromARGB(255, 113, 9, 49)
+              )
+            ),
+          ),
+        ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16, right: 16),
-            child: Text(
-              "Komunitas",
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 113, 9, 49)
-                )
-              ),
+          IconButton(
+            onPressed: () {
+              reloadPage();
+            },
+            icon: const Icon(
+              Icons.refresh,
+              color: Color.fromARGB(255, 113, 9, 49)
             ),
           )
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 16, right: 16),
+          //   child: Text(
+          //     "Komunitas",
+          //     style: GoogleFonts.nunito(
+          //       textStyle: const TextStyle(
+          //         fontSize: 20,
+          //         fontWeight: FontWeight.bold,
+          //         color: Color.fromARGB(255, 113, 9, 49)
+          //       )
+          //     ),
+          //   ),
+          // )
         ],
       ),
       body: WillPopScope(
@@ -352,7 +393,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
               child: Container(
                 height: 35,
                 decoration: BoxDecoration(
@@ -462,16 +503,18 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                                     children: [
                                                       Row(
                                                         children: [
-                                                          Text(
-                                                            globals.idUser != "" 
-                                                            ?listKomunitasShow[index].namakomunitas.toString()
-                                                            :listKomunitasAll[index].namakomunitas.toString(),
-                                                            style: GoogleFonts.nunito(
-                                                              textStyle: const TextStyle(
-                                                                fontSize: 18, 
-                                                                fontWeight: FontWeight.bold,
-                                                                color: Color.fromARGB(255, 113, 9, 49)
-                                                              )
+                                                          Expanded(
+                                                            child: Text(
+                                                              globals.idUser != "" 
+                                                              ?listKomunitasShow[index].namakomunitas.toString()
+                                                              :listKomunitasAll[index].namakomunitas.toString(),
+                                                              style: GoogleFonts.nunito(
+                                                                textStyle: const TextStyle(
+                                                                  fontSize: 18, 
+                                                                  fontWeight: FontWeight.bold,
+                                                                  color: Color.fromARGB(255, 113, 9, 49)
+                                                                )
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
@@ -661,6 +704,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                   globals.jumlahanggota = listKomunitasAll[index].jumlahanggota;
                                   globals.passwordkomunitas = listKomunitasAll[index].passwordkomunitas;
                                   globals.tanggalpembuatan = listKomunitasAll[index].tanggalpembuatan;
+                                  
                                 }
                                 Navigator.push(
                                   context, 

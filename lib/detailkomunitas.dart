@@ -296,6 +296,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
   Future<void> getListRenungan() async {
     RenunganKomunitas.getAllData().then((value) async {
       setState(() {
+        listRenungan = [];
         listRenungan = value;
 
         String tanggaltemp = "";
@@ -393,6 +394,21 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     });
   }
 
+  Future reloadPage() async {
+    setState(() {
+      getListRenungan();
+      getMembersName();
+      getDataRencana();
+      _tabController = TabController(length: 3, vsync: this);
+
+      if (widget.shouldpop == 'true'){
+        shouldPop = true;
+      } else {
+        shouldPop = false;
+      }
+    });
+  }
+
   void sendBantuanDoa() async {
     var url ="${globals.urllocal}listdoaadd";
     var response = await http.post(Uri.parse(url), body: {
@@ -425,10 +441,14 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
 
   void selectedMenu(String menu) async {
     if (menu == "itemPost") {
-      Navigator.push(
+      final data = await Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => TambahRenunganK(  ))
+        MaterialPageRoute(builder: (context) => const TambahRenunganK())
       );
+
+      if (data == "refresh") {
+        reloadPage();
+      }
     } else if (menu == "itemDoa") {
       _showDialogDoa();
     } else if (menu == "itemEdit") {
@@ -438,18 +458,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
       );
 
       if (data == "refresh") {
-        setState(() {
-          getListRenungan();
-          getMembersName();
-          getDataRencana();
-          _tabController = TabController(length: 3, vsync: this);
-
-          if (widget.shouldpop == 'true'){
-            shouldPop = true;
-          } else {
-            shouldPop = false;
-          }
-        });
+        reloadPage();
       }
 
     } else if (menu == "itemListDoa") {
@@ -460,10 +469,14 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     } else if (menu == "itemKeluar") {
       deleteDialog();
     } else if (menu == "itemRencana") {
-      Navigator.push(
+      final data = await Navigator.push(
         context, 
         MaterialPageRoute(builder: (context) => TambahRencana())
       );
+
+      if (data == "refresh") {
+        reloadPage();
+      }
     }
   }
 
@@ -634,6 +647,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     } else {
       shouldPop = false;
     }
+
+    print("id komunitas: ${globals.idkomunitas}");
   }
 
   @override
@@ -652,10 +667,25 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     sharedPreferences.setStringList('listIdRencana', listIdRencana);
 
     // ignore: use_build_context_synchronously
-    Navigator.push(
+    final data = await Navigator.push(
       context, 
       MaterialPageRoute(builder: (context) => ListRencanaUser())
     );
+
+    if (data == "refresh") {
+      setState(() {
+        getListRenungan();
+          getMembersName();
+          getDataRencana();
+          _tabController = TabController(length: 3, vsync: this);
+
+          if (widget.shouldpop == 'true'){
+            shouldPop = true;
+          } else {
+            shouldPop = false;
+          }
+      });
+    }
   }
 
   List<bool> punyaRencana = [];
@@ -812,8 +842,18 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
             )
           ),
           actions: [
-            Row(
+            globals.roleuser != ""
+            ? Row(
               children: [
+                IconButton(
+                  onPressed: () {
+                    reloadPage();
+                  }, 
+                  icon: const Icon(
+                    Icons.refresh,
+                    color: Color.fromARGB(255, 113, 9, 49),
+                  )
+                ),
                 IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -967,7 +1007,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                   ]
                 ),
               ],
-            ),
+            )
+            : Container(),
           ],
         ),
         body: Column(

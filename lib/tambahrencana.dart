@@ -594,7 +594,7 @@ class _TambahRencanaState extends State<TambahRencana> {
     //   +"link: ${ctr_linkrenungan[i].text}");
     }
 
-    Navigator.pop(context);
+    Navigator.pop(context, "refresh");
   }
   // END OF API SERVICES
 

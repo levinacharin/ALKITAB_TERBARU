@@ -404,12 +404,10 @@ class _CatatanPageState extends State<CatatanPage> {
     }
     dataCatatan = "$dataCatatan]";
     dataCatatan = dataCatatan.replaceAll("\n", "<br>");
-    // log("data catatan : dataCatatan");
     // END OF FORMAT JSON
     
     
     // WIRTE STRING OF JSON TO FILE
-    // log("status: ${widget.status}");
 
     if(mauapa!="resetcatatan"){
       await File(path).writeAsString(dataCatatan);
@@ -418,9 +416,22 @@ class _CatatanPageState extends State<CatatanPage> {
     }
     
 
-    globals.buatcatatan = true;
-    // ignore: use_build_context_synchronously
-    // Navigator.pop(context, "refresh");
+    if (widget.darimana == "detailcatatan") {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context, "refresh");
+    } else if (widget.darimana == "listcatatan") {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => DetailCatatan(index: widget.index, shouldpop: "true", darimana: widget.darimana,))
+      );
+    } else if (widget.darimana == "homepage") {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => DetailCatatan(index: globals.lastIdCatatan, shouldpop: "true", darimana: widget.darimana,))
+      );
+    }
   }
 
   void updateData() async {
@@ -482,7 +493,8 @@ class _CatatanPageState extends State<CatatanPage> {
               const SizedBox(
                 height: 30,
               ),
-              Text("Bacaan",
+              Text(
+                edited == true ? "Ayat Bacaan*" : "Ayat Bacaan",
                   style: GoogleFonts.nunito(
                       textStyle: const TextStyle(
                           fontSize: 18,
@@ -490,7 +502,8 @@ class _CatatanPageState extends State<CatatanPage> {
               const SizedBox(
                 height: 5,
               ),
-              TextField(
+              edited == true
+              ? TextField(
                 controller: ctr_isibacaan,
                 cursorColor: Color(int.parse(globals.defaultcolor)),
                 decoration: InputDecoration(
@@ -506,7 +519,6 @@ class _CatatanPageState extends State<CatatanPage> {
                   ),
                   contentPadding: const EdgeInsets.all(10),
                 ),
-                enabled: edited,
                 style: GoogleFonts.nunito(
                   textStyle: const TextStyle(
                     fontSize: 18,
@@ -514,11 +526,30 @@ class _CatatanPageState extends State<CatatanPage> {
                   )
                 ),
                 maxLines: 8,
+              )
+              : Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.grey
+                  )
+                ),
+                child: Text(
+                  ctr_isibacaan.text,
+                  style: GoogleFonts.nunito(
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black
+                    )
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 30,
               ),
-              Text("Catatan Saya",
+              Text("Catatan Saya*",
                   style: GoogleFonts.nunito(
                       textStyle: const TextStyle(
                           fontSize: 18,
@@ -573,6 +604,13 @@ class _CatatanPageState extends State<CatatanPage> {
                         width: 1, color: Color(int.parse(globals.defaultcolor))),
                   ),
                   contentPadding: const EdgeInsets.all(10),
+                  hintText: 'Masukkan link atau "-"',
+                  hintStyle: GoogleFonts.nunito(
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey
+                    )
+                  )
                 ),
                 style: GoogleFonts.nunito(
                   textStyle: const TextStyle(
@@ -585,7 +623,7 @@ class _CatatanPageState extends State<CatatanPage> {
               const SizedBox(
                 height: 30,
               ),
-              Text("Tagline",
+              Text("Tagline* ",
                   style: GoogleFonts.nunito(
                       textStyle: const TextStyle(
                           fontSize: 18,

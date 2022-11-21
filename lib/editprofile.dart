@@ -27,32 +27,31 @@ class _EditProfileState extends State<EditProfile> {
   // ignore: non_constant_identifier_names
   TextEditingController ctr_deskripsi = TextEditingController();
 
-  File? image;
+  bool uploadFoto = false;
+  var imageFile;
+  String pathPhoto = "";
+  final ImagePicker _picker = ImagePicker();
 
-  Future pickImage(ImageSource source) async {
-    try { 
-      // getting an image
-      final image = await ImagePicker().pickImage(source: source);
+  Future<void> pickImage(ImageSource source) async {
+    final XFile? image = await _picker.pickImage(source: source, imageQuality: 10);
 
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
+    print("image: $image");
+    if (image != null) {
       setState(() {
-        this.image = imageTemporary;
-        // print("image: $imageTemporary");
+        imageFile = File(image.path);
+        pathPhoto = image.path;
+        uploadFoto = true;
       });
-    } on PlatformException catch (e) {
-      log('Failed to pick image: $e');
-    }
-  }
 
-  Future<String?> uploadImage(file, id) async {
-    // ignore: prefer_interpolation_to_compose_strings
-    String url = "${globals.urllocal}upload?id=" + id;
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.files.add(await http.MultipartFile.fromPath('photo', file));
-    var res = await request.send();
-    return res.reasonPhrase;
+      var url = "${globals.urllocal}uploadimage";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.fields['id'] = globals.idUser.toString();
+      request.fields['folder'] = 'user';
+      request.files.add(
+        await http.MultipartFile.fromPath('photo', pathPhoto)
+      );
+      var res = await request.send();
+    }
   }
 
   void updateData() async {
@@ -63,22 +62,20 @@ class _EditProfileState extends State<EditProfile> {
     });
 
     var url = "${globals.urllocal}userakunedit";
+    // ignore: unused_local_variable
     var response = await http.put(Uri.parse(url), body: {
       "email" : ctr_email.text,
       "namadepan" : ctr_namadepan.text,
       "namabelakang" : ctr_namabelakang.text,
       "deskripsi" : ctr_deskripsi.text
     });
-    if (response.statusCode == 200) {
-    }
 
-    if (image != null) {
-    }
-
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => const ProfilePage())
-    );
+    // Navigator.push(
+    //   context, 
+    //   MaterialPageRoute(builder: (context) => const ProfilePage())
+    // );
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context, "refresh");
   }
   
   @override
@@ -107,10 +104,6 @@ class _EditProfileState extends State<EditProfile> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
-            // Navigator.push(
-            //   context, 
-            //   MaterialPageRoute(builder: (context) => const ProfilePage())
-            // );
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)
@@ -136,16 +129,18 @@ class _EditProfileState extends State<EditProfile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  image != null 
-                  ? ClipOval(
-                    child: Image.file(
-                      image!,
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                  : Icon(
+                  // ignore: unnecessary_null_comparison
+                  // _picker != null 
+                  // ? ClipOval(
+                  //   child: Image.file(
+                  //     _picker as File,
+                  //     width: 120,
+                  //     height: 120,
+                  //     fit: BoxFit.cover,
+                  //   ),
+                  // )
+                  // : 
+                  Icon(
                     Icons.account_circle_outlined,
                     color: Color(int.parse(globals.defaultcolor)),
                     size: 120,
@@ -391,8 +386,8 @@ class _EditProfileState extends State<EditProfile> {
                 width: MediaQuery.of(context).size.width,   
                 child: ElevatedButton(
                   onPressed: () {
-                    // updateData();
-                    Navigator.pop(context, "refresh");
+                    updateData();
+                    // Navigator.pop(context, "refresh");
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(int.parse(globals.defaultcolor)),

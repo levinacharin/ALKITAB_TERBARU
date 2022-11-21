@@ -57,6 +57,7 @@ class _RenunganPageState extends State<RenunganPage> {
   List alkitab_ = globals.alkitab;
   TextEditingController searchKitabController = TextEditingController();
   String hasil = "";
+  String kitabPasal = "";
   // int jumlahdicari = 0;
   // int jumlahdicaribanding = 0;
 
@@ -1115,7 +1116,7 @@ class _RenunganPageState extends State<RenunganPage> {
     // ignore: prefer_interpolation_to_compose_strings
     dataRenungan = dataRenungan + "[";
     if (widget.status == 'tambah') {
-      if (widget.darimana == 'listrenungan') {
+      if (widget.darimana == 'addfromlistrenungan' || widget.darimana == 'homepage') {
         text_highlight = '';
         ayatdipilih = '';
         isi_ayatdipilih = '';
@@ -1178,7 +1179,7 @@ class _RenunganPageState extends State<RenunganPage> {
         }
         globals.lastIdRenunganUser = globals.lastIdRenunganUser + 1;
       }
-      temp = hasil.replaceAll('"', '${String.fromCharCode(92)}"');
+      temp = text_highlight.replaceAll('"', '${String.fromCharCode(92)}"');
       temp_berkesan = ctr_aberkesan.text.replaceAll('"', '${String.fromCharCode(92)}"');
       // ignore: prefer_interpolation_to_compose_strings
       dataRenungan = dataRenungan +
@@ -1209,10 +1210,32 @@ class _RenunganPageState extends State<RenunganPage> {
           ctr_tagline.text +
           '"}';
     } else if (widget.status == 'edit') {
+      if (widget.darimana == 'listrenungan' || widget.darimana == 'detailrenungan') {
+        text_highlight = '';
+        ayatdipilih = '';
+        isi_ayatdipilih = '';
+        bool getkitab = false;
+
+        for (int i = 0; i < ctr_abacaan.text.length; i++) {
+          if (ctr_abacaan.text[i] == "\n") {
+            getkitab = true;
+          }
+
+          if (getkitab == false) {
+            ayatdipilih= ayatdipilih + ctr_abacaan.text[i];
+          } else if (getkitab == true) {
+            isi_ayatdipilih = isi_ayatdipilih + ctr_abacaan.text[i];
+          }
+        }
+        // ignore: prefer_interpolation_to_compose_strings
+        text_highlight = text_highlight + ayatdipilih + "\n" + isi_ayatdipilih;
+        print("data th: $ayatdipilih");
+      }
+
       listTempData[widget.index]['Tanggal'] = tanggaldipilih;
       listTempData[widget.index]['Judul'] = ctr_judul.text.toString();
       listTempData[widget.index]['Kitab'] = ctr_abacaan.text.toString();
-      listTempData[widget.index]['Ayat Bacaan'] = hasil;
+      listTempData[widget.index]['Ayat Bacaan'] = text_highlight;
       listTempData[widget.index]['Ayat Berkesan'] = ctr_aberkesan.text.toString();
       listTempData[widget.index]['Isi Renungan'] = ctr_renungan.text.toString();
       listTempData[widget.index]['Tindakan Saya'] = ctr_tindakan.text.toString();
@@ -1266,11 +1289,24 @@ class _RenunganPageState extends State<RenunganPage> {
     // end of add json to string
 
     // write string of json to local file
-    File(path).writeAsString(dataRenungan);
+    // File(path).writeAsString(dataRenungan);
 
-    globals.buatrenungan = true;
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => DetailRenungan(index: widget.index, status: widget.status, shoulpop: 'false',)));
+    // if (widget.darimana == "detailrenungan") {
+    //   // ignore: use_build_context_synchronously
+    //   Navigator.pop(context, "refresh");
+    // } else if (widget.darimana == "listrenungan") {
+    //   // ignore: use_build_context_synchronously
+    //   Navigator.push(
+    //     context, 
+    //     MaterialPageRoute(builder: (context) => DetailRenungan(index: widget.index, shoulpop: "true", darimana: widget.darimana,))
+    //   );
+    // } else if (widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan") {
+    //   // ignore: use_build_context_synchronously
+    //   Navigator.push(
+    //     context, 
+    //     MaterialPageRoute(builder: (context) => DetailRenungan(index: globals.lastIdRenunganUser, shoulpop: "true", darimana: widget.darimana,))
+    //   );
+    // }
   }
 
   void updateData() async {
@@ -1326,7 +1362,7 @@ class _RenunganPageState extends State<RenunganPage> {
                     children: [
                       Expanded(
                         child: Text(
-                          "Ayat Bacaan",
+                          edited == true ? "Ayat Bacaan*" : "Ayat Bacaan",
                           style: GoogleFonts.nunito(
                               textStyle: const TextStyle(
                                   fontSize: 16,
@@ -1390,6 +1426,12 @@ class _RenunganPageState extends State<RenunganPage> {
                                 width: 1,
                                 color: Color(int.parse(globals.defaultcolor))),
                           ),
+                          disabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 1, color: Colors.grey 
+                            )
+                          ),
+                          enabled: edited,
                           hintText: "Kejadian 1:1; Keluaran 1:1",
                           hintStyle: TextStyle(color: Colors.grey[400]),
                           contentPadding: const EdgeInsets.all(10),
@@ -1480,7 +1522,8 @@ class _RenunganPageState extends State<RenunganPage> {
               const SizedBox(
                 height: 30,
               ),
-              Text("Tanggal",
+              Text(
+                edited == true ? "Tanggal*" : "Tanggal",
                 style: GoogleFonts.nunito(
                   textStyle: const TextStyle(
                     fontSize: 18,
@@ -1499,12 +1542,15 @@ class _RenunganPageState extends State<RenunganPage> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 1,
-                        color: Color(int.parse(globals.defaultcolor)),
+                        color: edited == true 
+                        ? Color(int.parse(globals.defaultcolor))
+                        : Colors.grey,
                       ),
                       borderRadius: BorderRadius.circular(5),
                       color: Colors.transparent,
                     ),
-                    child: IconButton(
+                    child: edited == true
+                    ? IconButton(
                       onPressed: () async {
                         DateTime? newDate = await showDatePicker(
                             context: context,
@@ -1524,7 +1570,12 @@ class _RenunganPageState extends State<RenunganPage> {
                         size: 30,
                         color: Color(int.parse(globals.defaultcolor)),
                       )
-                    ),
+                    )
+                    : Icon(
+                        Icons.calendar_today_rounded,
+                        size: 30,
+                        color: Color(int.parse(globals.defaultcolor)),
+                      ),
                   ),
                   const SizedBox(
                     width: 5,
@@ -1535,7 +1586,9 @@ class _RenunganPageState extends State<RenunganPage> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           width: 1,
-                          color: Color(int.parse(globals.defaultcolor)),
+                          color: edited == true
+                          ? Color(int.parse(globals.defaultcolor))
+                          : Colors.grey,
                         ),
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.transparent
@@ -1556,7 +1609,8 @@ class _RenunganPageState extends State<RenunganPage> {
               const SizedBox(
                 height: 30,
               ),
-              Text("Judul Renungan",
+              Text(
+                "Judul Renungan*",
                 style: GoogleFonts.nunito(
                   textStyle: const TextStyle(
                     fontSize: 18,
@@ -1596,7 +1650,8 @@ class _RenunganPageState extends State<RenunganPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Ayat Bacaan",
+                  Text(
+                    edited == true ? "Ayat Bacaan*" : "Ayat Bacaan",
                     style: GoogleFonts.nunito(
                       textStyle: const TextStyle(
                         fontSize: 18,
@@ -1631,9 +1686,10 @@ class _RenunganPageState extends State<RenunganPage> {
                     borderSide: BorderSide(
                         width: 1, color: Color(int.parse(globals.defaultcolor))),
                   ),
-                  disabledBorder: OutlineInputBorder(
+                  disabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(
-                        width: 1, color: Color(int.parse(globals.defaultcolor))),
+                      width: 1, color: Colors.grey 
+                    )
                   ),
                   contentPadding: const EdgeInsets.all(10),
                   hintText: "Kejadian 1:1; Keluaran 1:1",
@@ -1653,7 +1709,7 @@ class _RenunganPageState extends State<RenunganPage> {
               const SizedBox(
                 height: 35,
               ),
-              Text("Ayat Berkesan",
+              Text("Ayat Berkesan*",
                 style: GoogleFonts.nunito(
                   textStyle: const TextStyle(
                     fontSize: 18,
@@ -1689,7 +1745,7 @@ class _RenunganPageState extends State<RenunganPage> {
               const SizedBox(
                 height: 35,
               ),
-              Text("Renungan",
+              Text("Renungan*",
                 style: GoogleFonts.nunito(
                   textStyle: const TextStyle(
                     fontSize: 18,
@@ -1725,7 +1781,7 @@ class _RenunganPageState extends State<RenunganPage> {
               const SizedBox(
                 height: 35,
               ),
-              Text("Tindakan Saya",
+              Text("Tindakan Saya*",
                 style: GoogleFonts.nunito(
                 textStyle: const TextStyle(
                     fontSize: 18,
@@ -1784,6 +1840,13 @@ class _RenunganPageState extends State<RenunganPage> {
                     borderSide: BorderSide(
                         width: 1, color: Color(int.parse(globals.defaultcolor))),
                   ),
+                  hintText: 'Masukkan link atau "-"',
+                  hintStyle: GoogleFonts.nunito(
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey
+                    )
+                  ),
                   contentPadding: const EdgeInsets.all(10),
                 ),
                 style: GoogleFonts.nunito(
@@ -1797,7 +1860,7 @@ class _RenunganPageState extends State<RenunganPage> {
               const SizedBox(
                 height: 35,
               ),
-              Text("Tagline",
+              Text("Tagline*",
                 style: GoogleFonts.nunito(
                   textStyle: const TextStyle(
                     fontSize: 18,
@@ -1841,7 +1904,7 @@ class _RenunganPageState extends State<RenunganPage> {
                     writeData();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(int.parse(globals.defaultcolor)),
+                    backgroundColor: Color(int.parse(globals.defaultcolor)),
                     elevation: 10,
                     padding: const EdgeInsets.all(5),
                   ),

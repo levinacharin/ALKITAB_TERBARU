@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,11 +12,13 @@ class DetailCatatan extends StatefulWidget {
   final int index;
   final String? status;
   final String shouldpop;
+  final String? darimana;
 
   const DetailCatatan({super.key,
   required this.index,
   this.status,
-  required this.shouldpop
+  required this.shouldpop,
+  this.darimana
   });
 
   @override
@@ -77,11 +80,12 @@ class _DetailCatatanState extends State<DetailCatatan> {
           backgroundColor: Colors.transparent,
           leading: IconButton(
             onPressed: () {
-              // Navigator.pop(context);
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => ListCatatan())
-              );
+              if (widget.darimana == "listcatatan" || widget.darimana == "homepage") {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+              }
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)
@@ -107,11 +111,19 @@ class _DetailCatatanState extends State<DetailCatatan> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+
+                      final data = await Navigator.push(
                             context, 
-                            MaterialPageRoute(builder: (context) => CatatanPage(status: 'edit', index: widget.index))
+                            MaterialPageRoute(builder: (context) => CatatanPage(status: 'edit', index: widget.index, darimana: "detailcatatan",))
                       );
+
+                      print("data : $data");
+                      if (data == "refresh") {
+                        setState(() {
+                          readFile();
+                        });
+                      }
                     }, 
                     icon: const Icon(
                       Icons.edit,

@@ -23,6 +23,12 @@ class _ListCatatanState extends State<ListCatatan> {
     readFile();
   }
 
+  Future reloadPage() async {
+    await Future.delayed(Duration(seconds: 2));
+    readFile();
+    setState(() { });
+  }
+
   // SERVICES FILE TEXT 
   List listDataCat = []; // read and display
   List listDataTemp = []; // temp
@@ -106,217 +112,215 @@ class _ListCatatanState extends State<ListCatatan> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_rounded),
-          color: const Color.fromARGB(255, 113, 9, 49)
+    return RefreshIndicator(
+      onRefresh: reloadPage,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_rounded),
+            color: const Color.fromARGB(255, 113, 9, 49)
+          ),
         ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-            child: Text(
-              "Catatan", 
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 24, 
-                  fontWeight: FontWeight.bold, 
-                  color: Color.fromARGB(255, 113, 9, 49)
-                )
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+              child: Text(
+                "Catatan", 
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 24, 
+                    fontWeight: FontWeight.bold, 
+                    color: Color.fromARGB(255, 113, 9, 49)
+                  )
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 10,),
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            height: 40,
-            child: TextField(
-              onChanged: (searchText) {
-                searchText = searchText.toLowerCase();
-                setState(() {
-                  List listfordisplay = [];
-                  for (int i = 0; i < listDataTemp.length; i++) {
-                    String temptag = listDataTemp[i]["Tagline"];
-                    temptag = temptag.toLowerCase();
-                    if (temptag.contains(searchText)) {
-                      listfordisplay.add(listDataTemp[i]);
+            const SizedBox(height: 10,),
+            Container(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              height: 40,
+              child: TextField(
+                onChanged: (searchText) {
+                  searchText = searchText.toLowerCase();
+                  setState(() {
+                    List listfordisplay = [];
+                    for (int i = 0; i < listDataTemp.length; i++) {
+                      String temptag = listDataTemp[i]["Tagline"];
+                      temptag = temptag.toLowerCase();
+                      if (temptag.contains(searchText)) {
+                        listfordisplay.add(listDataTemp[i]);
+                      }
                     }
-                  }
-                  // print("result: $listfordisplay");
-                  listDataCat = [];
-                  listDataCat = listfordisplay;
-
-                  itemAyatBacaan = [];
-                  itemCatatan = [];
-                  itemTagline = [];
-                  for (int i = 0; i < listDataCat.length; i++) {
-                    itemAyatBacaan.add(listDataCat[i]['Ayat Bacaan'].toString());
-                    itemCatatan.add(listDataCat[i]['Isi Catatan'].toString());
-                    itemTagline.add(listDataCat[i]['Tagline'].toString());
-                  }
-                  listDataCat = listfordisplay;
-                });
-              },
-              cursorColor: Color(int.parse(globals.defaultcolor)),
-              decoration: InputDecoration(
-                fillColor: Color.fromARGB(255, 253, 255, 252),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1, 
-                    color: Color(int.parse(globals.defaultcolor))
+                    // print("result: $listfordisplay");
+                    listDataCat = [];
+                    listDataCat = listfordisplay;
+    
+                    itemAyatBacaan = [];
+                    itemCatatan = [];
+                    itemTagline = [];
+                    for (int i = 0; i < listDataCat.length; i++) {
+                      itemAyatBacaan.add(listDataCat[i]['Ayat Bacaan'].toString());
+                      itemCatatan.add(listDataCat[i]['Isi Catatan'].toString());
+                      itemTagline.add(listDataCat[i]['Tagline'].toString());
+                    }
+                    listDataCat = listfordisplay;
+                  });
+                },
+                cursorColor: Color(int.parse(globals.defaultcolor)),
+                decoration: InputDecoration(
+                  fillColor: Color.fromARGB(255, 253, 255, 252),
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1, 
+                      color: Color(int.parse(globals.defaultcolor))
+                    ),
                   ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1, 
-                    color: Color(int.parse(globals.defaultcolor))
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1, 
+                      color: Color(int.parse(globals.defaultcolor))
+                    ),
                   ),
+                  hintText: 'Cari',
+                  hintStyle: TextStyle(
+                    color: Colors.grey[400]
+                  ),
+                  contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5)
                 ),
-                hintText: 'Cari',
-                hintStyle: TextStyle(
-                  color: Colors.grey[400]
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black
+                  )
                 ),
-                contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5)
-              ),
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black
-                )
               ),
             ),
-          ),
-          const SizedBox(height: 20,),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, right: 12),
-                        child: Card(
-                          elevation: 3,
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        itemAyatBacaan[index], 
-                                        style: GoogleFonts.nunito(
-                                          textStyle: TextStyle(
-                                            fontSize: 18, 
-                                            fontWeight: FontWeight.w700, 
-                                            color: Color(int.parse(globals.defaultcolor))
-                                          )
+            const SizedBox(height: 20,),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12, right: 12),
+                          child: Card(
+                            elevation: 3,
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          itemAyatBacaan[index], 
+                                          style: GoogleFonts.nunito(
+                                            textStyle: TextStyle(
+                                              fontSize: 18, 
+                                              fontWeight: FontWeight.w700, 
+                                              color: Color(int.parse(globals.defaultcolor))
+                                            )
+                                          ),
+                                        )
+                                      ),
+                                      PopupMenuButton(
+                                        icon: const Icon(
+                                          Icons.more_horiz,
+                                          color: Color.fromARGB(255, 113, 9, 49),
                                         ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(8))
+                                        ),
+                                        itemBuilder: (context) => [
+                                          PopupMenuItem(
+                                            // ignore: sort_child_properties_last
+                                            child: Row(
+                                              children: const [
+                                                Icon(Icons.create),
+                                                SizedBox(width: 5),
+                                                Text("Edit"),
+                                              ],
+                                            ),
+                                            value: 1,
+                                          ),
+                                          PopupMenuItem(
+                                            // ignore: sort_child_properties_last
+                                            child: Row(
+                                              children: const [
+                                                Icon(Icons.auto_delete),
+                                                SizedBox(width: 5),
+                                                Text("Delete"),
+                                              ],
+                                            ),
+                                            value: 2,
+                                          ),
+                                        ],
+                                        onSelected: (value) {
+                                          if (value == 1) {
+                                            Navigator.push(
+                                              context, 
+                                              MaterialPageRoute(builder: (context) => CatatanPage(status: 'edit', index: index, darimana: "listcatatan",))
+                                            );
+
+                                          } else if (value == 2) {
+                                            deleteData(index);
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    itemTagline[index], 
+                                    style: GoogleFonts.nunito(
+                                      textStyle: TextStyle(
+                                        fontSize: 14, 
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black
                                       )
                                     ),
-                                    PopupMenuButton(
-                                      icon: const Icon(
-                                        Icons.more_horiz,
-                                        color: Color.fromARGB(255, 113, 9, 49),
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(8))
-                                      ),
-                                      itemBuilder: (context) => [
-                                        PopupMenuItem(
-                                          // ignore: sort_child_properties_last
-                                          child: Row(
-                                            children: const [
-                                              Icon(Icons.create),
-                                              SizedBox(width: 5),
-                                              Text("Edit"),
-                                            ],
-                                          ),
-                                          value: 1,
-                                        ),
-                                        PopupMenuItem(
-                                          // ignore: sort_child_properties_last
-                                          child: Row(
-                                            children: const [
-                                              Icon(Icons.auto_delete),
-                                              SizedBox(width: 5),
-                                              Text("Delete"),
-                                            ],
-                                          ),
-                                          value: 2,
-                                        ),
-                                      ],
-                                      onSelected: (value) async {
-                                        if (value == 1) {
-                                          final data = await Navigator.push(
-                                            context, 
-                                            MaterialPageRoute(builder: (context) => CatatanPage(status: 'edit', index: index))
-                                          );
-
-                                          if (data == "refresh") {
-                                            setState(() {
-                                              readFile();
-                                            });
-                                          }
-                                        } else if (value == 2) {
-                                          deleteData(index);
-                                        }
-                                      },
-                                    )
-                                  ],
-                                ),
-                                Text(
-                                  itemTagline[index], 
-                                  style: GoogleFonts.nunito(
-                                    textStyle: TextStyle(
-                                      fontSize: 14, 
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.black
-                                    )
                                   ),
-                                ),
-                                const SizedBox(height: 20,),
-                                Text(
-                                  itemCatatan[index], 
-                                  style: GoogleFonts.nunito(
-                                    textStyle: TextStyle(
-                                      fontSize: 16, 
-                                      color: Colors.black
-                                    )
+                                  const SizedBox(height: 20,),
+                                  Text(
+                                    itemCatatan[index], 
+                                    style: GoogleFonts.nunito(
+                                      textStyle: TextStyle(
+                                        fontSize: 16, 
+                                        color: Colors.black
+                                      )
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 10,),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => DetailCatatan(index: index, shouldpop: 'true',))
-                    );
-                  },
-                );
-              },
-              itemCount: itemAyatBacaan.length,
-            )
-          ),
-        ],
+                        const SizedBox(height: 10,),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => DetailCatatan(index: index, shouldpop: 'true',))
+                      );
+                    },
+                  );
+                },
+                itemCount: itemAyatBacaan.length,
+              )
+            ),
+          ],
+        ),
       ),
     );
   }

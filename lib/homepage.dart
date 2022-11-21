@@ -2621,10 +2621,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     readFileHeightLayout();
 
+
     globals.buatkomunitas = false;
-    globals.buatcatatan = false;
-    globals.buatrenungan = false;
-    // print("id renungan user : ${globals.lastIdRenunganUser}");
+    globals.refreshpage = false;
 
     pagesekarang = 0;
     WidgetsBinding.instance.addObserver(this);

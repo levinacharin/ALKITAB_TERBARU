@@ -1,5 +1,7 @@
 library my_prj.globals;
 
+import 'package:alkitab/listrencanauser.dart';
+
 import 'detailkomunitas.dart';
 import 'homepage.dart';
 import 'mergeayat.dart';
@@ -29,15 +31,17 @@ String deskripsiUser = "";
 bool statusLogin = false;
 // end of akun profile
 
+double sizeStack = 0.0;
+
 int lastIdCatatan = 0;  // untuk detail catatan setelah add
 int lastIdRenunganUser = 1;  // untuk detail renungan setelah add
 
 bool call = true;
 
 bool buatkomunitas = false;
-bool buatcatatan = false;
-bool buatrenungan = false;
 String urllocal = "http://bible.crossnet.co.id:1234/";
+
+bool refreshpage = false;
 
 // akun profile komunitas
 String idkomunitas = "";
@@ -84,7 +88,15 @@ String lastIdRDatabase = "";
 // rencana bacaan 
 String idrencana = "";
 String judulrencana = "";
-List<DetailRencana> listDetailRencana = []; // dari komunitas
+List<DetailRencana> listDetailRencana = []; // dari menu komunitas
 List listDetailRUser = []; // dari menu user
-List<String> rencanaDone = [];
+
+List<String> statusBaca = []; // kasih status per konten nya
 // end of rencana bacaan
+
+
+// bacaan liturgi
+List<BacaanLiturgi> listBacaLiturgi = [];
+String informasiliturgi = "";
+String titletanggal = "";
+// end of bacaan liturgi

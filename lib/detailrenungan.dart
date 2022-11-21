@@ -12,11 +12,13 @@ class DetailRenungan extends StatefulWidget {
   final int index;
   final String? status;
   final String shoulpop;
+  final String? darimana;
 
   const DetailRenungan({super.key,
   required this.index,
   this.status,
-  required this.shoulpop
+  required this.shoulpop,
+  this.darimana
   });
 
   @override
@@ -86,11 +88,16 @@ class _DetailRenunganState extends State<DetailRenungan> {
           backgroundColor: Colors.transparent,
           leading: IconButton(
             onPressed: () {
-              // Navigator.push(
-              //   context, 
-              //   MaterialPageRoute(builder: (context) => ListRenungan())
-              // );
-              Navigator.pop(context);
+              if (widget.darimana == "listrenungan" || widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan") {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else if (widget.darimana == "tambahrenungank") {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {
+                Navigator.pop(context);
+              }
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49),

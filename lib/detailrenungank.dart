@@ -141,8 +141,10 @@ class RefleksiUser {
 }
 
 class DetailRenunganKomunitas extends StatefulWidget {
+  final String? darimana;
   const DetailRenunganKomunitas({
     super.key,
+    this.darimana
   });
 
   @override
@@ -247,7 +249,12 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            if (widget.darimana == "tambahrenungank") {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
           }, 
           icon: const Icon(
             Icons.arrow_back,
@@ -361,28 +368,6 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
             ),
             const SizedBox(height: 25,),
             Text(
-              "Topik Bacaan",
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 18, 
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 113, 9, 49)
-                )
-              ),
-            ),
-            const SizedBox(height: 5,),
-            Text(
-              globals.kitabbacaan,
-              style: GoogleFonts.nunito(
-                textStyle: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black
-                )
-              ),
-            ),
-            const SizedBox(height: 25,),
-            Text(
               "Ayat Bacaan",
               style: GoogleFonts.nunito(
                 textStyle: const TextStyle(
@@ -394,7 +379,7 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
             ),
             const SizedBox(height: 5,),
             Text(
-              globals.ayatbacaan,
+              globals.kitabbacaan,
               style: GoogleFonts.nunito(
                 textStyle: TextStyle(
                   fontSize: 18,

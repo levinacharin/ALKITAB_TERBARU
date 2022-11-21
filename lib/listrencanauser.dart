@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:alkitab/detailbacaliturgi.dart';
 import 'package:alkitab/detailrencanabaca.dart';
+import 'package:alkitab/homepage.dart';
+import 'package:alkitab/pecahAyatClass.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +12,51 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'global.dart' as globals;
+
+class BacaanLiturgi {
+  String tanggal;
+  String infobacaan;
+  String content;
+  String kitab;
+  String isiContent;
+
+  BacaanLiturgi({
+    required this.tanggal,
+    required this.infobacaan,
+    required this.content,
+    required this.kitab,
+    required this.isiContent
+  });
+
+  factory BacaanLiturgi.createData(Map<String, dynamic> object) {
+    return BacaanLiturgi(
+      tanggal: object['tanggal'], 
+      infobacaan: object['infobacaan'], 
+      content: object['content'], 
+      kitab: object['kitab'], 
+      isiContent: object['isiContent']
+    );
+  }
+
+  static Future<List<BacaanLiturgi>> getData(String date) async {
+    var url = "${globals.urllocal}liturgihariini?tanggal=$date";
+    var apiResult = await http.get(Uri.parse(url), headers: {
+      "Accept" : "application/json",
+      "Access-Control-Allow-Origin" : "*"
+    });
+    var jsonObject = json.decode(apiResult.body);
+    var data = (jsonObject as Map<String, dynamic>)['data'];
+    List<BacaanLiturgi> listData = [];
+    if (data.toString() == "null") {
+      return listData;
+    } else {
+      for (int i = 0; i < data.length; i++) {
+        listData.add(BacaanLiturgi.createData(data[i]));
+      }
+      return listData;
+    }
+  }
+}
 
 class ListRencanaUser extends StatefulWidget {
   const ListRencanaUser({super.key});
@@ -18,10 +66,41 @@ class ListRencanaUser extends StatefulWidget {
 }
 
 class _ListRencanaUserState extends State<ListRencanaUser> {
-  bool status_maintenance = false;
   List listDetailRencana = [];
   List<String> itemJudulRencana = [];
 
+  List<BacaanLiturgi> listBacaLiturgi = [];
+  DateTime currentDate = DateTime.now();
+  String _currentdate = "";
+  List infobacatemp = [];
+  String _infobacaan = "";
+  String titletanggal = "";
+
+  //  API GET BACAAN LITURGI 
+  Future<void> getLiturgi(String currentdate) async  {
+    BacaanLiturgi.getData(currentdate).then((value) async {
+      setState(() {
+        listBacaLiturgi = [];
+        listBacaLiturgi = value;
+        
+        for (int i = 0; i < listBacaLiturgi.length; i++) {
+          listBacaLiturgi[i].infobacaan = listBacaLiturgi[i].infobacaan.replaceAll("<br>", "\n");
+          listBacaLiturgi[i].isiContent = listBacaLiturgi[i].isiContent.replaceAll("<br>", "\n");
+          infobacatemp.add(listBacaLiturgi[i].infobacaan);
+        }
+
+        infobacatemp = infobacatemp.toSet().toList();
+        _infobacaan = infobacatemp[0];
+
+        for (int i = 0; i < listBacaLiturgi.length; i++) {
+          if (listBacaLiturgi[i].kitab != "-") {
+            _infobacaan = _infobacaan + "\n" + listBacaLiturgi[i].content + ": " + listBacaLiturgi[i].kitab;
+          }
+        }
+        infobacatemp = [];
+      });
+    });
+  }
 
   // read file Rencanajson
   void readFile() async {
@@ -38,6 +117,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
         setState(() {
           for (int i = 0; i < listDetailRencana.length; i++) {
             itemJudulRencana.add(listDetailRencana[i]['Judul Rencana']);
+            print("status selesai list detail rencana awal: ${listDetailRencana[i]['Status Selesai']}");
           }
           itemJudulRencana = itemJudulRencana.toSet().toList();
         });
@@ -49,7 +129,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
 
   // Shared Preferences Id Rencana
   List<String> listIdRencana = []; 
-  getIdRencanaSP() async {
+  getIdRencanaSP() async { // ambil id yang tersimpan
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     listIdRencana = sharedPreferences.getStringList('listIdRencana') ?? [];
 
@@ -58,51 +138,103 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     });
   }
 
+  List<String> listStatusBaca = [];
+  saveStatusBaca(List<String> statusBaca, String idrencana) async {
+    setState(() {
+      if (listStatusBaca.length != 0) {
+        
+      }
+      listStatusBaca.add(idrencana);
+      for (int i = 0; i < statusBaca.length; i++) {
+        listStatusBaca.add(statusBaca[i]);
+      }
+      print("list status baca: $listStatusBaca");
+    });
+  }
+
   List listDetailTemp = [];
   sendData(String idrencana) async {
-    print("idrencana: $idrencana");
-    listDetailTemp = [];
     setState(() {
+      listDetailTemp = [];
       for (int i = 0; i < listDetailRencana.length; i++) {
         if (listDetailRencana[i]['Id Rencana'] == idrencana) {
           listDetailTemp.add(listDetailRencana[i]);
         }
       }
+      globals.listDetailRUser.clear();
       globals.listDetailRUser = listDetailTemp;
+
+      globals.statusBaca.clear();
+      for (int i = 0; i < globals.listDetailRUser.length; i++) {
+        if (globals.listDetailRUser[i]['Status Selesai'] == "true") {
+          globals.statusBaca.add("ayat-true");
+
+          if (globals.listDetailRUser[i]['Judul Renungan'] == "-") {
+            globals.statusBaca.add("-");
+          } else {
+            globals.statusBaca.add("renungan-true");
+          }
+
+        } else {
+          globals.statusBaca.add("ayat-false");
+
+          if (globals.listDetailRUser[i]['Judul Renungan'] == "-") {
+            globals.statusBaca.add("-");
+          } else {
+            globals.statusBaca.add("renungan-false");
+          }
+        }
+      }
     });
   }
 
   
-  List<double> listScore = [];
+  List<int> listScore = [];
   int count = 0;
   int hasdone = 0;
   double total = 0;
   void calculateScore() {
     setState(() {
+      listScore = [];
+      int num = 0;
+      count = 0;
+      hasdone = 0;
+      total= 0.0;
+
       for (int i = 0; i < listDetailRencana.length; i++) {
         if (i != listDetailRencana.length-1) {
           if (listDetailRencana[i+1]['Id Rencana'] == listDetailRencana[i]['Id Rencana']) {
-            if (listDetailRencana[i]['Status Selesai'] == "true"){
-              hasdone++;
+            if (listDetailRencana[i]['Status Selesai'] == "true") {
+              ++hasdone;
             }
-            count++;
+            ++count;
           } else {
             if (listDetailRencana[i]['Status Selesai'] == "true") {
               ++hasdone;
             }
             ++count;
-            total = hasdone / count;
-            listScore.add(total);
+            total = (hasdone / count) * 100;
+            num = total.round();
+            listScore.add(num);
+
+            hasdone = 0;
             count = 0;
+            total = 0;
           }
         } else {
           if (listDetailRencana[i]['Status Selesai'] == "true") {
             ++hasdone;
           }
           ++count;
-          total = hasdone / count;
-          listScore.add(total);
+
+          total = (hasdone / count) * 100;
+          num = total.round();
+          listScore.add(num);
+
+          hasdone = 0;
           count = 0;
+          total = 0;
+
         }
       }
 
@@ -116,184 +248,286 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     super.initState();
     getIdRencanaSP();
     readFile();
+    _currentdate = "${currentDate.year}-${currentDate.month}-${currentDate.day}";
+    getLiturgi(_currentdate );
+    formatDatetoString();
+
+    saveStatusBaca(globals.statusBaca, globals.idrencana);
+    globals.listDetailRUser.clear();
+    globals.statusBaca.clear();
+    globals.idrencana="";
+    calculateScore();
+    
+  }
+
+  Future reloadPage() async {
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      
+
+      globals.listDetailRUser.clear();
+      globals.statusBaca.clear();
+      globals.idrencana="";
+      
+      calculateScore();
+    });
+  }
+
+  void formatDatetoString() {
+    setState(() {
+      if (currentDate.month == 1) {
+        titletanggal = "${currentDate.day} Januari ${currentDate.year}";
+      } else if (currentDate.month == 2) {
+        titletanggal = "${currentDate.day} Februari ${currentDate.year}";
+      } else if (currentDate.month == 3) {
+        titletanggal = "${currentDate.day} Maret ${currentDate.year}";
+      } else if (currentDate.month == 4) {
+        titletanggal = "${currentDate.day} April ${currentDate.year}";
+      } else if (currentDate.month == 5) {
+        titletanggal = "${currentDate.day} Mei ${currentDate.year}";
+      } else if (currentDate.month == 6) {
+        titletanggal = "${currentDate.day} Juni ${currentDate.year}";
+      } else if (currentDate.month == 7) {
+        titletanggal = "${currentDate.day} Juli ${currentDate.year}";
+      } else if (currentDate.month == 8) {
+        titletanggal = "${currentDate.day} Agustus ${currentDate.year}";
+      } else if (currentDate.month == 9) {
+        titletanggal = "${currentDate.day} September ${currentDate.year}";
+      } else if (currentDate.month == 10) {
+        titletanggal = "${currentDate.day} Oktober ${currentDate.year}";
+      } else if (currentDate.month == 11) {
+        titletanggal = "${currentDate.day} November ${currentDate.year}";
+      } else if (currentDate.month == 12) {
+        titletanggal = "${currentDate.day} Desember ${currentDate.year}";
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            globals.listDetailRUser = [];
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: const Color.fromARGB(255, 113, 9, 49),
+    return RefreshIndicator(
+      triggerMode: RefreshIndicatorTriggerMode.anywhere,
+      onRefresh: reloadPage,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
+              );
+            },
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: Color.fromARGB(255, 113, 9, 49),
+            ),
           ),
         ),
-      ),
-      body: status_maintenance != true
-      ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Text(
-              "Rencana Bacaanku",
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 113, 9, 49)
-                )
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Text(
+                "Rencana Bacaanku",
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 113, 9, 49)
+                  )
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 10,),
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            height: 40,
-            child: TextField(
-              cursorColor: Color(int.parse(globals.defaultcolor)),
-              decoration: InputDecoration(
-                fillColor: Color.fromARGB(255, 253, 255, 252),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1, 
-                    color: Color(int.parse(globals.defaultcolor))
+            const SizedBox(height: 10,),
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              height: 40,
+              child: TextField(
+                cursorColor: Color(int.parse(globals.defaultcolor)),
+                decoration: InputDecoration(
+                  fillColor: Color.fromARGB(255, 253, 255, 252),
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1, 
+                      color: Color(int.parse(globals.defaultcolor))
+                    ),
                   ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1, 
-                    color: Color(int.parse(globals.defaultcolor))
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1, 
+                      color: Color(int.parse(globals.defaultcolor))
+                    ),
                   ),
+                  hintText: 'Cari',
+                  hintStyle: TextStyle(
+                    color: Colors.grey[400]
+                  ),
+                  contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5)
                 ),
-                hintText: 'Cari',
-                hintStyle: TextStyle(
-                  color: Colors.grey[400]
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black
+                  )
                 ),
-                contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5)
-              ),
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black
-                )
               ),
             ),
-          ),
-          const SizedBox(height: 20,),
-          Expanded(
-            child: ListView.builder(
-              itemCount: itemJudulRencana.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        child: Card(
-                          elevation: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 80,
-                                  child: Image.asset(
-                                    "assets/images/pp3.jpg"
-                                  ),
-                                ),
-                                const SizedBox(width: 5,),
-                                Expanded(
-                                  child: Text(
-                                    itemJudulRencana[index],
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 113, 9, 49)
-                                      )
+            const SizedBox(height: 20,),
+            GestureDetector(
+              onTap: () {
+                globals.listBacaLiturgi = listBacaLiturgi;
+                globals.informasiliturgi = _infobacaan;
+                globals.titletanggal = titletanggal;
+
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const DetailBLiturgi())
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: Card(
+                  elevation: 4,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Bacaan Liturgi Hari Ini",
+                          style: GoogleFonts.nunito(
+                            textStyle: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Color.fromARGB(255, 113, 9, 49)
+                            )
+                          ),
+                        ),
+                        const SizedBox(height: 20,),
+                        Text(
+                          _infobacaan,
+                          style: GoogleFonts.nunito(
+                            textStyle: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: Color(int.parse(globals.defaultcolor)),
+                            )
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20,),
+            Expanded(
+              child: ListView.builder(
+                itemCount: itemJudulRencana.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          child: Card(
+                            elevation: 4,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 100,
+                                    height: 80,
+                                    child: Image.asset(
+                                      "assets/images/pp3.jpg"
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 5,),
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Color(int.parse(globals.defaultcolor)),
-                                      width: 2
-                                    )
-                                  ),
-                                  child: Center(
+                                  const SizedBox(width: 5,),
+                                  Expanded(
                                     child: Text(
-                                      "${listScore[index]}%",
+                                      itemJudulRencana[index],
                                       style: GoogleFonts.nunito(
-                                        textStyle: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(int.parse(globals.defaultcolor))
+                                        textStyle: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color.fromARGB(255, 113, 9, 49)
                                         )
                                       ),
                                     ),
                                   ),
-                                )
-                              ],
+                                  const SizedBox(width: 5,),
+                                  listScore[index] != 100
+                                  ? Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Color(int.parse(globals.defaultcolor)),
+                                        width: 2
+                                      )
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "${listScore[index]}%",
+                                        style: GoogleFonts.nunito(
+                                          textStyle: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(int.parse(globals.defaultcolor))
+                                          )
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.green
+                                    ),
+                                    child: const Icon(
+                                      Icons.check,
+                                      size: 35,
+                                      color: Colors.white,
+                                    )
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        onTap: () async {
-                          await sendData(listIdRencana[index]);
+                          onTap: () async {
+                            await sendData(listIdRencana[index]);
 
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (context) => DetailRencanaBaca(pagefrom: "user",))
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 10,)
-                    ],
-                  ),
-                );
-              },
+                            globals.idrencana = "";
+                            globals.idrencana = listIdRencana[index];
+    
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: "user",))
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 10,)
+                      ],
+                    ),
+                  );
+                },
+              )
             )
-          )
-        ],
-      )
-      : Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.settings,
-              size: 100,
-              color: Color(int.parse(globals.defaultcolor)),
-            ),
-            const SizedBox(height: 20,),
-            Text(
-              "Mohon maaf fitur ini masih dalam perbaikan oleh developer",
-              style: GoogleFonts.nunito(
-                textStyle: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Color(int.parse(globals.defaultcolor))
-                )
-              ),
-              textAlign: TextAlign.center,
-            ),
           ],
-        ),
+        )
       ),
     );
   }

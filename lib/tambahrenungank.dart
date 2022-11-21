@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:alkitab/detailkomunitas.dart';
+import 'package:alkitab/detailrefleksiuser.dart';
+import 'package:alkitab/detailrenungan.dart';
 import 'package:alkitab/detailrenungank.dart';
 import 'package:alkitab/homepage.dart';
 import 'package:flutter/material.dart';
@@ -544,9 +545,19 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
 
       globals.lastIdRDatabase = lastId.toString();
       
+      
+      // ignore: use_build_context_synchronously
+      globals.idrenungankomunitas = globals.lastIdRDatabase;
+      globals.tanggalrenungan = tanggal;
+      globals.judulrenungan = ctr_judul.text;
+      globals.kitabbacaan = ctr_ayatbacaan.text;
+      globals.isirenungan = ctr_isirenungan.text;
+      globals.linkrenungan = ctr_linkrenungan.text;
+      globals.tagline = ctr_tagline.text;
+      // ignore: use_build_context_synchronously
       Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "true"))
+        MaterialPageRoute(builder: (context) => const DetailRenunganKomunitas(darimana: "tambahrenungank",))
       );
     } else {
       final data = jsonDecode(response.body);
@@ -685,9 +696,10 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
       // write string of json to local file
       File(path).writeAsString(dataRenungan);
 
+      // ignore: use_build_context_synchronously
       Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'true',))
+        MaterialPageRoute(builder: (context) => DetailRenungan(index: globals.lastIdRenunganUser, shoulpop: "true", darimana: "tambahrenungank",))
       );
   }
 
@@ -863,7 +875,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
                   )
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(255, 113, 9, 49),
+                  backgroundColor: const Color.fromARGB(255, 113, 9, 49),
                   elevation: 5,
                   padding: const EdgeInsets.all(5),
                 ),
@@ -888,7 +900,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
                   )
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: Color(int.parse(globals.defaultcolor)),
+                  backgroundColor: Color(int.parse(globals.defaultcolor)),
                   elevation: 5,
                   padding: const EdgeInsets.all(5),
                 ),
@@ -1299,7 +1311,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
                     
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(int.parse(globals.defaultcolor)),
+                    backgroundColor: Color(int.parse(globals.defaultcolor)),
                     elevation: 10,
                     padding: const EdgeInsets.all(5),
                   ),
