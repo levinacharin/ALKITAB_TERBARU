@@ -2057,7 +2057,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       highlightMenu(selectedAyat);
     } else if (pilihanMenu == "Catatan") {
       // List passinglistini = benerinIndexAyatSebelumPassingList(selectedAyat);
-      Navigator.push(
+      await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => CatatanPage(
@@ -2067,7 +2067,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   darimana: "homepage")));
     } else if (pilihanMenu == "Renungan") {
       // List passinglistini = benerinIndexAyatSebelumPassingList(selectedAyat);
-      Navigator.push(
+      await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => RenunganPage(

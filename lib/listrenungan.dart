@@ -341,6 +341,52 @@ class _ListRenunganState extends State<ListRenungan> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Column(
+                                    children: [
+                                      listDataRenungan[index]['Id Renungan Komunitas'] != "0"
+                                      ? 
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Color(0xFF373A54),
+                                                      
+                                                    ),
+                                                    child: Text("Komunitas",
+                                                    textAlign: TextAlign.center,
+                                                        style: GoogleFonts.nunito(
+                                                            textStyle: const TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                                color: Colors
+                                                                    .white))),
+                                                                    
+                                                  ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                            
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                      : Container(
+                                      ),
+                                    ],
+                                  ),
+                                  listDataRenungan[index]['Id Renungan Komunitas'] != "0"
+                                      ? SizedBox(height: 9):SizedBox(),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -356,13 +402,7 @@ class _ListRenunganState extends State<ListRenungan> {
                                           ),
                                         )
                                       ),
-                                      listDataRenungan[index]['Id Renungan Komunitas'] != "0"
-                                      ? Icon(
-                                        Icons.person,
-                                        size: 20,
-                                        color: Color(int.parse(globals.defaultcolor)),
-                                      )
-                                      : Container(),
+                                      
                                       PopupMenuButton(
                                         icon: Icon(
                                           Icons.more_horiz,
@@ -743,6 +783,7 @@ class _ListRenunganState extends State<ListRenungan> {
                                       ),
                                     ],
                                   ),
+                                  
                                   Text(
                                     itemTanggal[index], 
                                     style: GoogleFonts.nunito(

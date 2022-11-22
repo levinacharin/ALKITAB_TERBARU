@@ -61,119 +61,64 @@ class _CatatanPageState extends State<CatatanPage> {
     } else if (widget.status == 'tambah') {
       edited = true;
     }
-    
     List? selectedAyat = widget.listHighlight;
-    if(widget.listHighlight!.isNotEmpty){
-      if (widget.darimana == "homepage") {
-      //SORTING
-    selectedAyat!.sort((a, b) {
-      return a.getindexpasal.compareTo(b.getindexpasal);
-    });
+    if (widget.darimana == "homepage") {
+      if(widget.listHighlight!.isNotEmpty){
+      
+        //SORTING
+        selectedAyat!.sort((a, b) {
+          return a.getindexpasal.compareTo(b.getindexpasal);
+        });
 
-    List? listhighlightsementara = [];
-    List? listperpasal = [];
+        List? listhighlightsementara = [];
+        List? listperpasal = [];
 
-    int pasal = selectedAyat[0].getindexpasal;
+        int pasal = selectedAyat[0].getindexpasal;
 
-    for (int i = 0; i < selectedAyat.length; i++) {
-      if (pasal == selectedAyat[i].getindexpasal &&
-          i != selectedAyat.length - 1) {
-        listperpasal.add(selectedAyat[i]);
-      } else {
-        if (i == selectedAyat.length - 1) {
-          listperpasal.add(selectedAyat[i]);
-          listperpasal.sort((a, b) {
-            return a.getindexayat.compareTo(b.getindexayat);
-          });
-          listhighlightsementara.addAll(listperpasal);
-        } else {
-          listperpasal.sort((a, b) {
-            return a.getindexayat.compareTo(b.getindexayat);
-          });
-          listhighlightsementara.addAll(listperpasal);
-          pasal = selectedAyat[i].getindexpasal;
-          listperpasal.clear();
-          listperpasal.add(selectedAyat[i]);
-        }
-      }
-    }
-
-    setState(() {
-      selectedAyat = listhighlightsementara;
-    });
-
-    //END OF SORTING
-    //}
-
-    bool ganti = true;
-    bool gantikitab = false;
-    
-    kitabPasal = "";
-      for (int i = 0; i < selectedAyat!.length; i++) {
-        log("hasil passing kitab - ${selectedAyat![i].getindexkitab}");
-        log("hasil passing pasal - ${selectedAyat![i].getindexpasal}");
-        log("hasil passing ayat - ${selectedAyat![i].getindexayat}");
-        log("hasil passing ayat asli - ${selectedAyat![i].getayatasli}");
-        log("hasil passing konten - ${selectedAyat![i].getkonten}");
-        log("hasil passing nama - ${selectedAyat![i].getnamakitab}");
-        
-
-        if(i==selectedAyat!.length-1 && selectedAyat!.length!=1){
-          ayatpilihantemp.add(selectedAyat![i].getayatasli);
-          
-         log("keluar hasil split if awal - $ayatpilihantemp");
-            bool udahdash = false;
-            for (int h = 0; h < ayatpilihantemp.length; h++) {
-              if (h == 0) {
-                tempneh = tempneh + ayatpilihantemp[h].toString();
-              } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] != 1) {
-                if (udahdash == true) {
-                  tempneh = tempneh +
-                      ayatpilihantemp[h - 1].toString() +
-                      "," +
-                      ayatpilihantemp[h].toString();
-                  udahdash = false;
-                } else {
-                  tempneh = tempneh + "," + ayatpilihantemp[h].toString();
-                }
-              } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] == 1) {
-               
-                if (udahdash == false) {
-                  if (h == (ayatpilihantemp.length - 1)) {
-                    tempneh = tempneh + "-" + ayatpilihantemp[h].toString();
-                    //udahdash = true;
-                  } else {
-                    tempneh = tempneh + "-";
-                    udahdash = true;
-                    continue;
-                  }
-                }else{
-                  if (h == (ayatpilihantemp.length - 1)) {
-                    tempneh = tempneh +ayatpilihantemp[h].toString();
-                    //udahdash = true;
-                  }else {
-                    
-                    continue;
-                  }
-
-                }
-                
-              }
+        for (int i = 0; i < selectedAyat.length; i++) {
+          if (pasal == selectedAyat[i].getindexpasal &&
+              i != selectedAyat.length - 1) {
+            listperpasal.add(selectedAyat[i]);
+          } else {
+            if (i == selectedAyat.length - 1) {
+              listperpasal.add(selectedAyat[i]);
+              listperpasal.sort((a, b) {
+                return a.getindexayat.compareTo(b.getindexayat);
+              });
+              listhighlightsementara.addAll(listperpasal);
+            } else {
+              listperpasal.sort((a, b) {
+                return a.getindexayat.compareTo(b.getindexayat);
+              });
+              listhighlightsementara.addAll(listperpasal);
+              pasal = selectedAyat[i].getindexpasal;
+              listperpasal.clear();
+              listperpasal.add(selectedAyat[i]);
             }
-
-            log("keluar hasil split akhir $tempneh");
-            ayatpilihantemp.clear();
-            kitabPasal = "$kitabPasal$tempneh";
-            tempneh="";
-            
-
+          }
         }
 
+        setState(() {
+          selectedAyat = listhighlightsementara;
+        });
 
-        if (ganti == true) {
-          gantikitab = true;
-          if (i != 0) {
-            
+        //END OF SORTING
+        //}
+
+        bool ganti = true;
+        bool gantikitab = false;
+
+        kitabPasal = "";
+        for (int i = 0; i < selectedAyat!.length; i++) {
+          log("hasil passing kitab - ${selectedAyat![i].getindexkitab}");
+          log("hasil passing pasal - ${selectedAyat![i].getindexpasal}");
+          log("hasil passing ayat - ${selectedAyat![i].getindexayat}");
+          log("hasil passing ayat asli - ${selectedAyat![i].getayatasli}");
+          log("hasil passing konten - ${selectedAyat![i].getkonten}");
+          log("hasil passing nama - ${selectedAyat![i].getnamakitab}");
+
+          if (i == selectedAyat!.length - 1 && selectedAyat!.length != 1) {
+            ayatpilihantemp.add(selectedAyat![i].getayatasli);
 
             log("keluar hasil split if awal - $ayatpilihantemp");
             bool udahdash = false;
@@ -191,7 +136,6 @@ class _CatatanPageState extends State<CatatanPage> {
                   tempneh = tempneh + "," + ayatpilihantemp[h].toString();
                 }
               } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] == 1) {
-                
                 if (udahdash == false) {
                   if (h == (ayatpilihantemp.length - 1)) {
                     tempneh = tempneh + "-" + ayatpilihantemp[h].toString();
@@ -201,100 +145,138 @@ class _CatatanPageState extends State<CatatanPage> {
                     udahdash = true;
                     continue;
                   }
-                }else{
+                } else {
                   if (h == (ayatpilihantemp.length - 1)) {
-                    tempneh = tempneh +ayatpilihantemp[h].toString();
+                    tempneh = tempneh + ayatpilihantemp[h].toString();
                     //udahdash = true;
-                  }else {
-                    // tempneh = tempneh + "-";
-                    // udahdash = true;
+                  } else {
                     continue;
                   }
-
                 }
-                
               }
             }
 
             log("keluar hasil split akhir $tempneh");
             ayatpilihantemp.clear();
-            
-            
-            kitabPasal = "$kitabPasal$tempneh ; ";
-            text_highlight = "$text_highlight\n\n";
-            tempneh="";
-
+            kitabPasal = "$kitabPasal$tempneh";
+            tempneh = "";
           }
 
-          
-          
-
-          // ignore: prefer_interpolation_to_compose_strings
-          kitabPasal = kitabPasal +
-              selectedAyat![i].getnamakitab +
-              ' ' +
-              ((selectedAyat![i].getindexpasal) + 1).toString() +
-              ":" 
-              // +
-              // ((selectedAyat![i].getayatasli)).toString()
-              ;
-
-              if(i==selectedAyat!.length-1 && selectedAyat!.length==1){
-                kitabPasal = "$kitabPasal${selectedAyat![i].getayatasli}";
+          if (ganti == true) {
+            gantikitab = true;
+            if (i != 0) {
+              log("keluar hasil split if awal - $ayatpilihantemp");
+              bool udahdash = false;
+              for (int h = 0; h < ayatpilihantemp.length; h++) {
+                if (h == 0) {
+                  tempneh = tempneh + ayatpilihantemp[h].toString();
+                } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] != 1) {
+                  if (udahdash == true) {
+                    tempneh = tempneh +
+                        ayatpilihantemp[h - 1].toString() +
+                        "," +
+                        ayatpilihantemp[h].toString();
+                    udahdash = false;
+                  } else {
+                    tempneh = tempneh + "," + ayatpilihantemp[h].toString();
+                  }
+                } else if (ayatpilihantemp[h] - ayatpilihantemp[h - 1] == 1) {
+                  if (udahdash == false) {
+                    if (h == (ayatpilihantemp.length - 1)) {
+                      tempneh = tempneh + "-" + ayatpilihantemp[h].toString();
+                      //udahdash = true;
+                    } else {
+                      tempneh = tempneh + "-";
+                      udahdash = true;
+                      continue;
+                    }
+                  } else {
+                    if (h == (ayatpilihantemp.length - 1)) {
+                      tempneh = tempneh + ayatpilihantemp[h].toString();
+                      //udahdash = true;
+                    } else {
+                      // tempneh = tempneh + "-";
+                      // udahdash = true;
+                      continue;
+                    }
+                  }
+                }
               }
-        } else {
-          gantikitab = false;
-          // kitabPasal =
-          //     // ignore: prefer_interpolation_to_compose_strings
-          //     kitabPasal + ',' + ((selectedAyat![i].getayatasli)).toString();
-        }
 
-        if (i != selectedAyat!.length - 1) {
-          if (selectedAyat![i].getnamakitab !=
-                  selectedAyat![i + 1].getnamakitab ||
-              selectedAyat![i].getindexpasal !=
-                  selectedAyat![i + 1].getindexpasal) {
-            ganti = true;
+              log("keluar hasil split akhir $tempneh");
+              ayatpilihantemp.clear();
+
+              kitabPasal = "$kitabPasal$tempneh ; ";
+              text_highlight = "$text_highlight\n\n";
+              tempneh = "";
+            }
+
+            // ignore: prefer_interpolation_to_compose_strings
+            kitabPasal = kitabPasal +
+                    selectedAyat![i].getnamakitab +
+                    ' ' +
+                    ((selectedAyat![i].getindexpasal) + 1).toString() +
+                    ":"
+                // +
+                // ((selectedAyat![i].getayatasli)).toString()
+                ;
+
+            if (i == selectedAyat!.length - 1 && selectedAyat!.length == 1) {
+              kitabPasal = "$kitabPasal${selectedAyat![i].getayatasli}";
+            }
           } else {
-            ganti = false;
+            gantikitab = false;
+            // kitabPasal =
+            //     // ignore: prefer_interpolation_to_compose_strings
+            //     kitabPasal + ',' + ((selectedAyat![i].getayatasli)).toString();
           }
-        }
 
-        if (gantikitab == true) {
-          
-          // ignore: prefer_interpolation_to_compose_strings
-          text_highlight = text_highlight +
-              selectedAyat![i].getnamakitab +
-              ' ' +
-              ((selectedAyat![i].getindexpasal) + 1).toString() +
-              "\n" +
-              ((selectedAyat![i].getayatasli)).toString() +
-              '. ' +
-              selectedAyat![i].getkonten +
-              ' ';
-        } else {
-          // ignore: prefer_interpolation_to_compose_strings
-          text_highlight = text_highlight +
-              ((selectedAyat![i].getayatasli)).toString() +
-              '. ' +
-              selectedAyat![i].getkonten +
-              ' ';
-        }
+          if (i != selectedAyat!.length - 1) {
+            if (selectedAyat![i].getnamakitab !=
+                    selectedAyat![i + 1].getnamakitab ||
+                selectedAyat![i].getindexpasal !=
+                    selectedAyat![i + 1].getindexpasal) {
+              ganti = true;
+            } else {
+              ganti = false;
+            }
+          }
 
-        ayatpilihantemp.add(selectedAyat![i].getayatasli);
-      }
-    }
-      
-      
-      
+          if (gantikitab == true) {
+            // ignore: prefer_interpolation_to_compose_strings
+            text_highlight = text_highlight +
+                selectedAyat![i].getnamakitab +
+                ' ' +
+                ((selectedAyat![i].getindexpasal) + 1).toString() +
+                "\n" +
+                ((selectedAyat![i].getayatasli)).toString() +
+                '. ' +
+                selectedAyat![i].getkonten +
+                ' ';
+          } else {
+            // ignore: prefer_interpolation_to_compose_strings
+            text_highlight = text_highlight +
+                ((selectedAyat![i].getayatasli)).toString() +
+                '. ' +
+                selectedAyat![i].getkonten +
+                ' ';
+          }
+
+          ayatpilihantemp.add(selectedAyat![i].getayatasli);
+        }
+      //}
+
       if (selectedAyat!.isNotEmpty) {
         log("data catatan b : $text_highlight");
-        
+
         setState(() {
           ctr_isibacaan.text = "$kitabPasal\n\n$text_highlight";
         });
       }
     }
+
+    }
+    
     
   }
 
