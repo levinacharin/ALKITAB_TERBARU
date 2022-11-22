@@ -16,6 +16,7 @@ class AkunUser {
   String namabelakang;
   String password;
   String deskripsi;
+  String imagepath;
 
   AkunUser({
     required this.iduser,
@@ -23,7 +24,8 @@ class AkunUser {
     required this.namadepan,
     required this.namabelakang,
     required this.password,
-    required this.deskripsi
+    required this.deskripsi,
+    required this.imagepath
   });
 
   factory AkunUser.createData(Map<String, dynamic> object) {
@@ -33,7 +35,8 @@ class AkunUser {
       namadepan: object['namadepan'], 
       namabelakang: object['namabelakang'], 
       password: object['password'],
-      deskripsi : object['deskripsi']
+      deskripsi : object['deskripsi'],
+      imagepath: object['imagepath']
     );
   }
 
@@ -88,6 +91,7 @@ class _LoginInputState extends State<LoginInput> {
           globals.namaDepanUser = listAkunUser[0].namadepan;
           globals.namaBelakangUser = listAkunUser[0].namabelakang;
           globals.deskripsiUser = listAkunUser[0].deskripsi;
+          globals.imagepath = listAkunUser[0].imagepath;
           globals.statusLogin = true;
           saveAkuntoLokal();
           _showDialogSuccess();
@@ -99,8 +103,6 @@ class _LoginInputState extends State<LoginInput> {
 
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-        
-        log("list akun user: $listAkunUser");
       });
     });
   }
@@ -135,6 +137,7 @@ class _LoginInputState extends State<LoginInput> {
           ),
         ),
         actions: [
+          // ignore: sized_box_for_whitespace
           Container(
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
@@ -142,11 +145,11 @@ class _LoginInputState extends State<LoginInput> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "logininput",))
+                      builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "logininput",))
                 );
               }, 
               style: ElevatedButton.styleFrom(
-                primary: Color(int.parse(globals.defaultcolor)),
+                backgroundColor: Color(int.parse(globals.defaultcolor)),
                 elevation: 5,
                 padding: const EdgeInsets.all(5)
               ),
@@ -166,10 +169,6 @@ class _LoginInputState extends State<LoginInput> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -353,7 +352,7 @@ class _LoginInputState extends State<LoginInput> {
                     getAkunUser(); // harusnya post
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(int.parse(globals.defaultcolor)),
+                    backgroundColor: Color(int.parse(globals.defaultcolor)),
                     elevation: 10,
                     padding: const EdgeInsets.all(5),
                   ),

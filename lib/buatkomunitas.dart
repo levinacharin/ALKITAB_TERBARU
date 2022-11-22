@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import './global.dart' as globals;
 import './detailkomunitas.dart';
@@ -97,6 +99,34 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
     }
   }
 
+  bool uploadFoto = false;
+  var imageFile;
+  String pathPhoto = "";
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickImage(ImageSource source) async {
+    final XFile? image = await _picker.pickImage(source: source, imageQuality: 10);
+
+    if (image != null) {
+      setState(() {
+        imageFile = File(image.path);
+        pathPhoto = image.path;
+        uploadFoto = true;
+
+        print("path photo: $pathPhoto");
+      });
+
+      var url = "${globals.urllocal}uploadimage";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.fields['id'] = globals.idkomunitas;
+      request.fields['folder'] = 'komunitas';
+      request.files.add(
+        await http.MultipartFile.fromPath('photo', pathPhoto)
+      );
+      var res = await request.send();
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -147,7 +177,120 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                 )
               ),
             ),
-            const SizedBox(height: 40,),
+            const SizedBox(height: 20,),
+            Row(
+              children: [
+                Container(
+                  height: 100,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.grey[300]
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context, 
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 150,
+                            padding: const EdgeInsets.only(top: 30),
+                            color: Colors.white,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          pickImage(ImageSource.gallery);
+                                          Navigator.pop(context);
+                                        }, 
+                                        child: Image.asset(
+                                          'assets/images/fromgallery.png',
+                                          width: 40,
+                                          height: 40,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Pilih Dari Album",
+                                        style: GoogleFonts.roboto(
+                                          textStyle: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(int.parse(globals.defaultcolor))
+                                          )
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(width: 40,),
+                                  Column(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          pickImage(ImageSource.camera);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Image.asset(
+                                          'assets/images/fromcamera.png',
+                                          width: 40,
+                                          height: 40,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Mengambil Foto",
+                                        style: GoogleFonts.roboto(
+                                          textStyle: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(int.parse(globals.defaultcolor))
+                                          )
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.camera_alt_rounded,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10,),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Gambar Komunitas",
+                        style: GoogleFonts.nunito(
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 113, 9, 49)
+                          )
+                        ),
+                      ),
+                      Text(
+                        "Unggah gambar untuk rencana bacaan dengan format .jpg, .jpeg, .png",
+                        style: GoogleFonts.nunito(
+                          textStyle: const TextStyle(
+                            fontSize: 16
+                          )
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 20,),
             Text(
               "Nama Komunitas",
               style: GoogleFonts.nunito(
@@ -342,7 +485,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(int.parse(globals.defaultcolor)),
+                  backgroundColor: Color(int.parse(globals.defaultcolor)),
                   elevation: 10,
                   padding: const EdgeInsets.all(5),
                 ),

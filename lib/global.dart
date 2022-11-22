@@ -28,6 +28,7 @@ String password = "";
 String namaDepanUser = "";
 String namaBelakangUser = "";
 String deskripsiUser = "";
+String imagepath = "";
 bool statusLogin = false;
 // end of akun profile
 
@@ -50,6 +51,7 @@ String statuskomunitas = "";
 String deskripsikomunitas = "";
 String passwordkomunitas = "";
 String tanggalpembuatan = "";
+String imagepathkomunitas = "";
 String jumlahanggota = "";
 String roleuser = "";
 // end of akun profile komunitas
@@ -71,6 +73,7 @@ String iduserrefleksi = "";
 String tanggalrefleksi = "";
 String namaduserrefleksi = "";
 String namabuserrefleksi = "";
+String imagepathrefleksi = "";
 String ayatberkesan = "";
 String tindakansaya = "";
 // end of refleksi user

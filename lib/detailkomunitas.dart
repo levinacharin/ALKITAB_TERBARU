@@ -30,6 +30,7 @@ class AkunKomunitas {
   String deskripsikomunitas;
   String passwordkomunitas;
   String tanggalpembuatan;
+  String imagepath;
   String jumlahanggota = "0";
 
   AkunKomunitas({
@@ -38,7 +39,8 @@ class AkunKomunitas {
     required this.statuskomunitas,
     required this.deskripsikomunitas,
     required this.passwordkomunitas,
-    required this.tanggalpembuatan
+    required this.tanggalpembuatan,
+    required this.imagepath
   });
 
   factory AkunKomunitas.createData(Map<String, dynamic> object) {
@@ -48,7 +50,8 @@ class AkunKomunitas {
       statuskomunitas: object['statuskomunitas'], 
       deskripsikomunitas: object['deskripsikomunitas'],
       passwordkomunitas : object['passwordkomunitas'],
-      tanggalpembuatan: object['tanggalpembuatan']
+      tanggalpembuatan: object['tanggalpembuatan'],
+      imagepath: object['imagepath']
     );
   }
 
@@ -1013,14 +1016,21 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
         ),
         body: Column(
           children: [
-          ClipOval(
-            child: Image.asset(
-              'assets/images/dummy-image.jpg',
-              width: 90,
-              height: 90,
+          globals.imagepathkomunitas != "-"
+          ? ClipOval(
+            child: Image.network(
+              '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
+              width: 100,
+              height: 100,
               fit: BoxFit.cover,
-            )
+            ),
+          )
+          : Icon(
+            Icons.account_circle_outlined,
+            color: Color(int.parse(globals.defaultcolor)),
+            size: 100,
           ),
+          const SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -1154,6 +1164,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
+                        // ignore: prefer_is_empty
                         child: listRenungan.length > 0 
                         ? ListView.builder(
                           itemCount: listRenungan.length,
@@ -1172,14 +1183,20 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                                               Column(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
                                                 children: [
-                                                  ClipOval(
-                                                    child: Image.asset(
-                                                      'assets/images/dummy-image.jpg',
-                                                      width: 60,
-                                                      height: 60,
-                                                      fit: BoxFit.cover,
+                                                  globals.imagepathkomunitas != "-"
+                                                    ? ClipOval(
+                                                      child: Image.network(
+                                                        '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
+                                                        width: 60,
+                                                        height: 60,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     )
-                                                  )
+                                                    : Icon(
+                                                      Icons.account_circle_outlined,
+                                                      color: Color(int.parse(globals.defaultcolor)),
+                                                      size: 60,
+                                                    )
                                                 ],
                                               ),
                                               const SizedBox(width: 5,),

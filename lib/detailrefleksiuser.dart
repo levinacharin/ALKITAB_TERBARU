@@ -45,14 +45,20 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          ClipOval(
-                            child: Image.asset(
-                              'assets/images/pp1.jpg',
+                          globals.imagepathrefleksi != "-"
+                          ? ClipOval(
+                            child: Image.network(
+                              '${globals.urllocal}getimage?id=${globals.iduserrefleksi}&folder=user',
                               width: 80,
                               height: 80,
                               fit: BoxFit.cover,
-                            )
+                            ),
                           )
+                          : Icon(
+                            Icons.account_circle_outlined,
+                            color: Color(int.parse(globals.defaultcolor)),
+                            size: 80,
+                          ) 
                         ],
                       ),
                       const SizedBox(width: 5,),
@@ -424,25 +430,26 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                 right: 0,
                 child: Container(
                   color: Colors.white,
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          ClipOval(
-                            child: Image.asset(
-                              'assets/images/dummy-image.jpg',
+                          globals.imagepathkomunitas != "-"
+                          ? ClipOval(
+                            child: Image.network(
+                              '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
                               width: 40,
                               height: 40,
                               fit: BoxFit.cover,
-                            )
+                            ),
                           )
-                          // Icon(
-                          //   Icons.account_circle_outlined,
-                          //   color: Color(int.parse(globals.defaultcolor)),
-                          //   size: 40,
-                          // )
+                          : Icon(
+                            Icons.account_circle_outlined,
+                            color: Color(int.parse(globals.defaultcolor)),
+                            size: 40,
+                          )
                         ],
                       ),
                       const SizedBox(width: 5,),

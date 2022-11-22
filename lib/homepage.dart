@@ -2816,7 +2816,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // SHARED PREFENCES AUTO LOGIN
   List<AkunUser> listAkunUser = [];
-
   void getAkunfromLokal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -2833,8 +2832,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         globals.namaBelakangUser = listAkunUser[0].namabelakang;
         globals.deskripsiUser = listAkunUser[0].deskripsi;
         globals.idUser = listAkunUser[0].iduser;
-        // print("status: ${globals.statusLogin}, namadepan : ${globals.namaDepanUser}, namabelakang: ${globals.namaBelakangUser}");
-        print("status: ${globals.statusLogin}, id: ${globals.idUser}");
+        globals.imagepath = listAkunUser[0].imagepath;
+        print("status: ${globals.statusLogin}, id: ${globals.idUser}, imagepath: ${globals.imagepath}");
       });
     });
   }

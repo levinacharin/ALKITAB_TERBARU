@@ -195,6 +195,18 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
   double total = 0;
   void calculateScore() {
     setState(() {
+      int idx = 0;
+      if (globals.listDetailRUser.isNotEmpty) {
+        for (int i = 0; i < listDetailRencana.length; i++) {
+          if (listDetailRencana[i]['Id Rencana'] == globals.idrencana) {
+            listDetailRencana[i]['Status Selesai'] = globals.listDetailRUser[idx]['Status Selesai'];
+            idx++;
+          }
+        }
+
+        // writeData();
+      }
+
       listScore = [];
       int num = 0;
       count = 0;
@@ -238,6 +250,10 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
         }
       }
 
+      globals.listDetailRUser.clear();
+      globals.idrencana = "";
+      globals.statusBaca.clear();
+      
       print("list score: $listScore");
     });
   }
@@ -253,24 +269,6 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     formatDatetoString();
 
     saveStatusBaca(globals.statusBaca, globals.idrencana);
-    globals.listDetailRUser.clear();
-    globals.statusBaca.clear();
-    globals.idrencana="";
-    calculateScore();
-    
-  }
-
-  Future reloadPage() async {
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      
-
-      globals.listDetailRUser.clear();
-      globals.statusBaca.clear();
-      globals.idrencana="";
-      
-      calculateScore();
-    });
   }
 
   void formatDatetoString() {
@@ -303,232 +301,260 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     });
   }
 
+  String dataRencana = "";
+  String temp = "";
+  // write to Json File
+  void writeData() async {
+    String path = '/storage/emulated/0/Download/Rencanajson.txt';
+
+    dataRencana = "";
+    dataRencana = "$dataRencana[";
+    for (int i = 0; i < listDetailRencana.length; i++) {
+      temp = listDetailRencana[i]['Ayat Bacaan'].toString().replaceAll('"', '${String.fromCharCode(92)}"');
+
+      // ignore: prefer_interpolation_to_compose_strings
+      dataRencana = dataRencana + "{"
+      '"Id Rencana":"' +
+      listDetailRencana[i]['Id Rencana'] + 
+      '","Tanggal Rencana":"' +
+      listDetailRencana[i]['Tanggal Rencana'] +
+      '","Judul Rencana":"' +
+      listDetailRencana[i]['Judul Rencana'] +
+      '","Deskripsi Rencana":"' +
+      listDetailRencana[i]['Deskripsi Rencana'] +
+      '","Kitab Bacaan":"' +
+      listDetailRencana[i]['Kitab Bacaan'] +
+      '","Ayat Bacaan":"' +
+      listDetailRencana[i]['Ayat Bacaan'] +
+      '","Judul Renungan":"' +
+      listDetailRencana[i]['Judul Renungan'] +
+      '","Isi Renungan":"' +
+      listDetailRencana[i]['Isi Renungan'] +
+      '","Link Renungan":"' +
+      listDetailRencana[i]['Link Renungan'] +
+      '","Status Selesai":"' +
+      listDetailRencana[i]['Status Selesai'];
+      if (i != listDetailRencana.length-1) {
+        // ignore: prefer_interpolation_to_compose_strings
+        dataRencana = dataRencana + ",";
+      }
+    }
+    dataRencana = "$dataRencana]";
+    dataRencana = dataRencana.replaceAll("\n", "<br>");
+
+    await File(path).writeAsString(dataRencana);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      triggerMode: RefreshIndicatorTriggerMode.anywhere,
-      onRefresh: reloadPage,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
-              );
-            },
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Color.fromARGB(255, 113, 9, 49),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: Color.fromARGB(255, 113, 9, 49),
           ),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Text(
-                "Rencana Bacaanku",
-                style: GoogleFonts.nunito(
-                  textStyle: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 113, 9, 49)
-                  )
-                ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Text(
+              "Rencana Bacaanku",
+              style: GoogleFonts.nunito(
+                textStyle: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 113, 9, 49)
+                )
               ),
             ),
-            const SizedBox(height: 10,),
-            Container(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              height: 40,
-              child: TextField(
-                cursorColor: Color(int.parse(globals.defaultcolor)),
-                decoration: InputDecoration(
-                  fillColor: Color.fromARGB(255, 253, 255, 252),
-                  filled: true,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 1, 
-                      color: Color(int.parse(globals.defaultcolor))
-                    ),
+          ),
+          const SizedBox(height: 10,),
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            height: 40,
+            child: TextField(
+              cursorColor: Color(int.parse(globals.defaultcolor)),
+              decoration: InputDecoration(
+                fillColor: Color.fromARGB(255, 253, 255, 252),
+                filled: true,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1, 
+                    color: Color(int.parse(globals.defaultcolor))
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 1, 
-                      color: Color(int.parse(globals.defaultcolor))
-                    ),
-                  ),
-                  hintText: 'Cari',
-                  hintStyle: TextStyle(
-                    color: Colors.grey[400]
-                  ),
-                  contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5)
                 ),
-                style: GoogleFonts.nunito(
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black
-                  )
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1, 
+                    color: Color(int.parse(globals.defaultcolor))
+                  ),
                 ),
+                hintText: 'Cari',
+                hintStyle: TextStyle(
+                  color: Colors.grey[400]
+                ),
+                contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5)
+              ),
+              style: GoogleFonts.nunito(
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black
+                )
               ),
             ),
-            const SizedBox(height: 20,),
-            GestureDetector(
-              onTap: () {
-                globals.listBacaLiturgi = listBacaLiturgi;
-                globals.informasiliturgi = _infobacaan;
-                globals.titletanggal = titletanggal;
+          ),
+          const SizedBox(height: 20,),
+          GestureDetector(
+            onTap: () {
+              globals.listBacaLiturgi = listBacaLiturgi;
+              globals.informasiliturgi = _infobacaan;
+              globals.titletanggal = titletanggal;
 
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => const DetailBLiturgi())
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: Card(
-                  elevation: 4,
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Bacaan Liturgi Hari Ini",
-                          style: GoogleFonts.nunito(
-                            textStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromARGB(255, 113, 9, 49)
-                            )
-                          ),
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const DetailBLiturgi())
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Card(
+                elevation: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Bacaan Liturgi Hari Ini",
+                        style: GoogleFonts.nunito(
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 113, 9, 49)
+                          )
                         ),
-                        const SizedBox(height: 20,),
-                        Text(
-                          _infobacaan,
-                          style: GoogleFonts.nunito(
-                            textStyle: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: Color(int.parse(globals.defaultcolor)),
-                            )
-                          ),
+                      ),
+                      const SizedBox(height: 20,),
+                      Text(
+                        _infobacaan,
+                        style: GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: Color(int.parse(globals.defaultcolor)),
+                          )
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20,),
-            Expanded(
-              child: ListView.builder(
-                itemCount: itemJudulRencana.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          child: Card(
-                            elevation: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    height: 80,
-                                    child: Image.asset(
-                                      "assets/images/pp3.jpg"
+          ),
+          const SizedBox(height: 20,),
+          Expanded(
+            child: ListView.builder(
+              itemCount: itemJudulRencana.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        child: Card(
+                          elevation: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 80,
+                                  child: Image.asset(
+                                    "assets/images/pp3.jpg"
+                                  ),
+                                ),
+                                const SizedBox(width: 5,),
+                                Expanded(
+                                  child: Text(
+                                    itemJudulRencana[index],
+                                    style: GoogleFonts.nunito(
+                                      textStyle: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color.fromARGB(255, 113, 9, 49)
+                                      )
                                     ),
                                   ),
-                                  const SizedBox(width: 5,),
-                                  Expanded(
+                                ),
+                                const SizedBox(width: 5,),
+                                Container(
+                                  width: 45,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: listScore[index] != 100 
+                                              ? Color(int.parse(globals.defaultcolor))
+                                              : Colors.green,
+                                      width: 2
+                                    )
+                                  ),
+                                  child: Center(
                                     child: Text(
-                                      itemJudulRencana[index],
+                                      "${listScore[index]}%",
                                       style: GoogleFonts.nunito(
-                                        textStyle: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color.fromARGB(255, 113, 9, 49)
+                                        textStyle: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(int.parse(globals.defaultcolor))
                                         )
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 5,),
-                                  listScore[index] != 100
-                                  ? Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Color(int.parse(globals.defaultcolor)),
-                                        width: 2
-                                      )
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "${listScore[index]}%",
-                                        style: GoogleFonts.nunito(
-                                          textStyle: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(int.parse(globals.defaultcolor))
-                                          )
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.green
-                                    ),
-                                    child: const Icon(
-                                      Icons.check,
-                                      size: 35,
-                                      color: Colors.white,
-                                    )
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
                           ),
-                          onTap: () async {
-                            await sendData(listIdRencana[index]);
-
-                            globals.idrencana = "";
-                            globals.idrencana = listIdRencana[index];
-    
-                            // ignore: use_build_context_synchronously
-                            Navigator.push(
-                              context, 
-                              MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: "user",))
-                            );
-                          },
                         ),
-                        const SizedBox(height: 10,)
-                      ],
-                    ),
-                  );
-                },
-              )
+                        onTap: () async {
+                          await sendData(listIdRencana[index]);
+
+                          globals.idrencana = "";
+                          globals.idrencana = listIdRencana[index];
+  
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: "user",))
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 10,)
+                    ],
+                  ),
+                );
+              },
             )
-          ],
-        )
-      ),
+          )
+        ],
+      )
     );
   }
 }

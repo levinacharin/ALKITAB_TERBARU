@@ -22,7 +22,10 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context, "refresh");
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const ProfilePageMenu())
+            );
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)
@@ -48,17 +51,17 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  gantipp == true
+                  globals.imagepath != "-"
                   ? ClipOval(
-                    child: Image.asset(
-                      'assets/images/ppdummy-image.jpg',
+                    child: Image.network(
+                      '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
                       width: 120,
                       height: 120,
                       fit: BoxFit.cover,
-                    )
+                    )  
                   )
                   : Icon(
-                    Icons.account_circle_outlined,
+                    Icons.account_circle_outlined, 
                     color: Color(int.parse(globals.defaultcolor)),
                     size: 160,
                   )

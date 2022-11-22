@@ -73,6 +73,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
       setState(() {
         listKomunitasAll = [];
         listKomunitasAll= value;
+
         getCountMember();  // get jumlah anggota semua list
       });
     });
@@ -297,8 +298,6 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
         listKomunitasShow.add(listKomunitasAll[i]);
       }
     }
-
-    // print ("length listkomunitasshow: ${listKomunitasShow.length}");
   }
 
   @override
@@ -349,41 +348,20 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
             color: Color.fromARGB(255, 113, 9, 49)
           )
         ),
-        title: Center(
-          child: Text(
-            "Komunitas",
-            style: GoogleFonts.nunito(
-              textStyle: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Color.fromARGB(255, 113, 9, 49)
-              )
-            ),
-          ),
-        ),
         actions: [
-          IconButton(
-            onPressed: () {
-              reloadPage();
-            },
-            icon: const Icon(
-              Icons.refresh,
-              color: Color.fromARGB(255, 113, 9, 49)
+          Padding(
+            padding: const EdgeInsets.only(top: 16, right: 16),
+            child: Text(
+              "Komunitas",
+              style: GoogleFonts.nunito(
+                textStyle: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 113, 9, 49)
+                )
+              ),
             ),
           )
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 16, right: 16),
-          //   child: Text(
-          //     "Komunitas",
-          //     style: GoogleFonts.nunito(
-          //       textStyle: const TextStyle(
-          //         fontSize: 20,
-          //         fontWeight: FontWeight.bold,
-          //         color: Color.fromARGB(255, 113, 9, 49)
-          //       )
-          //     ),
-          //   ),
-          // )
         ],
       ),
       body: WillPopScope(
@@ -486,13 +464,19 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                               children: [
                                                 Column(
                                                   children: [
-                                                    ClipOval(
-                                                      child: Image.asset(
-                                                        'assets/images/dummy-image.jpg',
+                                                    listKomunitasShow[index].imagepath != "-"
+                                                    ? ClipOval(
+                                                      child: Image.network(
+                                                        '${globals.urllocal}getimage?id=${listKomunitasShow[index].idkomunitas}&folder=komunitas',
                                                         width: 60,
                                                         height: 60,
                                                         fit: BoxFit.cover,
-                                                      )
+                                                      ),
+                                                    )
+                                                    : Icon(
+                                                      Icons.account_circle_outlined,
+                                                      color: Color(int.parse(globals.defaultcolor)),
+                                                      size: 60,
                                                     )
                                                   ],
                                                 ),
@@ -696,6 +680,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                   globals.jumlahanggota = listKomunitasShow[index].jumlahanggota;
                                   globals.passwordkomunitas = listKomunitasShow[index].passwordkomunitas;
                                   globals.tanggalpembuatan = listKomunitasShow[index].tanggalpembuatan;
+                                  globals.imagepathkomunitas = listKomunitasShow[index].imagepath;
                                 } else {
                                   globals.idkomunitas = listKomunitasAll[index].idkomunitas;
                                   globals.namakomunitas = listKomunitasAll[index].namakomunitas;
@@ -704,7 +689,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                   globals.jumlahanggota = listKomunitasAll[index].jumlahanggota;
                                   globals.passwordkomunitas = listKomunitasAll[index].passwordkomunitas;
                                   globals.tanggalpembuatan = listKomunitasAll[index].tanggalpembuatan;
-                                  
+                                  globals.imagepathkomunitas = listKomunitasAll[index].imagepath;
                                 }
                                 Navigator.push(
                                   context, 
@@ -779,13 +764,19 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                               children: [
                                                 Column(
                                                   children: [
-                                                    ClipOval(
-                                                      child: Image.asset(
-                                                        'assets/images/dummy-image.jpg',
+                                                    listKomunitasku[index].imagepath != "-"
+                                                    ? ClipOval(
+                                                      child: Image.network(
+                                                        '${globals.urllocal}getimage?id=${listKomunitasku[index].idkomunitas}&folder=komunitas',
                                                         width: 60,
                                                         height: 60,
                                                         fit: BoxFit.cover,
-                                                      )
+                                                      ),
+                                                    )
+                                                    : Icon(
+                                                      Icons.account_circle_outlined,
+                                                      color: Color(int.parse(globals.defaultcolor)),
+                                                      size: 60,
                                                     )
                                                   ],
                                                 ),
@@ -892,6 +883,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                 globals.jumlahanggota = listKomunitasku[index].jumlahanggota;
                                 globals.passwordkomunitas = listKomunitasku[index].passwordkomunitas;
                                 globals.tanggalpembuatan = listKomunitasku[index].passwordkomunitas;
+                                globals.imagepathkomunitas = listKomunitasku[index].imagepath;
                                 Navigator.push(
                                   context, 
                                   MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'true', pagefrom: 'komunitasku',))

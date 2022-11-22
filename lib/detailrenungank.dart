@@ -74,6 +74,7 @@ class RefleksiUser {
   String tanggalposting;
   String namadepan;
   String namabelakang;
+  String imagepath;
   String ayatberkesan;
   String tindakansaya;
 
@@ -84,6 +85,7 @@ class RefleksiUser {
     required this.tanggalposting,
     required this.namadepan,
     required this.namabelakang,
+    required this.imagepath,
     required this.ayatberkesan,
     required this.tindakansaya
   });
@@ -96,6 +98,7 @@ class RefleksiUser {
       tanggalposting: object['tanggalposting'], 
       namadepan: object['namadepan'],
       namabelakang: object['namabelakang'],
+      imagepath: object['imagepath'],
       ayatberkesan: object['ayatberkesan'], 
       tindakansaya: object['tindakansaya']
     );
@@ -273,13 +276,19 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    ClipOval(
-                      child: Image.asset(
-                        'assets/images/dummy-image.jpg',
-                        width: 60,
-                        height: 60,
+                    globals.imagepathkomunitas != "-"
+                    ? ClipOval(
+                      child: Image.network(
+                        '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
+                        width: 80,
+                        height: 80,
                         fit: BoxFit.cover,
-                      )
+                      ),
+                    )
+                    : Icon(
+                      Icons.account_circle_outlined,
+                      color: Color(int.parse(globals.defaultcolor)),
+                      size: 80,
                     )
                   ],
                 ),
@@ -331,7 +340,7 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          primary: Color(int.parse(globals.defaultcolor)),
+                          backgroundColor: Color(int.parse(globals.defaultcolor)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                           ),
@@ -487,14 +496,20 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      ClipOval(
-                                        child: Image.asset(
-                                          'assets/images/pp1.jpg',
+                                      listRefleksi[index].imagepath != "-"
+                                      ?ClipOval(
+                                        child: Image.network(
+                                          '${globals.urllocal}getimage?id=${listRefleksi[index].iduser}&folder=user',
                                           width: 60,
                                           height: 60,
                                           fit: BoxFit.cover,
-                                        )
+                                        ),
                                       )
+                                      : Icon(
+                                        Icons.account_circle_outlined,
+                                        color: Color(int.parse(globals.defaultcolor)),
+                                        size: 60,
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(width: 5,),
@@ -649,6 +664,7 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                     globals.iduserrefleksi = listRefleksi[index].iduser;
                     globals.namaduserrefleksi = listRefleksi[index].namadepan;
                     globals.namabuserrefleksi = listRefleksi[index].namabelakang;
+                    globals.imagepathrefleksi = listRefleksi[index].imagepath;
                     listRefleksi[index].ayatberkesan = listRefleksi[index].ayatberkesan.replaceAll("<br>", "\n"); 
                     globals.ayatberkesan = listRefleksi[index].ayatberkesan;
                     globals.tindakansaya = listRefleksi[index].tindakansaya;

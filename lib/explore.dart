@@ -18,6 +18,7 @@ class ListExplore {
   String tanggalposting;
   String namadepan;
   String namabelakang;
+  String imagepath;
   String judul;
   String kitabbacaan;
   String ayatbacaan;
@@ -37,6 +38,7 @@ class ListExplore {
     required this.tanggalposting,
     required this.namadepan,
     required this.namabelakang,
+    required this.imagepath,
     required this.judul,
     required this.kitabbacaan,
     required this.ayatbacaan,
@@ -58,6 +60,7 @@ class ListExplore {
       tanggalposting: object['tanggalposting'],
       namadepan: object['namadepan'],
       namabelakang: object['namabelakang'],
+      imagepath: object['imagepath'],
       judul: object['judul'],
       kitabbacaan: object['kitabbacaan'],
       ayatbacaan: object['ayatbacaan'],
@@ -191,6 +194,7 @@ class _ExploreState extends State<Explore> {
   void sharerenungan(int index)async{
     String renunganfull = "";
     renunganfull = 
+    // ignore: prefer_interpolation_to_compose_strings
     "Tanggal : "+
     listExplore[index].tanggalposting.toString() + 
     "\n\n" +
@@ -209,7 +213,7 @@ class _ExploreState extends State<Explore> {
     "Tindakan Saya :\n"+
     listExplore[index].tindakansaya.toString()
     ;
-   
+
     await FlutterShare.share(
       title: 'Share Renungan',
       text: renunganfull,
@@ -306,6 +310,7 @@ class _ExploreState extends State<Explore> {
                                     globals.tanggalposting = listExplore[index].tanggalposting;
                                     globals.namaduserrefleksi = listExplore[index].namadepan;
                                     globals.namabuserrefleksi = listExplore[index].namabelakang;
+                                    globals.imagepathrefleksi = listExplore[index].imagepath;
                                     globals.judulrenungan = listExplore[index].judul;
                                     globals.kitabbacaan = listExplore[index].kitabbacaan;
                                     globals.ayatbacaan = listExplore[index].ayatbacaan;
@@ -331,13 +336,19 @@ class _ExploreState extends State<Explore> {
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
-                                            ClipOval(
-                                              child: Image.asset(
-                                                'assets/images/pp1.jpg',
+                                            listExplore[index].imagepath != "-"
+                                            ? ClipOval(
+                                              child: Image.network(
+                                                '${globals.urllocal}getimage?id=${listExplore[index].iduser}&folder=user',
                                                 width: 60,
                                                 height: 60,
                                                 fit: BoxFit.cover,
-                                              )
+                                              ),
+                                            )
+                                            : Icon(
+                                              Icons.account_circle_outlined,
+                                              color: Color(int.parse(globals.defaultcolor)),
+                                              size: 60,
                                             )
                                           ],
                                         ),

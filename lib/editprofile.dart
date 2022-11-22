@@ -35,12 +35,13 @@ class _EditProfileState extends State<EditProfile> {
   Future<void> pickImage(ImageSource source) async {
     final XFile? image = await _picker.pickImage(source: source, imageQuality: 10);
 
-    print("image: $image");
     if (image != null) {
       setState(() {
         imageFile = File(image.path);
         pathPhoto = image.path;
         uploadFoto = true;
+
+        print("path photo: $pathPhoto");
       });
 
       var url = "${globals.urllocal}uploadimage";
@@ -70,12 +71,11 @@ class _EditProfileState extends State<EditProfile> {
       "deskripsi" : ctr_deskripsi.text
     });
 
-    // Navigator.push(
-    //   context, 
-    //   MaterialPageRoute(builder: (context) => const ProfilePage())
-    // );
     // ignore: use_build_context_synchronously
-    Navigator.pop(context, "refresh");
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => const ProfilePage())
+    );
   }
   
   @override
@@ -130,21 +130,30 @@ class _EditProfileState extends State<EditProfile> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // ignore: unnecessary_null_comparison
-                  // _picker != null 
-                  // ? ClipOval(
-                  //   child: Image.file(
-                  //     _picker as File,
-                  //     width: 120,
-                  //     height: 120,
-                  //     fit: BoxFit.cover,
-                  //   ),
-                  // )
-                  // : 
-                  Icon(
-                    Icons.account_circle_outlined,
-                    color: Color(int.parse(globals.defaultcolor)),
-                    size: 120,
-                  ),
+                  imageFile != null 
+                  ? ClipOval(
+                    child: Image.file(
+                      // ignore: unnecessary_string_interpolations
+                      File('$pathPhoto'),
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                  : globals.imagepath != "-"
+                    ? ClipOval(
+                      child: Image.network(
+                        '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    : Icon(
+                      Icons.account_circle_outlined,
+                      color: Color(int.parse(globals.defaultcolor)),
+                      size: 120,
+                    )
                 ],
               ),
               Row(
@@ -387,7 +396,6 @@ class _EditProfileState extends State<EditProfile> {
                 child: ElevatedButton(
                   onPressed: () {
                     updateData();
-                    // Navigator.pop(context, "refresh");
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(int.parse(globals.defaultcolor)),
