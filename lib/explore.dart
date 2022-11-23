@@ -102,6 +102,7 @@ class Explore extends StatefulWidget {
 }
 
 class _ExploreState extends State<Explore> {
+  bool like=false;
   List<ListExplore> listExplore = [];
   Future<void> getListExplore() async {
     ListExplore.getAllData().then((value) async {
@@ -195,22 +196,22 @@ class _ExploreState extends State<Explore> {
     String renunganfull = "";
     renunganfull = 
     // ignore: prefer_interpolation_to_compose_strings
-    "Tanggal : "+
+    "*Tanggal* : "+
     listExplore[index].tanggalposting.toString() + 
     "\n\n" +
-    "Judul Renungan : "+
+    "*Judul Renungan* : "+
     listExplore[index].judul.toString()+
     "\n\n" +
-    "Ayat Bacaan :\n"+
+    "*Ayat Bacaan* :\n"+
     listExplore[index].ayatbacaan.toString()+
     "\n\n" +
-    "Ayat Berkesan :\n"+
+    "*Ayat Berkesan* :\n"+
     listExplore[index].ayatberkesan.toString()+
     "\n\n" +
-    "Renungan :\n"+
+    "*Renungan* :\n"+
     listExplore[index].isirenungan.toString()+
     "\n\n" +
-    "Tindakan Saya :\n"+
+    "*Tindakan Saya* :\n"+
     listExplore[index].tindakansaya.toString()
     ;
 
@@ -414,7 +415,17 @@ class _ExploreState extends State<Explore> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      print("like klik");
+                                      if(like==false){
+                                        setState(() {
+                                          like=true;
+                                        });
+                                        
+                                      }else{
+                                        setState(() {
+                                          like=false;
+                                        });
+                                        
+                                      }
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(8.0),
@@ -432,12 +443,18 @@ class _ExploreState extends State<Explore> {
                                       ),
                                       child: Row(
                                         children: [
-                                          const Icon(
-                                            Icons.thumb_up_rounded,
-                                            color: Color.fromARGB(255, 125, 125, 125),
-                                            size: 20,
-                                          ),
-                                          const SizedBox(width: 10,),
+                                            
+                                            Container(
+                                              width: 20,
+                                              height: 20,
+                                              child: (like?Image.asset(
+                                                  "assets/images/icon_like_red.png"):Image.asset(
+                                                  "assets/images/icon_like_black.png"))
+                                              ,
+                                              // child: Image.asset("assets/images/komunitas_icon.png"),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,),
                                           Text(
                                             listExplore[index].suka,
                                             style: GoogleFonts.nunito(

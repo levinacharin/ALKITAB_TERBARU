@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 import 'package:alkitab/tambahrenungank.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -155,6 +156,43 @@ class DetailRenunganKomunitas extends StatefulWidget {
 }
 
 class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
+  bool like=false;
+  void sharerenungan(int index)async{
+    // globals.idrenungankomunitas = listRenungan[index].idrenungankomunitas;
+    //                             globals.tanggalrenungan = listRenungan[index].tanggalrenungan;
+    //                             globals.judulrenungan = listRenungan[index].judulrenungan;
+    //                             globals.kitabbacaan = listRenungan[index].kitabbacaan;
+    //                             globals.ayatbacaan = listRenungan[index].ayatbacaan;
+    //                             globals.isirenungan = listRenungan[index].isirenungan;
+    //                             globals.linkrenungan = listRenungan[index].linkrenungan;
+    //                             globals.tagline = listRenungan[index].tagline;
+    String renunganfull = "";
+    renunganfull = 
+    // ignore: prefer_interpolation_to_compose_strings
+    "*Tanggal* : "+
+    globals.tanggalrenungan .toString() + 
+    "\n\n" +
+    "*Judul Renungan* : "+
+    globals.judulrenungan.toString()+
+    "\n\n" +
+    "*Ayat Bacaan* :\n"+
+    globals.ayatbacaan.toString()+
+    "\n\n" +
+    "*Ayat Berkesan* :\n"+
+    listRefleksi[index].ayatberkesan.toString()+
+    "\n\n" +
+    "*Renungan* :\n"+
+    globals.isirenungan.toString()+
+    "\n\n" +
+    "*Tindakan Saya* :\n"+
+    listRefleksi[index].tindakansaya.toString()
+    ;
+
+    await FlutterShare.share(
+      title: 'Share Renungan',
+      text: renunganfull,
+    );
+  }
   List<RefleksiUser> listRefleksi = [];
   bool hasRefleksi = false;
 
@@ -480,199 +518,248 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
               shrinkWrap: true,
               itemCount: listRefleksi.length,
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  child: Column(
-                    children: [
-                      Card(
-                        elevation: 3,
-                        child: 
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      listRefleksi[index].imagepath != "-"
-                                      ?ClipOval(
-                                        child: Image.network(
-                                          '${globals.urllocal}getimage?id=${listRefleksi[index].iduser}&folder=user',
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                      : Icon(
-                                        Icons.account_circle_outlined,
-                                        color: Color(int.parse(globals.defaultcolor)),
-                                        size: 60,
+                return Column(
+                  children: [
+                    Card(
+                      elevation: 3,
+                      child: 
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                  globals.idrefleksi = listRefleksi[index].idrefleksi;
+                  globals.iduserrefleksi = listRefleksi[index].iduser;
+                  globals.namaduserrefleksi = listRefleksi[index].namadepan;
+                  globals.namabuserrefleksi = listRefleksi[index].namabelakang;
+                  globals.imagepathrefleksi = listRefleksi[index].imagepath;
+                  listRefleksi[index].ayatberkesan = listRefleksi[index].ayatberkesan.replaceAll("<br>", "\n"); 
+                  globals.ayatberkesan = listRefleksi[index].ayatberkesan;
+                  globals.tindakansaya = listRefleksi[index].tindakansaya;
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => DetailRefleksiUser())
+                  );
+                  
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    listRefleksi[index].imagepath != "-"
+                                    ?ClipOval(
+                                      child: Image.network(
+                                        '${globals.urllocal}getimage?id=${listRefleksi[index].iduser}&folder=user',
+                                        width: 60,
+                                        height: 60,
+                                        fit: BoxFit.cover,
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 5,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${listRefleksi[index].namadepan} ${listRefleksi[index].namabelakang}",
-                                        style: GoogleFonts.nunito(
-                                          textStyle: const TextStyle(
-                                            fontSize: 18, 
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(255, 113, 9, 49)
-                                          )
-                                        ),
-                                      ),
-                                      Text(
-                                        listRefleksi[index].tanggalposting,
-                                        style: GoogleFonts.nunito(
-                                          textStyle: const TextStyle(
-                                            fontSize: 14,
-                                            color: Color.fromARGB(255, 125, 125, 125)
-                                          )
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 5,),
-                              Text(
-                                globals.judulrenungan,
-                                style: GoogleFonts.nunito(
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(int.parse(globals.defaultcolor))
-                                  )
+                                    )
+                                    : Icon(
+                                      Icons.account_circle_outlined,
+                                      color: Color(int.parse(globals.defaultcolor)),
+                                      size: 60,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 15,),
-                              Text(
-                                listRefleksi[index].tindakansaya,
-                                style: GoogleFonts.nunito(
-                                  textStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black
-                                  )
-                                ),
-                              ),
-                              const SizedBox(height: 10,),
-                              Container(
-                                padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
-                                height: 1,
-                                color: const Color.fromARGB(255, 125, 125, 125),
-                              ),
-                              const SizedBox(height: 10,),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.5),
-                                            spreadRadius: 1,
-                                            blurRadius: 10,
-                                            offset: Offset(0, 1), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.thumb_up_rounded,
-                                            color: Color.fromARGB(255, 125, 125, 125),
-                                            size: 20,
-                                          ),
-                                          const SizedBox(width: 10,),
-                                          Text(
-                                            "01",
-                                            style: GoogleFonts.nunito(
-                                              textStyle: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromARGB(255, 125, 125, 125)
-                                              )
-                                            ),
-                                          )
-                                        ],
+                                const SizedBox(width: 5,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${listRefleksi[index].namadepan} ${listRefleksi[index].namabelakang}",
+                                      style: GoogleFonts.nunito(
+                                        textStyle: const TextStyle(
+                                          fontSize: 18, 
+                                          fontWeight: FontWeight.bold,
+                                          color: Color.fromARGB(255, 113, 9, 49)
+                                        )
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10,),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.chat_bubble_outline_outlined,
-                                        color: Color.fromARGB(255, 125, 125, 125),
-                                        size: 20,
+                                    Text(
+                                      listRefleksi[index].tanggalposting,
+                                      style: GoogleFonts.nunito(
+                                        textStyle: const TextStyle(
+                                          fontSize: 14,
+                                          color: Color.fromARGB(255, 125, 125, 125)
+                                        )
                                       ),
-                                      const SizedBox(width: 5,),
-                                      Text(
-                                        "01",
-                                        style: GoogleFonts.nunito(
-                                          textStyle: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(255, 125, 125, 125)
-                                          )
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 5,),
+                            Text(
+                              globals.judulrenungan,
+                              style: GoogleFonts.nunito(
+                                textStyle: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(int.parse(globals.defaultcolor))
+                                )
+                              ),
+                            ),
+                            const SizedBox(height: 15,),
+                            Text(
+                              listRefleksi[index].tindakansaya,
+                              style: GoogleFonts.nunito(
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black
+                                )
+                              ),
+                            ),
+
+                ],),
+                            ),
+                            
+                            
+                            //sini
+                            const SizedBox(height: 10,),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
+                              height: 1,
+                              color: const Color.fromARGB(255, 125, 125, 125),
+                            ),
+                            const SizedBox(height: 10,),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if(like==false){
+                                      setState(() {
+                                        like=true;
+                                      });
+                                      
+                                    }else{
+                                      setState(() {
+                                        like=false;
+                                      });
+                                      
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 1,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 1), // changes position of shadow
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            width: 20,
+                                            height: 20,
+                                            child: (like?Image.asset(
+                                                "assets/images/icon_like_red.png"):Image.asset(
+                                                "assets/images/icon_like_black.png"))
+                                            ,
+                                            // child: Image.asset("assets/images/komunitas_icon.png"),
+                                          ),
+                                        const SizedBox(width: 10,),
+                                        Text(
+                                          "01",
+                                          style: GoogleFonts.nunito(
+                                            textStyle: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color.fromARGB(255, 125, 125, 125)
+                                            )
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(width: 10,),
-                                  Row(
+                                ),
+                                const SizedBox(width: 10,),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.chat_bubble_outline_outlined,
+                                      color: Color.fromARGB(255, 125, 125, 125),
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 5,),
+                                    Text(
+                                      "01",
+                                      style: GoogleFonts.nunito(
+                                        textStyle: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color.fromARGB(255, 125, 125, 125)
+                                        )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 10,),
+                                GestureDetector(
+                                  onTap: () {
+                                    sharerenungan(index);
+                                  },
+                                  child: Row(
                                     children: [
                                       const Icon(
                                         Icons.ios_share_outlined,
                                         color: Color.fromARGB(255, 125, 125, 125),
                                         size: 20,
                                       ),
-                                      const SizedBox(width: 5,),
+                                      const SizedBox(width: 10,),
                                       Text(
-                                        "01",
+                                        "0",
                                         style: GoogleFonts.nunito(
-                                          textStyle: const TextStyle(
+                                          textStyle: const TextStyle (
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: Color.fromARGB(255, 125, 125, 125)
                                           )
                                         ),
-                                      ),
+                                      )
                                     ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+                                  ),
+                                )
+                                // Row(
+                                //   children: [
+                                //     const Icon(
+                                //       Icons.ios_share_outlined,
+                                //       color: Color.fromARGB(255, 125, 125, 125),
+                                //       size: 20,
+                                //     ),
+                                //     const SizedBox(width: 5,),
+                                //     Text(
+                                //       "01",
+                                //       style: GoogleFonts.nunito(
+                                //         textStyle: const TextStyle(
+                                //           fontSize: 14,
+                                //           fontWeight: FontWeight.bold,
+                                //           color: Color.fromARGB(255, 125, 125, 125)
+                                //         )
+                                //       ),
+                                //     ),
+                                //   ],
+                                // )
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 10,),
-                    ],
-                  ),
-                  onTap: () {
-                    globals.idrefleksi = listRefleksi[index].idrefleksi;
-                    globals.iduserrefleksi = listRefleksi[index].iduser;
-                    globals.namaduserrefleksi = listRefleksi[index].namadepan;
-                    globals.namabuserrefleksi = listRefleksi[index].namabelakang;
-                    globals.imagepathrefleksi = listRefleksi[index].imagepath;
-                    listRefleksi[index].ayatberkesan = listRefleksi[index].ayatberkesan.replaceAll("<br>", "\n"); 
-                    globals.ayatberkesan = listRefleksi[index].ayatberkesan;
-                    globals.tindakansaya = listRefleksi[index].tindakansaya;
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => DetailRefleksiUser())
-                    );
-                  },
+                    ),
+                    const SizedBox(height: 10,),
+                  ],
                 );
               }
             ),

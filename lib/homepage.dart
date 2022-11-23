@@ -330,7 +330,6 @@ class cKitab {
 // enum MenuSelected { Highlight, Catatan, Renungan, Share }
 enum MenuSelected { Highlight, Catatan, Renungan }
 
-
 class HomePage extends StatefulWidget {
   final int? indexKitabdicari;
   final int? pasalKitabdicari;
@@ -1247,43 +1246,40 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   //BUKAN KELOMPOK, SATU SATU
   void selecttext(int indexKitab, int indexPasal, int indexAyat,
       Color indexcolor, String konten, String mauapa) {
-    print("title index ke selectednih - ${getNamaKitab(indexKitab)} $indexPasal $indexAyat");
+    print(
+        "title index ke selectednih - ${getNamaKitab(indexKitab)} $indexPasal $indexAyat");
 
     List<List> titlepasal = getjumlahtitle(namakitabdicari);
     //log("title index ke ${titlepasal[indexPasal][0]}");
 
     late int ayataslii;
-    int hitunglewattitle=0;
+    int hitunglewattitle = 0;
 
-    for(int i=0;i<titlepasal[indexPasal].length;i++){
-      if(titlepasal[indexPasal][i]>indexAyat){
-        
+    for (int i = 0; i < titlepasal[indexPasal].length; i++) {
+      if (titlepasal[indexPasal][i] > indexAyat) {
         break;
       }
       hitunglewattitle++;
-
     }
 
     log("title index ke adatitle sebelumnya $hitunglewattitle");
-    
+
     // if(hitunglewattitle==0){
-      
-      ayataslii = indexAyat-hitunglewattitle+1;
+
+    ayataslii = indexAyat - hitunglewattitle + 1;
     // }
     // else{
-      // ayataslii = indexAyat-hitunglewattitle+1;
-   // }
-   
+    // ayataslii = indexAyat-hitunglewattitle+1;
+    // }
+
     log("title index ke AYAT ASLI $ayataslii");
-    
-    
+
     // ignore: non_constant_identifier_names
     cSelected SelectedC = cSelected();
 
     bool sudahada = false;
 
     if (selectedAyat.isEmpty) {
-      
       log("selectednih 1 - masuk isempty");
       //selectedAyat = newObject();
       for (int i = 0; i < listTempHighlightData.length; i++) {
@@ -1307,7 +1303,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         }
       }
 
-      if(sudahada==true && mauapa!="unselect"){
+      if (sudahada == true && mauapa != "unselect") {
         selectedAyat.add([]);
         SelectedC.indxKitab = indexKitab;
         SelectedC.indxPasal = indexPasal;
@@ -1346,7 +1342,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         if (selectedAyat[i].getindexkitab == indexKitab &&
             selectedAyat[i].getindexpasal == indexPasal &&
             selectedAyat[i].getindexayat == indexAyat) {
-              log("selectednih 3 - masuk list lokal");
+          log("selectednih 3 - masuk list lokal");
           sudahada = true;
           diselectlokalada = true;
           if (mauapa == "unselect") {
@@ -1366,7 +1362,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   indexPasal.toString() &&
               listTempHighlightData[i]["KelompokHighlight"][j]["IndexAyat"] ==
                   indexAyat.toString()) {
-                    log("selectednih 3 - masuk list file");
+            log("selectednih 3 - masuk list file");
             sudahada = true;
             if (mauapa == "unselect") {
               deleteHighlightData(indexKitab, indexPasal, indexAyat);
@@ -1378,7 +1374,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         }
       }
 
-      if(sudahada==true && mauapa!="unselect" && diselectlokalada==false){
+      if (sudahada == true &&
+          mauapa != "unselect" &&
+          diselectlokalada == false) {
         selectedAyat.add([]);
         SelectedC.indxKitab = indexKitab;
         SelectedC.indxPasal = indexPasal;
@@ -1700,7 +1698,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // double screenheight=-99 ;
   // double screenwidth=-99;
- // Size wsize = Size.zero;
+  // Size wsize = Size.zero;
 
   //final GlobalKey<> keyheight = GlobalKey();
   List<GlobalKey> keyheight = [];
@@ -1728,7 +1726,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     ayatkitab = listindexbookmarked[2];
     namakitabdicari = listindexbookmarked[3];
 
-    
     // indexKitabDiCari = 1;
 
     log("infoo - $indexKitabDiCari $pasalkitab $ayatkitab $namakitabdicari");
@@ -1739,171 +1736,156 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     getkitabperpasal(namakitabdicari);
 
     for (int i = 0; i < jumlahpasal; i++) {
-      
       setState(() {
         keyheight.add(GlobalKey());
         page.add(
-          
           SingleChildScrollView(
             scrollDirection: ScrollDirectionn,
             controller: controllerscroll,
             child: Stack(
               // fit: StackFit.loose,
               children: [
-               
-                        ListView.builder(
-                            key: keyheight[i],
-                            //key:keyheight,
-                            padding: EdgeInsets.only(bottom: 70),
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: satukitabperpasal[i].length,
-                            itemBuilder: (context, index) {
-                              // leyoutheight = MediaQuery.of(context).size.height;
+                ListView.builder(
+                    key: keyheight[i],
+                    //key:keyheight,
+                    padding: EdgeInsets.only(bottom: 70),
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: satukitabperpasal[i].length,
+                    itemBuilder: (context, index) {
+                      // leyoutheight = MediaQuery.of(context).size.height;
 
-                              // setState(() {
-                              //   screenheight = MediaQuery.of(context).size.height;
-                              //   screenwidth = MediaQuery.of(context).size.width;
-                              //   log("dapet tinggi -$screenheight");
-                              // });
+                      // setState(() {
+                      //   screenheight = MediaQuery.of(context).size.height;
+                      //   screenwidth = MediaQuery.of(context).size.width;
+                      //   log("dapet tinggi -$screenheight");
+                      // });
 
-                              bool adagadilistunderlined = false;
-                              int indexketemuunderlined = adaDiListUnderlined(
-                                  namakitabdicari,
-                                  (i + 1).toString(),
-                                  satukitabperpasal[i][index]['verse']
-                                      .toString());
+                      bool adagadilistunderlined = false;
+                      int indexketemuunderlined = adaDiListUnderlined(
+                          namakitabdicari,
+                          (i + 1).toString(),
+                          satukitabperpasal[i][index]['verse'].toString());
 
-                              if (indexketemuunderlined == -99) {
-                                adagadilistunderlined = false;
-                              } else {
-                                adagadilistunderlined = true;
-                              }
+                      if (indexketemuunderlined == -99) {
+                        adagadilistunderlined = false;
+                      } else {
+                        adagadilistunderlined = true;
+                      }
 
-                              if (satukitabperpasal[i][index]['type']
-                                      .toString() !=
-                                  't') {
-                                return AutoScrollTag(
-                                  key: ValueKey(index),
-                                  controller: controllerscroll!,
-                                  index: index,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: (adaDiListSelect(
-                                                  indexKitabDiCari, i, index) ==
-                                              true)
-                                          ? getWarnaPilihan(
-                                              indexKitabDiCari, i, index)
-                                          : Colors.transparent,
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        log("ketap sini");
-                                        //log("panjang layar - ${keylayoutbuilderaddpages.currentContext!.size!.height}");
-                                        if (stickermode == false) {
-                                          selecttext(
-                                              indexKitabDiCari,
-                                              i,
-                                              index,
-                                              mycolor,
-                                              satukitabperpasal[i][index]
-                                                      ['content']
-                                                  .toString(),
-                                              "select");
-                                          addPages("selectayat");
-                                        }
-                                      },
-                                      onLongPress: () {
-                                        if (stickermode == false) {
-                                          setState(() {
-                                            selecttext(
-                                                indexKitabDiCari,
-                                                i,
-                                                index,
-                                                mycolor,
-                                                satukitabperpasal[i][index]
-                                                        ['content']
-                                                    .toString(),
-                                                "unselect");
-                                            addPages("selectayat");
-                                          });
-                                        }
-                                      },
-                                      onDoubleTap: () async {
-                                        await _showDetailAyat(
-                                            namakitabdicari,
-                                            (i + 1).toString(),
-                                            satukitabperpasal[i][index]['verse']
-                                                .toString(),
-                                            satukitabperpasal[i][index]
-                                                    ['content']
-                                                .toString());
-                                      },
-                                      child: ListTile(
-                                        subtitle: (adagadilistunderlined ==
-                                                true)
-                                            ? tampilanUnderlined(
-                                                namakitabdicari,
-                                                (i + 1).toString(),
-                                                satukitabperpasal[i][index]
-                                                        ['verse']
-                                                    .toString(),
-                                                satukitabperpasal[i][index]
-                                                        ['content']
-                                                    .toString(),
-                                                indexketemuunderlined,
-                                                indexKitabDiCari,
-                                                index,
-                                                mycolor)
-                                            : Text(
-                                                "${satukitabperpasal[i][index]['verse'].toString()}  ${satukitabperpasal[i][index]['content'].toString()}",
-                                                style: GoogleFonts.nunito(
-                                                    textStyle: const TextStyle(
-                                                        //decoration: TextDecoration.underline,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                        color: Colors.black)),
-                                              ),
+                      if (satukitabperpasal[i][index]['type'].toString() !=
+                          't') {
+                        return AutoScrollTag(
+                          key: ValueKey(index),
+                          controller: controllerscroll!,
+                          index: index,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: (adaDiListSelect(
+                                          indexKitabDiCari, i, index) ==
+                                      true)
+                                  ? getWarnaPilihan(indexKitabDiCari, i, index)
+                                  : Colors.transparent,
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                log("ketap sini");
+                                //log("panjang layar - ${keylayoutbuilderaddpages.currentContext!.size!.height}");
+                                if (stickermode == false) {
+                                  selecttext(
+                                      indexKitabDiCari,
+                                      i,
+                                      index,
+                                      mycolor,
+                                      satukitabperpasal[i][index]['content']
+                                          .toString(),
+                                      "select");
+                                  addPages("selectayat");
+                                }
+                              },
+                              onLongPress: () {
+                                if (stickermode == false) {
+                                  setState(() {
+                                    selecttext(
+                                        indexKitabDiCari,
+                                        i,
+                                        index,
+                                        mycolor,
+                                        satukitabperpasal[i][index]['content']
+                                            .toString(),
+                                        "unselect");
+                                    addPages("selectayat");
+                                  });
+                                }
+                              },
+                              onDoubleTap: () async {
+                                await _showDetailAyat(
+                                    namakitabdicari,
+                                    (i + 1).toString(),
+                                    satukitabperpasal[i][index]['verse']
+                                        .toString(),
+                                    satukitabperpasal[i][index]['content']
+                                        .toString());
+                              },
+                              child: ListTile(
+                                subtitle: (adagadilistunderlined == true)
+                                    ? tampilanUnderlined(
+                                        namakitabdicari,
+                                        (i + 1).toString(),
+                                        satukitabperpasal[i][index]['verse']
+                                            .toString(),
+                                        satukitabperpasal[i][index]['content']
+                                            .toString(),
+                                        indexketemuunderlined,
+                                        indexKitabDiCari,
+                                        index,
+                                        mycolor)
+                                    : Text(
+                                        "${satukitabperpasal[i][index]['verse'].toString()}  ${satukitabperpasal[i][index]['content'].toString()}",
+                                        style: GoogleFonts.nunito(
+                                            textStyle: const TextStyle(
+                                                //decoration: TextDecoration.underline,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w300,
+                                                color: Colors.black)),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                return AutoScrollTag(
-                                  key: ValueKey(index),
-                                  controller: controllerscroll!,
-                                  index: index,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: (adaDiListSelect(
-                                                  widget.indexKitabdicari!,
-                                                  i,
-                                                  index) ==
-                                              true)
-                                          ? Colors.blue.withOpacity(0.5)
-                                          : Colors.transparent,
-                                    ),
-                                    child: ListTile(
-                                        title: Text(
-                                      // ignore: unnecessary_string_interpolations
-                                      "${satukitabperpasal[i][index]['content'].toString()}",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.nunito(
-                                          textStyle: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black)),
-                                    )),
-                                  ),
-                                );
-                              }
-                            }),
-                    //,stickerlayoutwidget(i, namakitabdicari,leyoutheight)
-                    //   ],
-                    // ),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return AutoScrollTag(
+                          key: ValueKey(index),
+                          controller: controllerscroll!,
+                          index: index,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: (adaDiListSelect(
+                                          widget.indexKitabdicari!, i, index) ==
+                                      true)
+                                  ? Colors.blue.withOpacity(0.5)
+                                  : Colors.transparent,
+                            ),
+                            child: ListTile(
+                                title: Text(
+                              // ignore: unnecessary_string_interpolations
+                              "${satukitabperpasal[i][index]['content'].toString()}",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.nunito(
+                                  textStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)),
+                            )),
+                          ),
+                        );
+                      }
+                    }),
+                //,stickerlayoutwidget(i, namakitabdicari,leyoutheight)
+                //   ],
+                // ),
 
-                   // ),
+                // ),
                 // Container(
                 //   child:
                 stickerlayoutwidget(i, namakitabdicari)
@@ -1924,7 +1906,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (darimana != "selectayat" &&
         darimana != "bookmarked" &&
         darimana != "sticker" &&
-        darimana != "underlined" && darimana != "deleteunderline") {
+        darimana != "underlined" &&
+        darimana != "deleteunderline") {
       //jump to sesuai pasal
       log("masuk sini start");
       // pageController.
@@ -2621,7 +2604,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     readFileHeightLayout();
 
-
     globals.buatkomunitas = false;
     globals.refreshpage = false;
 
@@ -2723,62 +2705,59 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return height;
   }
 
-  Widget stickerlayoutwidget(
-      int indexpage, String namakitab) {
+  Widget stickerlayoutwidget(int indexpage, String namakitab) {
     //log("pas dah ambil ${MediaQuery.of(context).size.height}");
-    return 
-    // MeasuredSize(
-    //   onChange: (Size size) {
-    //     log("ceking ganti selected ayat- ${size.height}");
-    //     //BUAT WRITE ULANG LAYOUTHEIGHT
-    //     // setState(() {
-    //     //   wsize = size;
-    //     //   addListLayoutHeight(namakitabdicari,i,size.height);
-    //     // });
-    //   },
-    //   child: 
-      LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          final keyContext = keyheight[indexpage].currentContext;
-          final box = keyContext!.findRenderObject() as RenderBox;
+    return
+        // MeasuredSize(
+        //   onChange: (Size size) {
+        //     log("ceking ganti selected ayat- ${size.height}");
+        //     //BUAT WRITE ULANG LAYOUTHEIGHT
+        //     // setState(() {
+        //     //   wsize = size;
+        //     //   addListLayoutHeight(namakitabdicari,i,size.height);
+        //     // });
+        //   },
+        //   child:
+        LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final keyContext = keyheight[indexpage].currentContext;
+        final box = keyContext!.findRenderObject() as RenderBox;
 
-
-
-          // final pos = box.localToGlobal(Offset.zero);
-          // log("ceking ganti selected ayat media query- ${MediaQuery.of(context).size.height}");
-          if (listposition.isNotEmpty && sticker_mode == true) {
-            //log("dapet wsizes - ${textComposerWidgetHeight}");
-            return Container(
-              // color: Colors.transparent,
-              // constraints: BoxConstraints(
-              //   maxHeight: min,
-              // ),
-              //key: keyheight,
-              width: double.infinity,
-              height: box.size.height,
-              //height: double.infinity,
-              //height: textComposerWidgetHeight,
-              //height:bounds.height * 2,
-              // height:keyheight.height,
-              // height: double.infinity,
-              //height: globals.sizeStickerLay,
-              //height:9000,
-              //height: wsize.height,
-              //height: (panjanglayar==-99)?100:panjanglayar,
-              child: Stack(children: [
-                for (final sticker in listposition)
-                  if (sticker.lokasipasal == indexpage &&
-                      sticker.lokasikitab == namakitab)
-                    (stickerselected != "assets/delete.png" ||
-                            stickermode == false)
-                        ? sticker.posisistiker
-                        : sticker.stackstiker
-              ]),
-            );
-          }
-          return const Text("");
-        },
-      );
+        // final pos = box.localToGlobal(Offset.zero);
+        // log("ceking ganti selected ayat media query- ${MediaQuery.of(context).size.height}");
+        if (listposition.isNotEmpty && sticker_mode == true) {
+          //log("dapet wsizes - ${textComposerWidgetHeight}");
+          return Container(
+            // color: Colors.transparent,
+            // constraints: BoxConstraints(
+            //   maxHeight: min,
+            // ),
+            //key: keyheight,
+            width: double.infinity,
+            height: box.size.height,
+            //height: double.infinity,
+            //height: textComposerWidgetHeight,
+            //height:bounds.height * 2,
+            // height:keyheight.height,
+            // height: double.infinity,
+            //height: globals.sizeStickerLay,
+            //height:9000,
+            //height: wsize.height,
+            //height: (panjanglayar==-99)?100:panjanglayar,
+            child: Stack(children: [
+              for (final sticker in listposition)
+                if (sticker.lokasipasal == indexpage &&
+                    sticker.lokasikitab == namakitab)
+                  (stickerselected != "assets/delete.png" ||
+                          stickermode == false)
+                      ? sticker.posisistiker
+                      : sticker.stackstiker
+            ]),
+          );
+        }
+        return const Text("");
+      },
+    );
     //);
   }
 
@@ -2833,7 +2812,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         globals.deskripsiUser = listAkunUser[0].deskripsi;
         globals.idUser = listAkunUser[0].iduser;
         globals.imagepath = listAkunUser[0].imagepath;
-        print("status: ${globals.statusLogin}, id: ${globals.idUser}, imagepath: ${globals.imagepath}");
+        print(
+            "status: ${globals.statusLogin}, id: ${globals.idUser}, imagepath: ${globals.imagepath}");
       });
     });
   }
@@ -3433,7 +3413,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Image.asset('assets/images/person_icon.png'),
+                          child: Image.asset('assets/images/icon_profile.png'),
                         ),
                         title: Text(
                           "Profile",
@@ -3463,7 +3443,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Image.asset("assets/images/add_icon.png"),
+                          child: Image.asset("assets/images/icon_add.png"),
                         ),
                         title: Text(
                           "Multi Pencarian",
@@ -3491,7 +3471,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Image.asset("assets/images/catatan_icon.png"),
+                          child: Image.asset("assets/images/icon_catatan.png"),
                         ),
                         title: Text(
                           "Catatan",
@@ -3514,7 +3494,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Image.asset("assets/images/alkitab_icon.png"),
+                          child: Image.asset("assets/images/icon_renungan.png"),
                         ),
                         title: Text(
                           "Renungan",
@@ -3537,7 +3517,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Image.asset("assets/images/search_icon.png"),
+                          child: Image.asset("assets/images/icon_search.png"),
                         ),
                         title: Text(
                           "Pencarian",
@@ -3561,7 +3541,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           width: 40,
                           height: 40,
                           child:
-                              Image.asset("assets/images/komunitas_icon.png"),
+                              Image.asset("assets/images/icon_komunitas.png"),
                         ),
                         title: Text(
                           "Komunitas",
@@ -3584,10 +3564,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Icon(
-                            Icons.chrome_reader_mode_outlined,
-                            color: Color(int.parse(globals.defaultcolor)),
-                          ),
+                          child: Image.asset(
+                              "assets/images/icon_rencanabacaan.png"),
                         ),
                         title: Text(
                           "Rencana Bacaan",
@@ -3610,10 +3588,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Icon(
-                            Icons.public,
-                            color: Color(int.parse(globals.defaultcolor)),
-                          ),
+                          child: Image.asset("assets/images/icon_explore.png"),
                           // child: Image.asset("assets/images/komunitas_icon.png"),
                         ),
                         title: Text(
@@ -3637,10 +3612,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         leading: Container(
                           width: 40,
                           height: 40,
-                          child: Icon(
-                            Icons.chrome_reader_mode_outlined,
-                            color: Color(int.parse(globals.defaultcolor)),
-                          ),
+                          child: Image.asset(
+                              "assets/images/icon_rencanabacaan.png"),
                           // child: Image.asset("assets/images/komunitas_icon.png"),
                         ),
                         title: Text(
@@ -3662,11 +3635,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           height: 1,
                           color: Colors.black),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
+                        padding: const EdgeInsets.fromLTRB(18, 0, 10, 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            Row(
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  child:
+                                      Image.asset('assets/images/icon_stiker.png'),
+                                ),
+                                SizedBox(
+                                  width: 18,
+                                ),
+                                Text(
                               "Mode Stiker",
                               style: GoogleFonts.nunito(
                                   textStyle: TextStyle(
@@ -3675,6 +3659,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       color: Color(
                                           int.parse(globals.defaultcolor)))),
                             ),
+                              ],
+                            ),
+                           
                             Switch(
                               // This bool value toggles the switch.
                               value: sticker_mode,
@@ -3691,17 +3678,29 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 10, 0),
+                        padding: const EdgeInsets.fromLTRB(18, 0, 10, 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Lagu",
+                            Row(
+                              children: [
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  child:
+                                      Image.asset('assets/images/icon_lagu.png'),
+                                ),
+                                SizedBox(width: 18,),
+                                Text("Lagu",
                                 style: GoogleFonts.nunito(
                                     textStyle: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500,
                                         color: Color(
                                             int.parse(globals.defaultcolor))))),
+                              ],
+                            ),
+                            
                             Switch(
                               // This bool value toggles the switch.
                               value: backsound_mode,

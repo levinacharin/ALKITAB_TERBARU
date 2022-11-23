@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:alkitab/detailrenungank.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,6 +20,37 @@ class ListRenungan extends StatefulWidget {
 }
 
 class _ListRenunganState extends State<ListRenungan> {
+
+  void sharerenungan(int i)async{
+    
+    temp_berkesan=listDataRenungan[i]['Ayat Berkesan'].toString().replaceAll('<br>', '\n');
+    String renunganfull = "";
+    renunganfull = 
+    // ignore: prefer_interpolation_to_compose_strings
+    "*Tanggal : "+
+    listDataRenungan[i]['Tanggal'].toString() + 
+    "\n\n" +
+    "*Judul Renungan* : "+
+    listDataRenungan[i]['Judul'].toString()+
+    "\n\n" +
+    "*Ayat Bacaan* :\n"+
+    listDataRenungan[i]['Ayat Bacaan'].toString()+
+    "\n\n" +
+    "*Ayat Berkesan* :\n"+
+    temp_berkesan.toString()+
+    "\n\n" +
+    "*Renungan* :\n"+
+    listDataRenungan[i]['Isi Renungan'].toString()+
+    "\n\n" +
+    "*Tindakan Saya* :\n"+
+    listDataRenungan[i]['Tindakan Saya'].toString()
+    ;
+
+    await FlutterShare.share(
+      title: 'Share Renungan',
+      text: renunganfull,
+    );
+  }
   DateTime date = DateTime.now();
   
   @override
@@ -627,16 +659,16 @@ class _ListRenunganState extends State<ListRenungan> {
                                                             ),
                                                             GestureDetector(
                                                               onTap: () {
-                                                                print("app lain");
+                                                                sharerenungan(index);
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  Icon(
-                                                                    Icons.contact_phone,
-                                                                    size: 40,
-                                                                  ),
-                                                                  const SizedBox(height: 5,),
-                                                                  Container (
+                                                                  Container(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset("assets/images/Send.png"),
+                        ),
+                        Container (
                                                                     width: 100,
                                                                     child: Text(
                                                                       "Kirim ke App Lain",
@@ -649,7 +681,14 @@ class _ListRenunganState extends State<ListRenungan> {
                                                                       ),
                                                                       textAlign: TextAlign.center,
                                                                     ),
-                                                                  )
+                                                                  ),
+                        
+                                                                  // Icon(
+                                                                  //   Icons.contact_phone,
+                                                                  //   size: 40,
+                                                                  // ),
+                                                                  const SizedBox(height: 5,),
+                                                                  
                                                                 ],
                                                               ),
                                                             ),
@@ -744,16 +783,16 @@ class _ListRenunganState extends State<ListRenungan> {
                                                             ),
                                                             GestureDetector(
                                                               onTap: () {
-                                                                print("app lain");
+                                                                sharerenungan(index);
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  Icon(
-                                                                    Icons.contact_phone,
-                                                                    size: 40,
-                                                                  ),
-                                                                  const SizedBox(height: 5,),
-                                                                  Container (
+                                                                  Container(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset("assets/images/Send.png"),
+                        ),
+                        Container (
                                                                     width: 100,
                                                                     child: Text(
                                                                       "Kirim ke App Lain",
@@ -766,7 +805,9 @@ class _ListRenunganState extends State<ListRenungan> {
                                                                       ),
                                                                       textAlign: TextAlign.center,
                                                                     ),
-                                                                  )
+                                                                  ),
+                                                                  const SizedBox(height: 5,),
+                                                                  
                                                                 ],
                                                               ),
                                                             ),
