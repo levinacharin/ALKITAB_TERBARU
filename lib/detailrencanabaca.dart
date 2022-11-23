@@ -187,7 +187,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
             ),
             const SizedBox(height: 10,),
             Container(
-              height: 90,
+              height: 100,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -205,65 +205,99 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                           },
                           child: Row(
                             children: [
-                              globals.listDetailRUser[index]['Status Selesai'] == "false"
-                              ? Container(
-                                width: 90,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: index == indexSelect ? Colors.black : Colors.grey
+                              widget.pagefrom == "user"
+                              ? globals.listDetailRUser[index]['Status Selesai'] == "false"
+                                ? Container(
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: index == indexSelect ? Colors.black : Colors.grey
+                                    ),
+                                    borderRadius: BorderRadius.circular(15)
                                   ),
-                                  borderRadius: BorderRadius.circular(15)
-                                ),
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                    children: [
-                                      Text(
-                                        "Hari ${index+1}",
-                                        style: GoogleFonts.nunito(
-                                          textStyle: const TextStyle(
-                                            fontSize: 15,
-                                            color: Color.fromARGB(255, 113, 9, 49)
-                                          )
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                      children: [
+                                        Text(
+                                          "Hari ${index+1}",
+                                          style: GoogleFonts.nunito(
+                                            textStyle: const TextStyle(
+                                              fontSize: 15,
+                                              color: Color.fromARGB(255, 113, 9, 49)
+                                            )
+                                          ),
                                         ),
+                                        const SizedBox(height: 10,),
+                                        Text(
+                                          estDate[index],
+                                          style: GoogleFonts.nunito(
+                                            textStyle: const TextStyle(
+                                              fontSize: 15,
+                                              color: Color.fromARGB(255, 113, 9, 49)
+                                            )
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                )
+                                : Container(
+                                    width: 90,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Colors.green
                                       ),
-                                      const SizedBox(height: 10,),
-                                      Text(
-                                        estDate[index],
-                                        style: GoogleFonts.nunito(
-                                          textStyle: const TextStyle(
-                                            fontSize: 15,
-                                            color: Color.fromARGB(255, 113, 9, 49)
-                                          )
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 2,
+                                          blurRadius: 3,
+                                          offset: Offset(1, 3), // changes position of shadow
                                         ),
-                                      )
-                                    ],
-                                  ),
-                              )
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(16),
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.green,
+                                        size: 40,
+                                      ),
+                                    )
+                                  )
                               : Container(
                                   width: 90,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
                                     border: Border.all(
-                                      color: Colors.green
+                                      color: index == indexSelect ? Colors.black : Colors.grey
                                     ),
-                                    borderRadius: BorderRadius.circular(15),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 3,
-                                        offset: Offset(1, 3), // changes position of shadow
-                                      ),
-                                    ],
+                                    borderRadius: BorderRadius.circular(15)
                                   ),
                                   padding: const EdgeInsets.all(16),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.green,
-                                      size: 40,
+                                  child: Column(
+                                      children: [
+                                        Text(
+                                          "Hari ${index+1}",
+                                          style: GoogleFonts.nunito(
+                                            textStyle: const TextStyle(
+                                              fontSize: 15,
+                                              color: Color.fromARGB(255, 113, 9, 49)
+                                            )
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10,),
+                                        Text(
+                                          estDate[index],
+                                          style: GoogleFonts.nunito(
+                                            textStyle: const TextStyle(
+                                              fontSize: 15,
+                                              color: Color.fromARGB(255, 113, 9, 49)
+                                            )
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
                                 ),
                               const SizedBox(width: 10,)
                             ],
@@ -308,31 +342,23 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                                       ),
                                     ),
                                   ),
-                                  statusSelesai[indexSelect+indexSelect] == "ayat-true"
-                                  ? Container(
-                                      width: 25,
-                                      height: 25,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.green,
-                                      ),
-                                      child: const Icon(
-                                        Icons.check,
-                                        size: 20,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : Container(
-                                      width: 25,
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.transparent,
-                                          width: 2
-                                        )
-                                      ),
-                                    )
+                                  widget.pagefrom == "user"
+                                  ? statusSelesai[indexSelect+indexSelect] == "ayat-true"
+                                    ? Container(
+                                        width: 25,
+                                        height: 25,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.green,
+                                        ),
+                                        child: const Icon(
+                                          Icons.check,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Container()
+                                  : Container()
                                 ],
                               ),
                             ],
@@ -387,31 +413,23 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                                         )
                                       ),
                                     ),
-                                    statusSelesai[indexSelect+indexSelect+1] == "renungan-true"
-                                    ? Container(
-                                      width: 25,
-                                      height: 25,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.green,
-                                      ),
-                                      child: const Icon(
-                                        Icons.check,
-                                        size: 20,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                    : Container(
-                                      width: 25,
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.transparent,
-                                          width: 2
-                                        )
-                                      ),
-                                    ),
+                                    widget.pagefrom == "user"
+                                    ? statusSelesai[indexSelect+indexSelect+1] == "renungan-true"
+                                      ? Container(
+                                        width: 25,
+                                        height: 25,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.green,
+                                        ),
+                                        child: const Icon(
+                                          Icons.check,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                      : Container()
+                                    : Container()
                                   ],
                                 ),
                               ],

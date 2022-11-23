@@ -113,20 +113,26 @@ class DetailCountMembers {   // class untuk dapat jumlah anggota
 }
 
 class DetailKomunitasMembersName {  // get anggota nama dan role
+  String iduser;
   String namadepan;
   String namabelakang;
+  String imagepath;
   String role;
 
   DetailKomunitasMembersName({
+    required this.iduser,
     required this.namadepan,
     required this.namabelakang,
+    required this.imagepath,
     required this.role
   });
 
   factory DetailKomunitasMembersName.createData(Map<String, dynamic> object) {
     return DetailKomunitasMembersName(
+      iduser: object['iduser'].toString(),
       namadepan: object['namadepan'],
       namabelakang: object['namabelakang'],
+      imagepath: object['imagepath'],
       role: object['role']
     );
   }
@@ -457,7 +463,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     } else if (menu == "itemEdit") {
       final data = await Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => BuatKomunitas(status: 'editkomunitas',))
+        MaterialPageRoute(builder: (context) => BuatKomunitas(status: 'editkomunitas', pagefrom: "detailkomunitas",))
       );
 
       if (data == "refresh") {
@@ -467,7 +473,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     } else if (menu == "itemListDoa") {
       Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => ListDoaPage())
+        MaterialPageRoute(builder: (context) => const ListDoaPage())
       );
     } else if (menu == "itemKeluar") {
       deleteDialog();
@@ -837,7 +843,10 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
           leading: IconButton(
             onPressed: () {
               globals.listDetailRencana = [];
-              Navigator.pop(context, "refresh");
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const ListKomunitas())
+              );
             }, 
             icon: const Icon(
               Icons.arrow_back,
@@ -1184,19 +1193,19 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                                                 crossAxisAlignment: CrossAxisAlignment.end,
                                                 children: [
                                                   globals.imagepathkomunitas != "-"
-                                                    ? ClipOval(
-                                                      child: Image.network(
-                                                        '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
-                                                        width: 60,
-                                                        height: 60,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    )
-                                                    : Icon(
-                                                      Icons.account_circle_outlined,
-                                                      color: Color(int.parse(globals.defaultcolor)),
-                                                      size: 60,
-                                                    )
+                                                  ? ClipOval(
+                                                    child: Image.network(
+                                                      '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
+                                                      width: 60,
+                                                      height: 60,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                  : Icon(
+                                                    Icons.account_circle_outlined,
+                                                    color: Color(int.parse(globals.defaultcolor)),
+                                                    size: 60,
+                                                  )
                                                 ],
                                               ),
                                               const SizedBox(width: 5,),
@@ -1472,12 +1481,13 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                                 await DetailRencana.getDetailRencana(int.parse(listRencana[index].idrencana)).then((value) {
                                   setState(() {
                                     globals.listDetailRencana = value;
+                                    print("length: ${globals.listDetailRencana.length}");
                                   });
                                 });
                                 // ignore: use_build_context_synchronously
                                 Navigator.push(
                                   context, 
-                                  MaterialPageRoute(builder: (context) => DetailRencanaBaca(pagefrom: "komunitas",))
+                                  MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: "komunitas",))
                                 );
                               },
                             );
@@ -1526,13 +1536,19 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                                               Column(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
                                                 children: [
-                                                  ClipOval(
-                                                    child: Image.asset(
-                                                      'assets/images/pp1.jpg',
+                                                  listMembers[index].imagepath != "-"
+                                                  ? ClipOval(
+                                                    child: Image.network(
+                                                      '${globals.urllocal}getimage?id=${listMembers[index].iduser}&folder=user',
                                                       width: 60,
                                                       height: 60,
                                                       fit: BoxFit.cover,
-                                                    )
+                                                    ),
+                                                  )
+                                                  : Icon(
+                                                    Icons.account_circle_outlined,
+                                                    color: Color(int.parse(globals.defaultcolor)),
+                                                    size: 60,
                                                   )
                                                 ],
                                               ),
