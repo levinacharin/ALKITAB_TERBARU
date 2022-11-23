@@ -96,6 +96,20 @@ flutter:
     - assets/images/pp1.jpg
     - assets/images/pp2.jpg
     - assets/images/pp3.jpg
+    - assets/images/icon_rencanabacaan.jpg
+    - assets/images/icon_add.jpg
+    - assets/images/icon_like_black.jpg
+    - assets/images/icon_like_red.jpg
+    - assets/images/icon_catatan.jpg
+    - assets/images/icon_explore.jpg
+    - assets/images/icon_komunitas.jpg
+    - assets/images/icon_lagu.jpg
+    - assets/images/icon_renungan.jpg
+    - assets/images/icon_search.jpg
+    - assets/images/icon_stiker.jpg
+    - assets/images/icon_logout.jpg
+    - assets/images/icon_profile.jpg
+    - assets/images/icon_setting.jpg
     - assets/flower.png
     - assets/rainbow.png
     - assets/heart.png
