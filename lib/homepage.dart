@@ -721,7 +721,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (widget.daripagemana == "listayat") {
       aturSync();
-      await getStickerSP();
+      await getStickerSP("listayat");
     } else {
       //PAKE SHARED PREFERENCES UNTUK BOOKMARKED
       await getBookMarkedSP();
@@ -2480,110 +2480,110 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 //LIST HEIGHT LAYOUT DATA
   // List listUnderlinedKalimat = [];
   // List listUnderlinedKalimatdarireadjson = [];
-  String dataHeightLayout = '';
-  List listHeightLayoutJson = [];
-  //int yangSudahDimasukinKeFileUnderlined = 0;
-  //List listTempHighlightData = [];
-  Future<File> get _localFileListHeightLayout async {
-    return File('/storage/emulated/0/Download/HeightLayout.txt');
-  }
+  // String dataHeightLayout = '';
+  // List listHeightLayoutJson = [];
+  // //int yangSudahDimasukinKeFileUnderlined = 0;
+  // //List listTempHighlightData = [];
+  // Future<File> get _localFileListHeightLayout async {
+  //   return File('/storage/emulated/0/Download/HeightLayout.txt');
+  // }
 
-  // write data
-  Future<void> writeDataHeightLayout() async {
-    final file = await _localFileListHeightLayout;
-    log("height layout panjang list ${listLayoutHeight.length}");
+  // // write data
+  // Future<void> writeDataHeightLayout() async {
+  //   final file = await _localFileListHeightLayout;
+  //   log("height layout panjang list ${listLayoutHeight.length}");
 
-    dataHeightLayout = '';
+  //   dataHeightLayout = '';
 
-    dataHeightLayout = "$dataHeightLayout[";
-    for (int i = 0; i < listLayoutHeight.length; i++) {
-      // log("LAYOUT NAMAKITAB -${listLayoutHeight[i]}");
-      // log("LAYOUT PASAL -${listLayoutHeight[i+1]}");
-      // log("LAYOUT HEIGHT -${listLayoutHeight[i+2]}");
+  //   dataHeightLayout = "$dataHeightLayout[";
+  //   for (int i = 0; i < listLayoutHeight.length; i++) {
+  //     // log("LAYOUT NAMAKITAB -${listLayoutHeight[i]}");
+  //     // log("LAYOUT PASAL -${listLayoutHeight[i+1]}");
+  //     // log("LAYOUT HEIGHT -${listLayoutHeight[i+2]}");
 
-      if (i != 0) {
-        // ignore: prefer_interpolation_to_compose_strings
+  //     if (i != 0) {
+  //       // ignore: prefer_interpolation_to_compose_strings
 
-        dataHeightLayout = "$dataHeightLayout,{";
-      } else {
-        // ignore: prefer_interpolation_to_compose_strings
-        dataHeightLayout = dataHeightLayout + "{";
-      }
+  //       dataHeightLayout = "$dataHeightLayout,{";
+  //     } else {
+  //       // ignore: prefer_interpolation_to_compose_strings
+  //       dataHeightLayout = dataHeightLayout + "{";
+  //     }
 
-      dataHeightLayout =
-          // ignore: prefer_interpolation_to_compose_strings
-          dataHeightLayout + '"NamaKitab":"' + listLayoutHeight[i] + "\",";
-      dataHeightLayout =
-          // ignore: prefer_interpolation_to_compose_strings
-          dataHeightLayout + '"Pasal":"' + listLayoutHeight[i + 1] + "\",";
-      dataHeightLayout =
-          // ignore: prefer_interpolation_to_compose_strings
-          dataHeightLayout + '"LayoutHeight":"' + listLayoutHeight[i + 2] + '"';
+  //     dataHeightLayout =
+  //         // ignore: prefer_interpolation_to_compose_strings
+  //         dataHeightLayout + '"NamaKitab":"' + listLayoutHeight[i] + "\",";
+  //     dataHeightLayout =
+  //         // ignore: prefer_interpolation_to_compose_strings
+  //         dataHeightLayout + '"Pasal":"' + listLayoutHeight[i + 1] + "\",";
+  //     dataHeightLayout =
+  //         // ignore: prefer_interpolation_to_compose_strings
+  //         dataHeightLayout + '"LayoutHeight":"' + listLayoutHeight[i + 2] + '"';
 
-      dataHeightLayout = "$dataHeightLayout}";
+  //     dataHeightLayout = "$dataHeightLayout}";
 
-      i = i + 2;
-    }
+  //     i = i + 2;
+  //   }
 
-    // ignore: prefer_interpolation_to_compose_strings
-    dataHeightLayout = dataHeightLayout + "]";
-    log("masuk write sini hasil LAYOUT $dataHeightLayout");
+  //   // ignore: prefer_interpolation_to_compose_strings
+  //   dataHeightLayout = dataHeightLayout + "]";
+  //   log("masuk write sini hasil LAYOUT $dataHeightLayout");
 
-    await file.writeAsString(dataHeightLayout);
-    //listLayoutHeight.clear();
+  //   await file.writeAsString(dataHeightLayout);
+  //   //listLayoutHeight.clear();
 
-    // log("hasil baca - setelah write");
-    readFileHeightLayout();
-    // await addPages("bacaunderline");
-  }
+  //   // log("hasil baca - setelah write");
+  //   readFileHeightLayout();
+  //   // await addPages("bacaunderline");
+  // }
 
   // read data
-  Future<void> readFileHeightLayout() async {
-    // List templistheightlayout = [];
+//   Future<void> readFileHeightLayout() async {
+//     // List templistheightlayout = [];
 
-    // String textasset = "assets/textfiles/file.txt"; //path to text file asset
-// String text = await rootBundle.loadString(textasset);
-// print(text);
+//     // String textasset = "assets/textfiles/file.txt"; //path to text file asset
+// // String text = await rootBundle.loadString(textasset);
+// // print(text);
 
-    // String path = 'assets/textfiles/file.txt';
-    // final file = await _localFileListHeightLayout;
-    // // Read the file-
+//     // String path = 'assets/textfiles/file.txt';
+//     // final file = await _localFileListHeightLayout;
+//     // // Read the file-
 
-    // bool directoryExists = await Directory(path).exists();
-    // bool fileExists = await File(path).exists();
+//     // bool directoryExists = await Directory(path).exists();
+//     // bool fileExists = await File(path).exists();
 
-    // if (directoryExists || fileExists) {
-    // final contents = await file.readAsString();
-    // if (contents.isNotEmpty ) {
-    //listUnderlinedKalimat.clear();
+//     // if (directoryExists || fileExists) {
+//     // final contents = await file.readAsString();
+//     // if (contents.isNotEmpty ) {
+//     //listUnderlinedKalimat.clear();
 
-    listHeightLayoutJson =
-        jsonDecode(await rootBundle.loadString('assets/HeightLayout.txt'));
-    // log("hasilllll - $listHeightLayoutJson");
-    listLayoutHeight.clear();
-    // log("hasil baca lengkap ${listHeightLayoutJson}");
+//     listHeightLayoutJson =
+//         jsonDecode(await rootBundle.loadString('assets/HeightLayout.txt'));
+//     // log("hasilllll - $listHeightLayoutJson");
+//     listLayoutHeight.clear();
+//     // log("hasil baca lengkap ${listHeightLayoutJson}");
 
-    for (int i = 0; i < listHeightLayoutJson.length; i++) {
-      // log("hasil baca json KE- ${i+1}");
-      //log("hasil baca json namakitab- ${listHeightLayoutJson[i]["NamaKitab"]}");
+//     for (int i = 0; i < listHeightLayoutJson.length; i++) {
+//       // log("hasil baca json KE- ${i+1}");
+//       //log("hasil baca json namakitab- ${listHeightLayoutJson[i]["NamaKitab"]}");
 
-      listLayoutHeight.add(listHeightLayoutJson[i]["NamaKitab"]);
+//       listLayoutHeight.add(listHeightLayoutJson[i]["NamaKitab"]);
 
-      listLayoutHeight.add(listHeightLayoutJson[i]["Pasal"]);
-      // log("hasil baca json pasal- ${listUnderlinedKalimatdarireadjson[i].Pasal}");
+//       listLayoutHeight.add(listHeightLayoutJson[i]["Pasal"]);
+//       // log("hasil baca json pasal- ${listUnderlinedKalimatdarireadjson[i].Pasal}");
 
-      listLayoutHeight.add(listHeightLayoutJson[i]["LayoutHeight"]);
-      // log("hasil baca json height- ${listUnderlinedKalimatdarireadjson[i].LayoutHeight}");
+//       listLayoutHeight.add(listHeightLayoutJson[i]["LayoutHeight"]);
+//       // log("hasil baca json height- ${listUnderlinedKalimatdarireadjson[i].LayoutHeight}");
 
-      // log("hasil baca json berhasil");
+//       // log("hasil baca json berhasil");
 
-    }
+//     }
 
-    listUnderlinedKalimatdarireadjson.clear();
+//     listUnderlinedKalimatdarireadjson.clear();
 
-    // }
-    // }
-  }
+//     // }
+//     // }
+//   }
 
   // Future setAudio() async{
   //   audioPlayer.setReleaseMode(ReleaseMode.loop);
@@ -2602,7 +2602,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     setLagu(backsound_mode);
 
-    readFileHeightLayout();
+   // readFileHeightLayout();
 
     globals.buatkomunitas = false;
     globals.refreshpage = false;
@@ -2646,7 +2646,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     getAyatBacaanRandomSP();
     readFileUnderlined("awal");
 
-    getStickerSP();
+    getStickerSP("initstate");
 
     //GET ULANG FILE LAYOUT HEIGHT
     // getListLayoutHeight();
@@ -2692,18 +2692,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   //   );
   // }
 
-  double cariHeightLayout(String namakitab, String pasal) {
-    double height = 0.0;
-    for (int i = 0; i < listLayoutHeight.length; i++) {
-      if (listLayoutHeight[i] == namakitab &&
-          listLayoutHeight[i + 1] == pasal) {
-        height = double.parse(listLayoutHeight[i + 2]);
-        break;
-      }
-    }
+  // double cariHeightLayout(String namakitab, String pasal) {
+  //   double height = 0.0;
+  //   for (int i = 0; i < listLayoutHeight.length; i++) {
+  //     if (listLayoutHeight[i] == namakitab &&
+  //         listLayoutHeight[i + 1] == pasal) {
+  //       height = double.parse(listLayoutHeight[i + 2]);
+  //       break;
+  //     }
+  //   }
 
-    return height;
-  }
+  //   return height;
+  // }
 
   Widget stickerlayoutwidget(int indexpage, String namakitab) {
     //log("pas dah ambil ${MediaQuery.of(context).size.height}");
@@ -2855,64 +2855,129 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   //SHARED PREFERENCES LISTUKURANLAYAR
-  List<String> listLayoutHeight = [];
-  List<String> listkoosongan = [];
-  int index = 0;
-  addListLayoutHeight(
-      String namakitabb, int pasal, double panjanglayout) async {
-    bool adaga = heightLayoutSudahAda(namakitabb, pasal.toString());
-    if (adaga == false) {
-      listLayoutHeight.add(namakitabb);
-      listLayoutHeight.add(pasal.toString());
-      listLayoutHeight.add(panjanglayout.toString());
+  // List<String> listLayoutHeight = [];
+  // List<String> listkoosongan = [];
+  // int index = 0;
+  // addListLayoutHeight(
+  //     String namakitabb, int pasal, double panjanglayout) async {
+  //   bool adaga = heightLayoutSudahAda(namakitabb, pasal.toString());
+  //   if (adaga == false) {
+  //     listLayoutHeight.add(namakitabb);
+  //     listLayoutHeight.add(pasal.toString());
+  //     listLayoutHeight.add(panjanglayout.toString());
 
-      log("add SP LAYOUT $listLayoutHeight");
-      //log("add SP LAYOUT ${listLayoutHeight[listLayoutHeight.length-3]} ${listLayoutHeight[listLayoutHeight.length-2]} ${listLayoutHeight[listLayoutHeight.length-1]}");
-      // for(int i=0;i<listLayoutHeight.length;i++){
-      //   log("add LAYOUT data namakitab ========================");
-      //   log("add LAYOUT data namakitab - ${listLayoutHeight[i]}");
-      //   log("add LAYOUT data pasal - ${listLayoutHeight[i+1]}");
-      //   log("add LAYOUT data height - ${listLayoutHeight[i+2]}");
-      //   i=i+2;
-      // }
-      SharedPreferences heightLayoutSP = await SharedPreferences.getInstance();
-      //heightLayoutSP.setStringList('ListHeightLayout', listkoosongan);
-      heightLayoutSP.setStringList('ListHeightLayout', listLayoutHeight);
-      listLayoutHeight.clear();
-      await getListLayoutHeight();
-    }
+  //     log("add SP LAYOUT $listLayoutHeight");
+  //     //log("add SP LAYOUT ${listLayoutHeight[listLayoutHeight.length-3]} ${listLayoutHeight[listLayoutHeight.length-2]} ${listLayoutHeight[listLayoutHeight.length-1]}");
+  //     // for(int i=0;i<listLayoutHeight.length;i++){
+  //     //   log("add LAYOUT data namakitab ========================");
+  //     //   log("add LAYOUT data namakitab - ${listLayoutHeight[i]}");
+  //     //   log("add LAYOUT data pasal - ${listLayoutHeight[i+1]}");
+  //     //   log("add LAYOUT data height - ${listLayoutHeight[i+2]}");
+  //     //   i=i+2;
+  //     // }
+  //     SharedPreferences heightLayoutSP = await SharedPreferences.getInstance();
+  //     //heightLayoutSP.setStringList('ListHeightLayout', listkoosongan);
+  //     heightLayoutSP.setStringList('ListHeightLayout', listLayoutHeight);
+  //     listLayoutHeight.clear();
+  //     await getListLayoutHeight();
+  //   }
+  // }
+
+  // getListLayoutHeight() async {
+  //   SharedPreferences heightLayoutSP = await SharedPreferences.getInstance();
+  //   listLayoutHeight = heightLayoutSP.getStringList('ListHeightLayout') ?? [];
+
+  //   //BUAT WRITE ULANG DI FILE
+  //   //writeDataHeightLayout();
+
+  //   // for(int i=0;i<listLayoutHeight.length;i++){
+  //   //   log("LAYOUT data namakitab =========${i+1}===============");
+  //   //   log("LAYOUT data namakitab - ${listLayoutHeight[i]}");
+  //   //   log("LAYOUT data pasal - ${listLayoutHeight[i+1]}");
+  //   //   log("LAYOUT data height - ${listLayoutHeight[i+2]}");
+  //   //   i = i+2;
+  //   // }
+
+  //   //log("get SP LAYOUT ada berapa ukuran ${listLayoutHeight.length/3}");
+  // }
+
+  // bool heightLayoutSudahAda(String namakitab, String pasal) {
+  //   bool ada = false;
+  //   for (int i = 0; i < listLayoutHeight.length; i++) {
+  //     if (listLayoutHeight[i] == namakitab &&
+  //         listLayoutHeight[i + 1] == pasal) {
+  //       ada = true;
+  //       break;
+  //     }
+  //   }
+
+  //   return ada;
+  // }
+
+  //FILE STICKERS
+  bool kosonginfilestiker=false;
+  Future<File> get _localFileStiker async {
+    return File('/storage/emulated/0/Download/listStiker.txt');
   }
+  Future<void> writeDataStiker() async {
+   
+    final file = await _localFileStiker;
+    List tempStiker = listpositionSP;
+    
+    log("panjang stiker SP ${tempStiker.length}");
+    String datajsonstiker="";
 
-  getListLayoutHeight() async {
-    SharedPreferences heightLayoutSP = await SharedPreferences.getInstance();
-    listLayoutHeight = heightLayoutSP.getStringList('ListHeightLayout') ?? [];
+    if(tempStiker.isNotEmpty){
+      datajsonstiker = '';
 
-    //BUAT WRITE ULANG DI FILE
-    //writeDataHeightLayout();
-
-    // for(int i=0;i<listLayoutHeight.length;i++){
-    //   log("LAYOUT data namakitab =========${i+1}===============");
-    //   log("LAYOUT data namakitab - ${listLayoutHeight[i]}");
-    //   log("LAYOUT data pasal - ${listLayoutHeight[i+1]}");
-    //   log("LAYOUT data height - ${listLayoutHeight[i+2]}");
-    //   i = i+2;
-    // }
-
-    //log("get SP LAYOUT ada berapa ukuran ${listLayoutHeight.length/3}");
-  }
-
-  bool heightLayoutSudahAda(String namakitab, String pasal) {
-    bool ada = false;
-    for (int i = 0; i < listLayoutHeight.length; i++) {
-      if (listLayoutHeight[i] == namakitab &&
-          listLayoutHeight[i + 1] == pasal) {
-        ada = true;
-        break;
+      datajsonstiker = "$datajsonstiker[";
+        for (int i = 0; i < tempStiker.length; i++) {
+          if (i != 0) {
+            // ignore: prefer_interpolation_to_compose_strings
+            datajsonstiker = datajsonstiker + ",{";
+          } else {
+            // ignore: prefer_interpolation_to_compose_strings
+            datajsonstiker = datajsonstiker + "{";
+          }
+          datajsonstiker =
+              // ignore: prefer_interpolation_to_compose_strings
+              datajsonstiker + '"Isi":"' + tempStiker[i].toString() + '"' + '}'; 
+        }
+      datajsonstiker = "$datajsonstiker]";
+    
+      if(kosonginfilestiker==true){
+        await file.writeAsString("");
+      }else{
+        await file.writeAsString(datajsonstiker);
       }
-    }
+      
+      readFileStiker();
 
-    return ada;
+    }
+    
+    
   }
+
+  // read data
+  List<String> listbacajsonstiker = [];
+  Future<void> readFileStiker() async {
+
+    final file = await _localFileStiker;
+   
+    List tempbacadrjson=[];
+    // Read the file-
+    final contents = await file.readAsString();
+    if(contents.isNotEmpty){
+      tempbacadrjson=json.decode(contents);
+      for(int i=0;i<tempbacadrjson.length;i++){
+        listbacajsonstiker.add(tempbacadrjson[i]["Isi"]);
+
+      }
+      log("stiker SP panjang - ${listbacajsonstiker.length}");
+    }
+  }
+  //END OF FILE STICKERS
+
 
   // //SHARED PREFERENCES STICKERS
 
@@ -2930,15 +2995,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         3, listposition[listposition.length - 1].lokasikitab.toString());
     listpositionSP.insert(
         4, listposition[listposition.length - 1].lokasipasal.toString());
-    // listpositionSP.insert(
-    //     5, listposition[listposition.length - 1].statusSticker.toString());
-    //listposition.clear();
 
-    //listpositionSP.insert(5, listposition[listposition.length].posisistiker);
-    //print("listindexkitab - ${listindexbookmarked.length}");
+    await writeDataStiker();
+    
     SharedPreferences stickerSP = await SharedPreferences.getInstance();
     stickerSP.setStringList('ListOfStickers', listpositionSP);
-    await getStickerSP();
+    await getStickerSP("SP");
   }
 
   updatewriteStickerSP() async {
@@ -2953,29 +3015,36 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       listpositionSP.insert(
           4 + (5 * i), listposition[i].lokasipasal.toString());
     }
+    await writeDataStiker();
 
     log("updatestiker - ${listpositionSP.length}");
 
     SharedPreferences stickerSP = await SharedPreferences.getInstance();
     await stickerSP.clear();
     stickerSP.setStringList('ListOfStickers', listpositionSP);
-    await getStickerSP();
+    await getStickerSP("SP");
   }
 
-  getStickerSP() async {
+  getStickerSP(String darimana) async {
     SharedPreferences stickerSP = await SharedPreferences.getInstance();
-    //buat clear semua di SP
-    //await stickerSP.clear();
-    // Return bool
-    listpositionSP = stickerSP.getStringList('ListOfStickers') ?? [];
 
+    if(darimana=="SP"){
+      listpositionSP = stickerSP.getStringList('ListOfStickers') ?? [];
+    }else{
+      if(listbacajsonstiker.isNotEmpty){
+        listpositionSP = listbacajsonstiker;
+      }else{
+        listpositionSP = stickerSP.getStringList('ListOfStickers') ?? [];
+        
+      }
+      
+    }
+  
     listposition.clear();
 
     if (listpositionSP.isNotEmpty) {
       for (int i = 0; i < listpositionSP.length; i++) {
-        // log("stiker ke - $stikerKe");
-        // log("looping child ${listpositionSP[i + 2]}");
-
+        
         Positioned posisistikeretanpadelete = Positioned(
           left: double.parse(listpositionSP[i]) - 20,
           top: double.parse(listpositionSP[i + 1]) - 105,
@@ -3019,6 +3088,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     log("stiker total ada - ${listposition.length}");
 
+    
     //return listpositionSP;
   }
 
@@ -3282,6 +3352,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         setState(() {
           // backsound_mode = true;
           setLagu(backsound_mode);
+
         });
         break;
       case AppLifecycleState.paused:
@@ -3745,7 +3816,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               return page[index];
                             },
                             onPageChanged: (page) {
-                              log("haduh - ${cariHeightLayout(namakitabdicari, index.toString())}");
+                              //log("haduh - ${cariHeightLayout(namakitabdicari, index.toString())}");
                               setState(() {
                                 int pasalsekarang = page + 1;
                                 pasalkitab = pasalsekarang.toString();
