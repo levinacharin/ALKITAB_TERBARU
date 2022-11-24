@@ -859,15 +859,6 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
               children: [
                 IconButton(
                   onPressed: () {
-                    reloadPage();
-                  }, 
-                  icon: const Icon(
-                    Icons.refresh,
-                    color: Color.fromARGB(255, 113, 9, 49),
-                  )
-                ),
-                IconButton(
-                  onPressed: () {
                     Navigator.push(
                       context, 
                       MaterialPageRoute(builder: (context) => NotifikasiPage())
@@ -1383,13 +1374,19 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                                               Column(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
                                                 children: [
-                                                  ClipOval(
-                                                    child: Image.asset(
-                                                      "assets/images/rencana1.jpg",
+                                                  listRencana[index].imagepath != "-"
+                                                  ? ClipOval(
+                                                    child: Image.network(
+                                                      '${globals.urllocal}getimage?id=${listRencana[index].idrencana}&folder=rencana',
                                                       width: 60,
                                                       height: 60,
                                                       fit: BoxFit.cover,
-                                                    )
+                                                    ),
+                                                  )
+                                                  : Icon(
+                                                    Icons.account_circle_outlined,
+                                                    color: Color(int.parse(globals.defaultcolor)),
+                                                    size: 60,
                                                   )
                                                 ],
                                               ),
@@ -1481,7 +1478,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                                 await DetailRencana.getDetailRencana(int.parse(listRencana[index].idrencana)).then((value) {
                                   setState(() {
                                     globals.listDetailRencana = value;
-                                    print("length: ${globals.listDetailRencana.length}");
+                                    globals.idrencana = listRencana[index].idrencana;
+                                    globals.imagepathrencana = listRencana[index].imagepath;
                                   });
                                 });
                                 // ignore: use_build_context_synchronously

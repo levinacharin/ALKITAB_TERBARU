@@ -326,7 +326,7 @@ class _ExploreState extends State<Explore> {
 
                                   Navigator.push(
                                     context, 
-                                    MaterialPageRoute(builder: (context) => const DetailRefleksiUser())
+                                    MaterialPageRoute(builder: (context) => const DetailRefleksiUser(pagefrom: 'explore',))
                                   );
                                 },
                                 child: Column(

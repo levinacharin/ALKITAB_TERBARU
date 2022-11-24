@@ -73,7 +73,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
     AkunKomunitas.getAllData().then((value) async {
       setState(() {
         listKomunitasAll = [];
-        listKomunitasAll= value;
+        listKomunitasAll = value;
 
         getCountMember();  // get jumlah anggota semua list
       });
@@ -321,23 +321,6 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
 
     _tabController = TabController(length: 2, vsync: this);
   }
-
-
-  Future reloadPage() async {
-    getAllAkunKomunitas();  // untuk list komunitasku
-    setState(() {
-      globals.idkomunitas = "";
-      globals.namakomunitas = "";
-      globals.statuskomunitas = "";
-      globals.deskripsikomunitas = "";
-      globals.passwordkomunitas = "";
-      globals.tanggalpembuatan = "";
-      globals.jumlahanggota = "";
-      globals.roleuser = "";
-
-      _tabController = TabController(length: 2, vsync: this);
-    });
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -472,10 +455,25 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                               children: [
                                                 Column(
                                                   children: [
-                                                    listKomunitasShow[index].imagepath != "-"
+                                                    globals.idUser != ""
+                                                    ? listKomunitasShow[index].imagepath != "-"
+                                                      ? ClipOval(
+                                                        child: Image.network(
+                                                          '${globals.urllocal}getimage?id=${listKomunitasShow[index].idkomunitas}&folder=komunitas',
+                                                          width: 60,
+                                                          height: 60,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      )
+                                                      : Icon(
+                                                        Icons.account_circle_outlined,
+                                                        color: Color(int.parse(globals.defaultcolor)),
+                                                        size: 60,
+                                                      )
+                                                  : listKomunitasAll[index].imagepath != "-"
                                                     ? ClipOval(
                                                       child: Image.network(
-                                                        '${globals.urllocal}getimage?id=${listKomunitasShow[index].idkomunitas}&folder=komunitas',
+                                                        '${globals.urllocal}getimage?id=${listKomunitasAll[index].idkomunitas}&folder=komunitas',
                                                         width: 60,
                                                         height: 60,
                                                         fit: BoxFit.cover,
@@ -643,7 +641,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                                         ),
                                                       ),
                                                       style: ElevatedButton.styleFrom(
-                                                        primary: Colors.white,
+                                                        backgroundColor: Colors.white,
                                                         side: BorderSide(
                                                           color: Color(int.parse(globals.defaultcolor))
                                                         ),

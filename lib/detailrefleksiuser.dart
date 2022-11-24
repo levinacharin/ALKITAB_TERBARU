@@ -5,7 +5,11 @@ import 'package:url_launcher/url_launcher.dart';
 import './global.dart' as globals;
 
 class DetailRefleksiUser extends StatefulWidget {
-  const DetailRefleksiUser({super.key});
+  final String pagefrom;
+  const DetailRefleksiUser({
+    super.key,
+    required this.pagefrom
+  });
 
   @override
   State<DetailRefleksiUser> createState() => _DetailRefleksiUserState();
@@ -13,6 +17,15 @@ class DetailRefleksiUser extends StatefulWidget {
 
 class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
   TextEditingController ctr_komen = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("iduser: ${globals.idUser}");
+    print("idkomunitas: ${globals.idkomunitas}");
+    print("image path: ${globals.imagepathrefleksi}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -265,159 +278,159 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                     color: Color(int.parse(globals.defaultcolor)),
                   ),
                   const SizedBox(height: 10,),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // ignore: avoid_unnecessary_containers
-                          Container(
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/pp2.jpg',
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                              )
-                            )
-                          ),
-                          const SizedBox(width: 5,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Nama User",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 18, 
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 113, 9, 49)
-                                    )
-                                  ),
-                                ),
-                                Text(
-                                  "16 September 2022",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 14,
-                                      color: Color.fromARGB(255, 125, 125, 125)
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SizedBox(width: 55,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10,),
-                                Text(
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10,),
-                  Divider(
-                    height: 1,
-                    color: Color(int.parse(globals.defaultcolor)),
-                  ),
-                  const SizedBox(height: 10,),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // ignore: avoid_unnecessary_containers
-                          Container(
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/pp3.jpg',
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                              )
-                            )
-                            // Icon(
-                            //   Icons.account_circle_outlined,
-                            //   color: Color(int.parse(globals.defaultcolor)),
-                            //   size: 50,
-                            // ),
-                          ),
-                          const SizedBox(width: 5,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Nama User",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 18, 
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 113, 9, 49)
-                                    )
-                                  ),
-                                ),
-                                Text(
-                                  "16 September 2022",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 14,
-                                      color: Color.fromARGB(255, 125, 125, 125)
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SizedBox(width: 55,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10,),
-                                Text(
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting",
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  // Column(
+                  //   children: [
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         // ignore: avoid_unnecessary_containers
+                  //         Container(
+                  //           child: ClipOval(
+                  //             child: Image.asset(
+                  //               'assets/images/pp2.jpg',
+                  //               width: 50,
+                  //               height: 50,
+                  //               fit: BoxFit.cover,
+                  //             )
+                  //           )
+                  //         ),
+                  //         const SizedBox(width: 5,),
+                  //         Expanded(
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               Text(
+                  //                 "Nama User",
+                  //                 style: GoogleFonts.nunito(
+                  //                   textStyle: const TextStyle(
+                  //                     fontSize: 18, 
+                  //                     fontWeight: FontWeight.bold,
+                  //                     color: Color.fromARGB(255, 113, 9, 49)
+                  //                   )
+                  //                 ),
+                  //               ),
+                  //               Text(
+                  //                 "16 September 2022",
+                  //                 style: GoogleFonts.nunito(
+                  //                   textStyle: const TextStyle(
+                  //                     fontSize: 14,
+                  //                     color: Color.fromARGB(255, 125, 125, 125)
+                  //                   )
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         const SizedBox(width: 55,),
+                  //         Expanded(
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               const SizedBox(height: 10,),
+                  //               Text(
+                  //                 "Lorem Ipsum is simply dummy text of the printing and typesetting",
+                  //                 style: GoogleFonts.nunito(
+                  //                   textStyle: const TextStyle(
+                  //                     fontSize: 16,
+                  //                     fontWeight: FontWeight.w500,
+                  //                     color: Colors.black
+                  //                   )
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 10,),
+                  // Divider(
+                  //   height: 1,
+                  //   color: Color(int.parse(globals.defaultcolor)),
+                  // ),
+                  // const SizedBox(height: 10,),
+                  // Column(
+                  //   children: [
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         // ignore: avoid_unnecessary_containers
+                  //         Container(
+                  //           child: ClipOval(
+                  //             child: Image.asset(
+                  //               'assets/images/pp3.jpg',
+                  //               width: 50,
+                  //               height: 50,
+                  //               fit: BoxFit.cover,
+                  //             )
+                  //           )
+                  //           // Icon(
+                  //           //   Icons.account_circle_outlined,
+                  //           //   color: Color(int.parse(globals.defaultcolor)),
+                  //           //   size: 50,
+                  //           // ),
+                  //         ),
+                  //         const SizedBox(width: 5,),
+                  //         Expanded(
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               Text(
+                  //                 "Nama User",
+                  //                 style: GoogleFonts.nunito(
+                  //                   textStyle: const TextStyle(
+                  //                     fontSize: 18, 
+                  //                     fontWeight: FontWeight.bold,
+                  //                     color: Color.fromARGB(255, 113, 9, 49)
+                  //                   )
+                  //                 ),
+                  //               ),
+                  //               Text(
+                  //                 "16 September 2022",
+                  //                 style: GoogleFonts.nunito(
+                  //                   textStyle: const TextStyle(
+                  //                     fontSize: 14,
+                  //                     color: Color.fromARGB(255, 125, 125, 125)
+                  //                   )
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         const SizedBox(width: 55,),
+                  //         Expanded(
+                  //           child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               const SizedBox(height: 10,),
+                  //               Text(
+                  //                 "Lorem Ipsum is simply dummy text of the printing and typesetting",
+                  //                 style: GoogleFonts.nunito(
+                  //                   textStyle: const TextStyle(
+                  //                     fontSize: 16,
+                  //                     fontWeight: FontWeight.w500,
+                  //                     color: Colors.black
+                  //                   )
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(
                     height: (MediaQuery.of(context).size.height)/10
                   ),
@@ -436,20 +449,35 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          globals.imagepathkomunitas != "-"
-                          ? ClipOval(
-                            child: Image.network(
-                              '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
-                              width: 40,
-                              height: 40,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                          : Icon(
-                            Icons.account_circle_outlined,
-                            color: Color(int.parse(globals.defaultcolor)),
-                            size: 40,
-                          )
+                          widget.pagefrom == "explore"
+                          ? globals.imagepathrefleksi != "-" 
+                            ? ClipOval(
+                                child: Image.network(
+                                  '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Icon(
+                                Icons.account_circle_outlined,
+                                color: Color(int.parse(globals.defaultcolor)),
+                                size: 40,
+                              )
+                          : globals.imagepathkomunitas != "-"
+                            ? ClipOval(
+                                child: Image.network(
+                                  '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Icon(
+                                Icons.account_circle_outlined,
+                                color: Color(int.parse(globals.defaultcolor)),
+                                size: 40,
+                              )
                         ],
                       ),
                       const SizedBox(width: 5,),

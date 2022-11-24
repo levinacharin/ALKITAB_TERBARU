@@ -91,6 +91,7 @@ String lastIdRDatabase = "";
 // rencana bacaan 
 String idrencana = "";
 String judulrencana = "";
+String imagepathrencana = "";
 List<DetailRencana> listDetailRencana = []; // dari menu komunitas
 List listDetailRUser = []; // dari menu user
 

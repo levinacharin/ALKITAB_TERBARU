@@ -158,20 +158,20 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
             color: Color.fromARGB(255, 113, 9, 49),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-              onPressed: () {
-                reloadPage();
-              }, 
-              icon: const Icon(
-                Icons.refresh,
-                color: Color.fromARGB(255, 113, 9, 49),
-              )
-            )
-          )
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.only(right: 8),
+        //     child: IconButton(
+        //       onPressed: () {
+        //         reloadPage();
+        //       }, 
+        //       icon: const Icon(
+        //         Icons.refresh,
+        //         color: Color.fromARGB(255, 113, 9, 49),
+        //       )
+        //     )
+        //   )
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -180,10 +180,12 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: 200,
-              child: Image.asset(
-                "assets/images/pp3.jpg",
-                fit: BoxFit.fill,
-              ),
+              child: globals.imagepathrencana != "-"
+              ? Image.network(
+                '${globals.urllocal}getimage?id=${globals.idrencana}&folder=rencana',
+                fit: BoxFit.cover,
+              )
+              : Image.asset("")
             ),
             const SizedBox(height: 10,),
             Container(

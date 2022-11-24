@@ -58,6 +58,7 @@ class _ListRenunganState extends State<ListRenungan> {
     super.initState();
     readFile();
     getRefleksi();
+    //getExplore sama dengan get Refleksi
   }
 
   Future reloadPage() async {
@@ -502,50 +503,97 @@ class _ListRenunganState extends State<ListRenungan> {
                                                           children: [
                                                             GestureDetector(
                                                               onTap: () async {
-                                                                addAsRefleksiUser(index);
-                                                                await showDialog(
-                                                                  context: context, 
-                                                                  builder: (context) {
-                                                                    return AlertDialog(
-                                                                      title: Center(
-                                                                        child: Text(
-                                                                          "Kirim ke komunitas berhasil",
-                                                                          style: GoogleFonts.nunito(
-                                                                            textStyle: const TextStyle(
-                                                                              fontSize: 18,
-                                                                              fontWeight: FontWeight.w500,
-                                                                              color: Color.fromARGB(255, 113, 9, 49)
-                                                                            )
+                                                                if (globals.idUser == "") {
+                                                                  addAsRefleksiUser(index);
+                                                                  await showDialog(
+                                                                    context: context, 
+                                                                    builder: (context) {
+                                                                      return AlertDialog(
+                                                                        title: Center(
+                                                                          child: Text(
+                                                                            "Kirim ke komunitas berhasil",
+                                                                            style: GoogleFonts.nunito(
+                                                                              textStyle: const TextStyle(
+                                                                                fontSize: 18,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: Color.fromARGB(255, 113, 9, 49)
+                                                                              )
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                      actions: [
-                                                                        Container(
-                                                                          width: MediaQuery.of(context).size.width,
-                                                                          child: ElevatedButton(
-                                                                            onPressed: () {
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                            style: ElevatedButton.styleFrom(
-                                                                              backgroundColor: Color(int.parse(globals.defaultcolor)),
-                                                                              elevation: 5,
-                                                                              padding: const EdgeInsets.all(5),
-                                                                            ),
-                                                                            child: Text(
-                                                                              "Oke",
-                                                                              style: GoogleFonts.nunito(
-                                                                                textStyle: const TextStyle(
-                                                                                  fontSize: 16,
-                                                                                  color: Colors.white
-                                                                                )
+                                                                        actions: [
+                                                                          Container(
+                                                                            width: MediaQuery.of(context).size.width,
+                                                                            child: ElevatedButton(
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                              style: ElevatedButton.styleFrom(
+                                                                                backgroundColor: Color(int.parse(globals.defaultcolor)),
+                                                                                elevation: 5,
+                                                                                padding: const EdgeInsets.all(5),
+                                                                              ),
+                                                                              child: Text(
+                                                                                "Oke",
+                                                                                style: GoogleFonts.nunito(
+                                                                                  textStyle: const TextStyle(
+                                                                                    fontSize: 16,
+                                                                                    color: Colors.white
+                                                                                  )
+                                                                                ),
                                                                               ),
                                                                             ),
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                  );
+                                                                } else {
+                                                                  await showDialog(
+                                                                    context: context, 
+                                                                    builder: (context) {
+                                                                      return AlertDialog(
+                                                                        title: Center(
+                                                                          child: Text(
+                                                                            "Silahkan Login Terlebih Dahulu",
+                                                                            style: GoogleFonts.nunito(
+                                                                              textStyle: const TextStyle(
+                                                                                fontSize: 18,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: Color.fromARGB(255, 113, 9, 49)
+                                                                              )
+                                                                            ),
+                                                                            textAlign: TextAlign.center,
                                                                           ),
-                                                                        )
-                                                                      ],
-                                                                    );
-                                                                  }
-                                                                );
+                                                                        ),
+                                                                        actions: [
+                                                                          Container(
+                                                                            width: MediaQuery.of(context).size.width,
+                                                                            child: ElevatedButton(
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                              style: ElevatedButton.styleFrom(
+                                                                                backgroundColor: Color(int.parse(globals.defaultcolor)),
+                                                                                elevation: 5,
+                                                                                padding: const EdgeInsets.all(5),
+                                                                              ),
+                                                                              child: Text(
+                                                                                "Oke",
+                                                                                style: GoogleFonts.nunito(
+                                                                                  textStyle: const TextStyle(
+                                                                                    fontSize: 16,
+                                                                                    color: Colors.white
+                                                                                  )
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                  );
+                                                                }
                                                               },
                                                               child: Column(
                                                                 children: [
@@ -588,50 +636,98 @@ class _ListRenunganState extends State<ListRenungan> {
                                                             ),
                                                             GestureDetector(
                                                               onTap: () async {
-                                                                addToExplore();
-                                                                await showDialog(
-                                                                  context: context, 
-                                                                  builder: (context) {
-                                                                    return AlertDialog(
-                                                                      title: Center(
-                                                                        child: Text(
-                                                                          "Kirim ke explore berhasil",
-                                                                          style: GoogleFonts.nunito(
-                                                                            textStyle: const TextStyle(
-                                                                              fontSize: 18,
-                                                                              fontWeight: FontWeight.w500,
-                                                                              color: Color.fromARGB(255, 113, 9, 49)
-                                                                            )
+                                                                if (globals.idUser != "") {
+                                                                  addToExplore();
+                                                                  await showDialog(
+                                                                    context: context, 
+                                                                    builder: (context) {
+                                                                      return AlertDialog(
+                                                                        title: Center(
+                                                                          child: Text(
+                                                                            "Kirim ke explore berhasil",
+                                                                            style: GoogleFonts.nunito(
+                                                                              textStyle: const TextStyle(
+                                                                                fontSize: 18,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: Color.fromARGB(255, 113, 9, 49)
+                                                                              )
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                      actions: [
-                                                                        Container(
-                                                                          width: MediaQuery.of(context).size.width,
-                                                                          child: ElevatedButton(
-                                                                            onPressed: () {
-                                                                              Navigator.pop(context);
-                                                                            },
-                                                                            style: ElevatedButton.styleFrom(
-                                                                              primary: Color(int.parse(globals.defaultcolor)),
-                                                                              elevation: 5,
-                                                                              padding: const EdgeInsets.all(5),
-                                                                            ),
-                                                                            child: Text(
-                                                                              "Oke",
-                                                                              style: GoogleFonts.nunito(
-                                                                                textStyle: const TextStyle(
-                                                                                  fontSize: 16,
-                                                                                  color: Colors.white
-                                                                                )
+                                                                        actions: [
+                                                                          Container(
+                                                                            width: MediaQuery.of(context).size.width,
+                                                                            child: ElevatedButton(
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                              style: ElevatedButton.styleFrom(
+                                                                                backgroundColor: Color(int.parse(globals.defaultcolor)),
+                                                                                elevation: 5,
+                                                                                padding: const EdgeInsets.all(5),
+                                                                              ),
+                                                                              child: Text(
+                                                                                "Oke",
+                                                                                style: GoogleFonts.nunito(
+                                                                                  textStyle: const TextStyle(
+                                                                                    fontSize: 16,
+                                                                                    color: Colors.white
+                                                                                  )
+                                                                                ),
                                                                               ),
                                                                             ),
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                  );
+                                                                }
+                                                                else {
+                                                                  await showDialog(
+                                                                    context: context, 
+                                                                    builder: (context) {
+                                                                      return AlertDialog(
+                                                                        title: Center(
+                                                                          child: Text(
+                                                                            "Silahkan Login Terlebih Dahulu",
+                                                                            style: GoogleFonts.nunito(
+                                                                              textStyle: const TextStyle(
+                                                                                fontSize: 18,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: Color.fromARGB(255, 113, 9, 49)
+                                                                              )
+                                                                            ),
+                                                                            textAlign: TextAlign.center,
                                                                           ),
-                                                                        )
-                                                                      ],
-                                                                    );
-                                                                  }
-                                                                );
+                                                                        ),
+                                                                        actions: [
+                                                                          Container(
+                                                                            width: MediaQuery.of(context).size.width,
+                                                                            child: ElevatedButton(
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                              style: ElevatedButton.styleFrom(
+                                                                                backgroundColor: Color(int.parse(globals.defaultcolor)),
+                                                                                elevation: 5,
+                                                                                padding: const EdgeInsets.all(5),
+                                                                              ),
+                                                                              child: Text(
+                                                                                "Oke",
+                                                                                style: GoogleFonts.nunito(
+                                                                                  textStyle: const TextStyle(
+                                                                                    fontSize: 16,
+                                                                                    color: Colors.white
+                                                                                  )
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                  );
+                                                                }
                                                               },
                                                               child: Column(
                                                                 children: [

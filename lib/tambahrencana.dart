@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:alkitab/detailkomunitas.dart';
+import 'package:alkitab/listkomunitas.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -305,6 +307,8 @@ class _TambahRencanaState extends State<TambahRencana> {
       fields_ayatbacaan.add(field_ayat);
       ctr_linkrenungan.add(controller_link);
       fields_linkrenungan.add(field_link);
+
+      print("path photo: $pathPhoto");
     });
   }
 
@@ -572,12 +576,11 @@ class _TambahRencanaState extends State<TambahRencana> {
       var lastId = data['data']['getIdLast'];
       idrencana = lastId.toString();
 
-      SimpanRencanaBacaan();
+      SimpanRencanaBacaan(idrencana);
     }
   }
 
-  void SimpanRencanaBacaan() async {
-    print("idrencana: $idrencana");
+  void SimpanRencanaBacaan(String idrencana) async {
     var url = "${globals.urllocal}simpandetailrencana";
     for (int i = 0; i < ctr_ayatbacaan.length; i++) {
       getPecahAyat(ctr_ayatbacaan[i].text);
@@ -593,10 +596,10 @@ class _TambahRencanaState extends State<TambahRencana> {
       });
     }
 
-    updateImage();
+    updateImage(idrencana);
   }
 
-  void updateImage() async {
+  void updateImage(String idrencana) async {
     var url = "${globals.urllocal}uploadimage";
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.fields['id'] = idrencana;
@@ -605,6 +608,12 @@ class _TambahRencanaState extends State<TambahRencana> {
       await http.MultipartFile.fromPath('photo', pathPhoto)
     );
     var res = await request.send();
+
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+    );
   }
   // END OF API SERVICES
 
@@ -771,15 +780,10 @@ class _TambahRencanaState extends State<TambahRencana> {
                       image: FileImage(imageFile),
                       fit: BoxFit.fill
                     )
-                    : globals.imagepathkomunitas != "-" 
-                      ? DecorationImage(
-                        image: NetworkImage(
-                          '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
-                        ),
-                        fit: BoxFit.fill
-                      )
-                      : const DecorationImage(image: AssetImage("")), 
-                    color: globals.idkomunitas == "-" && pathPhoto == "" ? Colors.grey[300] : Colors.transparent
+                    : const DecorationImage(
+                      image: AssetImage("")
+                    ),
+                    color: pathPhoto == "" ? Colors.grey[300] : Colors.transparent
                   ),
                   child: IconButton(
                     onPressed: () {

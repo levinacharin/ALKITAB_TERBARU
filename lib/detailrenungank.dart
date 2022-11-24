@@ -540,7 +540,7 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                   globals.tindakansaya = listRefleksi[index].tindakansaya;
                   Navigator.push(
                     context, 
-                    MaterialPageRoute(builder: (context) => DetailRefleksiUser())
+                    MaterialPageRoute(builder: (context) => DetailRefleksiUser(pagefrom: '',))
                   );
                   
                 },
