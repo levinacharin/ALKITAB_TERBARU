@@ -1,14 +1,17 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 
 import 'global.dart' as globals;
 import 'pecahAyatClass.dart';
 
 class TambahRencana extends StatefulWidget {
+  
   const TambahRencana({super.key});
 
   @override
@@ -588,15 +591,41 @@ class _TambahRencanaState extends State<TambahRencana> {
       "isirenungan" : ctr_isirenungan[i].text,
       "linkrenungan" : ctr_linkrenungan[i].text
       });
-        // ignore: prefer_adjacent_string_concatenation, prefer_interpolation_to_compose_strings
-    //     log("hari: ${i+1}, ayatbacaan: ${hasil}, " +
-    //   "judul: ${ctr_judulrenungan[i].text}, isi: ${ctr_isirenungan[i].text}, "
-    //   +"link: ${ctr_linkrenungan[i].text}");
     }
 
-    Navigator.pop(context, "refresh");
+    updateImage();
+  }
+
+  void updateImage() async {
+    var url = "${globals.urllocal}uploadimage";
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields['id'] = idrencana;
+    request.fields['folder'] = 'rencana';
+    request.files.add(
+      await http.MultipartFile.fromPath('photo', pathPhoto)
+    );
+    var res = await request.send();
   }
   // END OF API SERVICES
+
+  bool uploadFoto = false;
+  var imageFile;
+  String pathPhoto = "";
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickImage(ImageSource source) async {
+    final XFile? image = await _picker.pickImage(source: source, imageQuality: 10);
+
+    if (image != null) {
+      setState(() {
+        imageFile = File(image.path);
+        pathPhoto = image.path;
+        uploadFoto = true;
+
+        print("path photo: $pathPhoto");
+      });
+    }
+  }
 
   Future<void> _showDialogAyatBacaan(int idx) async {
     setState(() {
@@ -737,24 +766,110 @@ class _TambahRencanaState extends State<TambahRencana> {
                   width: 150,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color: Colors.grey[300]
+                    image: pathPhoto != ""
+                    ? DecorationImage(
+                      image: FileImage(imageFile),
+                      fit: BoxFit.fill
+                    )
+                    : globals.imagepathkomunitas != "-" 
+                      ? DecorationImage(
+                        image: NetworkImage(
+                          '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
+                        ),
+                        fit: BoxFit.fill
+                      )
+                      : const DecorationImage(image: AssetImage("")), 
+                    color: globals.idkomunitas == "-" && pathPhoto == "" ? Colors.grey[300] : Colors.transparent
                   ),
                   child: IconButton(
                     onPressed: () {
-                      print("terklik");
+                      showModalBottomSheet(
+                        context: context, 
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: 150,
+                            padding: const EdgeInsets.only(top: 30),
+                            color: Colors.white,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          pickImage(ImageSource.gallery);
+                                          Navigator.pop(context);
+                                        }, 
+                                        child: Image.asset(
+                                          'assets/images/fromgallery.png',
+                                          width: 40,
+                                          height: 40,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Pilih Dari Album",
+                                        style: GoogleFonts.roboto(
+                                          textStyle: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(int.parse(globals.defaultcolor))
+                                          )
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(width: 40,),
+                                  Column(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          pickImage(ImageSource.camera);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Image.asset(
+                                          'assets/images/fromcamera.png',
+                                          width: 40,
+                                          height: 40,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Mengambil Foto",
+                                        style: GoogleFonts.roboto(
+                                          textStyle: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(int.parse(globals.defaultcolor))
+                                          )
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      );
                     },
-                    icon: const Icon(
-                      Icons.camera_alt_rounded,
-                      size: 30,
+                    icon: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.white
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10,),
                 Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Gambar Rencana Bacaan",
+                        "Gambar Komunitas",
                         style: GoogleFonts.nunito(
                           textStyle: const TextStyle(
                             fontSize: 18,

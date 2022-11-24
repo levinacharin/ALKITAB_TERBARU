@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:alkitab/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -272,6 +273,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
         }
       }
 
+      // ignore: use_build_context_synchronously
       Navigator.push(
         context, 
         MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'false', pagefrom: 'joinkomunitas',))
@@ -312,7 +314,10 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
     globals.passwordkomunitas = "";
     globals.tanggalpembuatan = "";
     globals.jumlahanggota = "";
+    globals.imagepathkomunitas = "";
     globals.roleuser = "";
+
+
 
     _tabController = TabController(length: 2, vsync: this);
   }
@@ -342,7 +347,10 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listkomunitas"))
+            );
           },
           icon: const Icon(Icons.arrow_back,
             color: Color.fromARGB(255, 113, 9, 49)
@@ -919,7 +927,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
         child: FloatingActionButton(
           onPressed: () {
             Navigator.push(
-              context, MaterialPageRoute(builder: (context) => BuatKomunitas())
+              context, MaterialPageRoute(builder: (context) => BuatKomunitas(pagefrom: "listkomunitas",))
             );
           },
           child: const Icon(

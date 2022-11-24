@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:alkitab/listkomunitas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,9 +14,11 @@ import './detailkomunitas.dart';
 
 class BuatKomunitas extends StatefulWidget {
   String? status;
+  final String? pagefrom;
   BuatKomunitas({
     super.key,
-    this.status
+    this.status,
+    required this.pagefrom
   });
 
   @override
@@ -31,7 +34,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
   bool status = false;
   String statuskomunitas = "";
 
-  
+  String idkomunitas = "";
   void addKomunitas() async {
     tanggal = "${date.day}/${date.month}/${date.year}";
     var url = "${globals.urllocal}komunitasakunadd";
@@ -40,11 +43,13 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
       "statuskomunitas" : statuskomunitas,
       "deskripsikomunitas" : _ctrdeskripsikomunitas.text,
       "passwordkomunitas" : _ctrpasswordkomunitas.text,
-      "tanggalpembuatan" : tanggal
+      "tanggalpembuatan" : tanggal,
+      "imagepath" : "-"
     });
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       var lastId = data['data']['getIdLast'];
+      idkomunitas = lastId.toString();
 
       addDetailKomunitas(lastId);
     }
@@ -66,15 +71,39 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
       globals.deskripsikomunitas = _ctrdeskripsikomunitas.text;
       globals.jumlahanggota = "1";
 
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context, 
-        MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'false', pagefrom: 'buatkomunitas',))
-      );
+      updateImage(idkomunitas.toString());
     }
     else{
-      log("buat akun gagal");
+      // ignore: avoid_print
+      print("buat akun gagal");
     }
+  }
+
+  void updateImage(String idkomunitas) async {
+    var url = "${globals.urllocal}uploadimage";
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields['id'] = idkomunitas;
+    request.fields['folder'] = 'komunitas';
+    request.files.add(
+      await http.MultipartFile.fromPath('photo', pathPhoto)
+    );
+    var res = await request.send();
+
+    globals.idkomunitas = idkomunitas;
+    globals.namakomunitas = _ctrnamakomunitas.text;
+    globals.statuskomunitas = statuskomunitas;
+    globals.deskripsikomunitas = _ctrdeskripsikomunitas.text;
+    if (statuskomunitas == "privat") {
+      globals.passwordkomunitas = _ctrpasswordkomunitas.text;
+    } else if (statuskomunitas == "publik") {
+      globals.passwordkomunitas = "-";
+    }
+    globals.imagepathkomunitas = "uploads/komunitas/komunitas-$idkomunitas.png";
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'false', pagefrom: 'buatkomunitas',))
+    );
   }
 
   void editKomunitas() async {
@@ -95,7 +124,11 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
       "passwordkomunitas" : _ctrpasswordkomunitas.text
     });
     if (response.statusCode == 200) {
-      Navigator.pop(context, "refresh");
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+      );
     }
   }
 
@@ -116,14 +149,16 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
         print("path photo: $pathPhoto");
       });
 
-      var url = "${globals.urllocal}uploadimage";
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.fields['id'] = globals.idkomunitas;
-      request.fields['folder'] = 'komunitas';
-      request.files.add(
-        await http.MultipartFile.fromPath('photo', pathPhoto)
-      );
-      var res = await request.send();
+      if (widget.pagefrom == "detailkomunitas") {
+        var url = "${globals.urllocal}uploadimage";
+        var request = http.MultipartRequest('POST', Uri.parse(url));
+        request.fields['id'] = globals.idkomunitas;
+        request.fields['folder'] = 'komunitas';
+        request.files.add(
+          await http.MultipartFile.fromPath('photo', pathPhoto)
+        );
+        var res = await request.send();
+      }
     }
   }
 
@@ -145,6 +180,11 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
         _ctrpasswordkomunitas.text = globals.passwordkomunitas;
       }
     }
+
+    setState(() {
+      print("path photo: ${imageFile}");
+      print("photo: ${globals.imagepathkomunitas}");
+    });
   }
 
   @override
@@ -155,7 +195,17 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            if (widget.pagefrom == "detailkomunitas") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+              );
+            } else if (widget.pagefrom == "listkomunitas") {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const ListKomunitas())
+              );
+            }
           },
           icon: const Icon(Icons.arrow_back,
             color: Color.fromARGB(255, 113, 9, 49)
@@ -185,7 +235,20 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                   width: 150,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color: Colors.grey[300]
+                    image: pathPhoto != ""
+                    ? DecorationImage(
+                      image: FileImage(imageFile),
+                      fit: BoxFit.fill
+                    )
+                    : globals.imagepathkomunitas != "-" && widget.pagefrom == "detailkomunitas"
+                      ? DecorationImage(
+                        image: NetworkImage(
+                          '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
+                        ),
+                        fit: BoxFit.fill
+                      )
+                      : const DecorationImage(image: AssetImage("")), 
+                    color: globals.idkomunitas == "" && pathPhoto == ""  ? Colors.grey[300] : Colors.transparent
                   ),
                   child: IconButton(
                     onPressed: () {
@@ -256,9 +319,16 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                         }
                       );
                     },
-                    icon: const Icon(
-                      Icons.camera_alt_rounded,
-                      size: 30,
+                    icon: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                        color: Colors.white
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ),
