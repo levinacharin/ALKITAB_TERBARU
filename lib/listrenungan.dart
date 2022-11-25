@@ -972,7 +972,7 @@ class _ListRenunganState extends State<ListRenungan> {
                     onTap: () {
                       Navigator.push(
                         context, 
-                        MaterialPageRoute(builder: (context) => DetailRenungan(index: index, shoulpop: 'true',))
+                        MaterialPageRoute(builder: (context) => DetailRenungan(id: int.parse(listDataRenungan[index]['Id Renungan User']), shoulpop: 'true',))
                       );
                     },
                   );    

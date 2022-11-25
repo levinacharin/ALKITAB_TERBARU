@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:developer';
+
 import 'package:alkitab/classrencanabacaan.dart';
 import 'package:alkitab/detailkomunitas.dart';
 import 'package:alkitab/isirencanabaca.dart';
@@ -27,13 +31,11 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
   List<String> estDate = [];
   String datetemp = "";  
 
-  List<String> statusSelesai = [];
-
   void getDate() {
     setState(() {
       estDate = [];
       datetemp = "";
-      if (widget.pagefrom == "user") {
+      if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
         currentdate = DateTime.parse(globals.listDetailRUser[0]['Tanggal Rencana']);
         for (int i = 0; i < globals.listDetailRUser.length; i++) {
           if (currentdate.month == 1) {
@@ -99,19 +101,9 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
           estDate.add(datetemp);
 
           if (i != globals.listDetailRencana.length-1) {
-            currentdate = currentdate.add(Duration(days: 1));
+            currentdate = currentdate.add(const Duration(days: 1));
           }
         }
-      }
-    });
-  }
-
-  void statusDayDone(int index) {
-    setState(() {
-      if (statusSelesai[index+index] == "ayat-true" && statusSelesai[index+index+1] == "renungan-true") {
-        globals.listDetailRUser[index]['Status Selesai'] = "true";
-      } else if (globals.listDetailRUser[index]['Judul Renungan'] == "-" && statusSelesai[index+index] == "ayat-true") {
-        globals.listDetailRUser[index] ['Status Selesai'] = "true";
       }
     });
   }
@@ -122,22 +114,97 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
     super.initState();
     getDate();
 
-    if (widget.pagefrom == "user") {
-      statusSelesai = globals.statusBaca;
-
+    if (widget.pagefrom == "isirencanabaca") {
       for (int i = 0; i < globals.listDetailRUser.length; i++) {
-        statusDayDone(i);
+        if (globals.listDetailRUser[i]['Status Ayat'] == "true" && globals.listDetailRUser[i]['Status Renungan'] == "true") {
+          setState(() {
+            globals.listDetailRUser[i]['Status Selesai'] = "true";
+          });
+        }
       }
     }
   }
 
-  Future reloadPage() async {
-    await Future.delayed(Duration(seconds: 1));
-    setState(() {
-      statusSelesai = globals.statusBaca;
-      statusDayDone(indexSelect);
-      print("status baca : $statusSelesai");
-    });
+  String dataRencana = '';
+  List listTempData = [];
+  Future<void> writeData() async {
+    var temp = '';
+
+    String path = '/storage/emulated/0/Download/Rencanajson.txt';
+    bool directoryExists = await Directory(path).exists();
+    bool fileExists = await File(path).exists();
+
+    if (directoryExists || fileExists) {
+      final contents = await File(path).readAsString(encoding: utf8);
+      listTempData = [];
+      setState(() {
+        if (contents.isNotEmpty) {
+          listTempData = json.decode(contents);
+
+          for (int i = 0; i < listTempData.length; i++) {
+            listTempData[i]['Ayat Bacaan'] = listTempData[i]['Ayat Bacaan'].toString().replaceAll("<br>", "\n");
+          }
+        }
+      });
+    }
+
+    int countidx = 0;
+
+    dataRencana = '';
+    dataRencana = "$dataRencana[";
+    if (listTempData.isNotEmpty) {
+      for (int i = 0; i < listTempData.length; i++) {
+        temp = listTempData[i]['Ayat Bacaan'].toString().replaceAll('"', '${String.fromCharCode(92)}"');
+        if (listTempData[i]['Id Rencana'] == globals.listDetailRUser[countidx]['Id Rencana']) {
+          listTempData[i]['Status Ayat'] = globals.listDetailRUser[countidx]['Status Ayat'];
+          listTempData[i]['Status Renungan'] = globals.listDetailRUser[countidx]['Status Renungan'];
+          listTempData[i]['Status Selesai'] = globals.listDetailRUser[countidx]['Status Selesai'];
+
+          countidx++;
+        }
+
+        dataRencana = "$dataRencana{";
+        // ignore: prefer_interpolation_to_compose_strings
+        dataRencana = dataRencana +
+        '"Id Rencana":"' +
+        listTempData[i]['Id Rencana'] +
+        '","Tanggal Rencana":"' +
+        listTempData[i]['Tanggal Rencana'] +
+        '","Judul Rencana":"' +
+        listTempData[i]['Judul Rencana'] +
+        '","Deskripsi Rencana":"' +
+        listTempData[i]['Deskripsi Rencana'] +
+        '","Image Path":"' +
+        listTempData[i]['Image Path'] +
+        '","Kitab Bacaan":"' +
+        listTempData[i]['Kitab Bacaan'] +
+        '","Ayat Bacaan":"' +
+        temp +
+        '","Judul Renungan":"' +
+        listTempData[i]['Judul Renungan'] +
+        '","Isi Renungan":"' +
+        listTempData[i]['Isi Renungan'] +
+        '","Link Renungan":"' +
+        listTempData[i]['Link Renungan'] +
+        '","Status Ayat":"' +
+        listTempData[i]['Status Ayat'] +
+        '","Status Renungan":"' +
+        listTempData[i]['Status Renungan'] +
+        '","Status Selesai":"' +
+        listTempData[i]['Status Selesai'] +
+        '"}';
+
+        if (listTempData.length != 1 && i != listTempData.length - 1) {
+          // ignore: prefer_interpolation_to_compose_strings
+          dataRencana = dataRencana + ',';
+        }
+      }
+
+      dataRencana = "$dataRencana]";
+      dataRencana = dataRencana.replaceAll("\n", "<br>");
+    }
+
+    await File(path).writeAsString(dataRencana);
   }
 
   @override
@@ -147,36 +214,33 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const ListRencanaUser())
-            );
+          onPressed: () async {
+            if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
+              await writeData();
+
+              // ignore: use_build_context_synchronously
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'detailrencanabaca',))
+              );
+            } else {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+              );
+            }
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
             color: Color.fromARGB(255, 113, 9, 49),
           ),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 8),
-        //     child: IconButton(
-        //       onPressed: () {
-        //         reloadPage();
-        //       }, 
-        //       icon: const Icon(
-        //         Icons.refresh,
-        //         color: Color.fromARGB(255, 113, 9, 49),
-        //       )
-        //     )
-        //   )
-        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
+            // ignore: sized_box_for_whitespace
             Container(
               width: MediaQuery.of(context).size.width,
               height: 200,
@@ -185,9 +249,13 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                 '${globals.urllocal}getimage?id=${globals.idrencana}&folder=rencana',
                 fit: BoxFit.cover,
               )
-              : Image.asset("")
+              : Image.network(
+                '${globals.urllocal}getimage?id=0&folder=rencana',
+                fit: BoxFit.cover,
+              )
             ),
             const SizedBox(height: 10,),
+            // ignore: sized_box_for_whitespace
             Container(
               height: 100,
               child: Row(
@@ -207,7 +275,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                           },
                           child: Row(
                             children: [
-                              widget.pagefrom == "user"
+                              widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
                               ? globals.listDetailRUser[index]['Status Selesai'] == "false"
                                 ? Container(
                                   width: 90,
@@ -247,7 +315,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(
-                                        color: Colors.green
+                                        color: index == indexSelect ? Colors.black : Colors.green
                                       ),
                                       borderRadius: BorderRadius.circular(15),
                                       boxShadow: [
@@ -255,7 +323,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                                           color: Colors.grey.withOpacity(0.5),
                                           spreadRadius: 2,
                                           blurRadius: 3,
-                                          offset: Offset(1, 3), // changes position of shadow
+                                          offset: const Offset(1, 3), // changes position of shadow
                                         ),
                                       ],
                                     ),
@@ -312,6 +380,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
               ),
             ),
             const SizedBox(height: 10,),
+            // ignore: sized_box_for_whitespace
             Container(
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -344,8 +413,8 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                                       ),
                                     ),
                                   ),
-                                  widget.pagefrom == "user"
-                                  ? statusSelesai[indexSelect+indexSelect] == "ayat-true"
+                                  widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
+                                  ? globals.listDetailRUser[indexSelect]['Status Ayat'] == "true"
                                     ? Container(
                                         width: 25,
                                         height: 25,
@@ -368,21 +437,12 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                         ),
                       ),
                     ),
-                    onTap: () async {
-                      if (widget.pagefrom == "user") {
-                        final data = await Navigator.push(
+                    onTap: () {
+                      if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
+                        Navigator.push(
                           context, 
                           MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "ayat", idx: indexSelect,))
                         );
-          
-                        if (data == "refresh") {
-                          setState(() {
-                            indexSelect = indexSelect;
-                            statusSelesai = globals.statusBaca;
-                            statusDayDone(indexSelect);
-                            print("status Baca = $statusSelesai");
-                          });
-                        }
                       }
                     },
                   ),
@@ -415,8 +475,8 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                                         )
                                       ),
                                     ),
-                                    widget.pagefrom == "user"
-                                    ? statusSelesai[indexSelect+indexSelect+1] == "renungan-true"
+                                    widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
+                                    ? globals.listDetailRUser[indexSelect]['Status Renungan'] == "true"
                                       ? Container(
                                         width: 25,
                                         height: 25,
@@ -439,20 +499,12 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                           ),
                         ),
                       ),
-                      onTap: () async {
-                        if (widget.pagefrom == "user") {
-                          final data = await Navigator.push(
+                      onTap: () {
+                        if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
+                          Navigator.push(
                             context, 
                             MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "renungan", idx: indexSelect,))
                           );
-          
-                          if (data == "refresh") {
-                            setState(() {
-                              statusSelesai = globals.statusBaca;
-                              statusDayDone(indexSelect);
-                              print("Status Baca = $statusSelesai");
-                            });
-                          }
                         }
                       },
                     ),

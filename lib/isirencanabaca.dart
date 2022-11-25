@@ -33,6 +33,8 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
     replaceTemp = replaceTemp.replaceAll("<br>", "\n");
 
     globals.listDetailRUser[widget.idx]['Ayat Bacaan'] = replaceTemp;
+
+    print("index kiriman: ${widget.idx}");
   }
   
   @override
@@ -47,18 +49,21 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
             replaceTemp = replaceTemp.replaceAll("\n", "<br>");
 
             globals.listDetailRUser[widget.idx]['Ayat Bacaan'] = replaceTemp;
-
+            
             if (widget.isicontent == "ayat") {
-              globals.statusBaca[widget.idx+widget.idx] = "ayat-true";
+              globals.listDetailRUser[widget.idx]['Status Ayat'] = "true";
             } else if (widget.isicontent == "renungan") {
-              globals.statusBaca[widget.idx+widget.idx+1] = "renungan-true";
+              globals.listDetailRUser[widget.idx]['Status Renungan'] = "true";
             }
 
-            Navigator.pop(context, "refresh");
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
+            );
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
-            color: const Color.fromARGB(255, 113, 9, 49),
+            color: Color.fromARGB(255, 113, 9, 49),
           ),
         ),
       ),
@@ -144,15 +149,31 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
           ],
         )
         : Center(
-          child: Text(
-            globals.listDetailRUser[widget.idx]['Ayat Bacaan'],
-            style: GoogleFonts.nunito(
-              textStyle: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.black
-              )
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Ayat Bacaan",
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 18, 
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 113, 9, 49)
+                  )
+                ),
+              ),
+              const SizedBox(height: 20,),
+              Text(
+                globals.listDetailRUser[widget.idx]['Ayat Bacaan'],
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black
+                  )
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -164,7 +185,7 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
             padding: const EdgeInsets.only(left: 32),
             child: FloatingActionButton(
               onPressed: () {
-                globals.statusBaca[widget.idx+widget.idx+1] = "renungan-true";
+                globals.listDetailRUser[widget.idx]['Status Renungan'] = "true";
                 
                 if (widget.pagefrom == "ayat") {
                   Navigator.pop(context);
@@ -184,14 +205,12 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
           ),
           FloatingActionButton(
             onPressed: () {
-              globals.statusBaca[widget.idx+widget.idx+1] = "renungan-true";
+              globals.listDetailRUser[widget.idx]['Status Renungan'] = "true";
               
-              if (widget.pagefrom == "ayat") {
-                Navigator.pop(context);
-                Navigator.pop(context, "refresh");
-              } else {
-                Navigator.pop(context, "refresh");
-              }
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
+              );
             },  
             backgroundColor: Color(int.parse(globals.defaultcolor)),
             child: const Icon(
@@ -204,8 +223,11 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
       : globals.listDetailRUser[widget.idx]['Judul Renungan'] == "-"
         ? FloatingActionButton(
             onPressed: () {
-              globals.statusBaca[widget.idx+widget.idx] = "ayat-true";
-              Navigator.pop(context, "refresh");
+              globals.listDetailRUser[widget.idx]['Status Ayat'] = 'true';
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
+              );
             },
             backgroundColor: Color(int.parse(globals.defaultcolor)),
             child: const Icon(
@@ -215,7 +237,7 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
           )
         : FloatingActionButton(
             onPressed: () {
-              globals.statusBaca[widget.idx+widget.idx] = "ayat-true";
+              globals.listDetailRUser[widget.idx]['Status Ayat'] = 'true';
 
               if (widget.pagefrom == "renungan") {
                 Navigator.pop(context);

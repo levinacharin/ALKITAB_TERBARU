@@ -9,13 +9,13 @@ import './renunganpage.dart';
 
 
 class DetailRenungan extends StatefulWidget {
-  final int index;
+  final int id;
   final String? status;
   final String shoulpop;
   final String? darimana;
 
   const DetailRenungan({super.key,
-  required this.index,
+  required this.id,
   this.status,
   required this.shoulpop,
   this.darimana
@@ -47,23 +47,24 @@ class _DetailRenunganState extends State<DetailRenungan> {
       final contents = await File(path).readAsString();
       listData = [];
       if (contents.isNotEmpty) {
-        listData = json.decode(contents);
-        int index = 0;
-        if (widget.status == 'tambah') {
-          index = listData.length-1;
-        } else {
-          index = widget.index;
-        }
         setState(() {
-          itemTanggal = listData[index]['Tanggal'].toString();
-          itemJudul = listData[index]['Judul'].toString();
-          itemaBacaan = listData[index]['Kitab'].toString().replaceAll("<br>", "\n"); // yang Ayat Bacaan harusnya
-          itemaBerkesan = listData[index]['Ayat Berkesan'].toString().replaceAll("<br>", "\n");
-          itemRenungan = listData[index]['Isi Renungan'].toString();
-          itemTindakan = listData[index]['Tindakan Saya'].toString();
-          itemLinkRenungan = listData[index]['Link Renungan'].toString();
-          itemTagline = listData[index]['Tagline'].toString();
+          print("id: ${widget.id}");
         });
+        listData = json.decode(contents);
+        for (int i = 0; i < listData.length; i++) {
+          if (int.parse(listData[i]['Id Renungan User']) == widget.id) {
+            setState(() {
+              itemTanggal = listData[i]['Tanggal'].toString();
+              itemJudul = listData[i]['Judul'].toString();
+              itemaBacaan = listData[i]['Kitab'].toString().replaceAll("<br>", "\n"); // yang Ayat Bacaan harusnya
+              itemaBerkesan = listData[i]['Ayat Berkesan'].toString().replaceAll("<br>", "\n");
+              itemRenungan = listData[i]['Isi Renungan'].toString();
+              itemTindakan = listData[i]['Tindakan Saya'].toString();
+              itemLinkRenungan = listData[i]['Link Renungan'].toString();
+              itemTagline = listData[i]['Tagline'].toString();
+            });
+          }
+        }
       }
     }
   }
@@ -126,7 +127,7 @@ class _DetailRenunganState extends State<DetailRenungan> {
                     onPressed: () {
                       Navigator.push(
                         context, 
-                        MaterialPageRoute(builder: (context) => RenunganPage(status: 'edit', index: widget.index, darimana: 'detailrenungan'))
+                        MaterialPageRoute(builder: (context) => RenunganPage(status: 'edit', index: widget.id, darimana: 'detailrenungan'))
                       );
                     }, 
                     icon: const Icon(
