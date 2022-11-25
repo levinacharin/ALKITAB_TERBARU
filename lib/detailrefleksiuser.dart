@@ -1,9 +1,11 @@
 import 'dart:developer';
 
+import 'package:alkitab/detailrenungank.dart';
 import 'package:alkitab/explore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 import './global.dart' as globals;
 
@@ -16,14 +18,20 @@ class DetailRefleksiUser extends StatefulWidget {
 }
 
 class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
-
+  DateTime tanggalhariini = DateTime.now();
   
   TextEditingController ctr_komen = TextEditingController();
 
   List<ExploreKomen> listExploreKomen = [];
+  String idx="";
 
   Future<void> getExploreKomen() async {
-    ExploreKomen.getExploreKomen().then((value) async {
+    if(widget.pagefrom=="explore"){
+      idx=globals.idexplore;
+    }else{
+      idx=globals.idrefleksi;
+    }
+    ExploreKomen.getExploreKomen(widget.pagefrom,idx).then((value) async {
       setState(() {
         listExploreKomen = [];
         listExploreKomen = value;
@@ -98,6 +106,34 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
     });
   }
 
+  void addKomenDatabase() async {
+    if(widget.pagefrom=="explore"){
+      idx=globals.idexplore;
+    }else{
+      idx=globals.idrefleksi;
+    }
+    String tanggalhariinistring = "${tanggalhariini.day}/${tanggalhariini.month}/${tanggalhariini.year}";
+    var url = "${globals.urllocal}simpankomen";
+    var response = await http.post(Uri.parse(url), body: {
+      "idKomen" : idx,
+      "darimana" : widget.pagefrom,
+      "idUser" : globals.idUser,
+      "isiKomen" : ctr_komen.text,
+      "tanggalKomen" : tanggalhariinistring
+    });
+    if (response.statusCode == 200) {
+
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => DetailRefleksiUser(pagefrom:widget.pagefrom))
+      );
+    }
+  }
+
+
+  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -120,7 +156,18 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+
+              if (widget.pagefrom == "explore") {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const Explore())
+                );
+              } else if (widget.pagefrom == "refleksi") {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const DetailRenunganKomunitas())
+                );
+              }
             }, 
             icon: const Icon(
               Icons.arrow_back,
@@ -458,202 +505,18 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 20,)
                     ],
                   );
-                      //           ListTile(
-                                  
-                      //   // ignore: sized_box_for_whitespace
-                      //   leading: Container(
-                      //     width: 40,
-                      //     height: 40,
-                      //     child: globals.imagepath != "-" 
-                      //     ? ClipOval(
-                      //       child: Image.network(
-                      //         '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
-                      //         width: 40,
-                      //         height: 40,
-                      //         fit: BoxFit.cover,
-                      //       ),
-                      //     )
-                      //     : const Icon(
-                      //       Icons.person, size: 40,
-                      //     ),
-                      //   ),
-                      //   title: Text(
-                      //     listExploreKomen[index].namadepan+" "+listExploreKomen[index].namaBelakang,
-                      //     style: GoogleFonts.nunito(
-                      //         textStyle: TextStyle(
-                      //             fontSize: 18,
-                      //             fontWeight: FontWeight.w500,
-                      //             color:
-                      //                 Color(int.parse(globals.defaultcolor)))),
-                      //   ),
-                      //   onTap: () {
-                          
-                      //   },
-                      // );
-                              }
+                      }
                             ),
                     
                     // )
                   ],),
                   
-                  // Column(
-                  //   children: [
-                  //     Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         // ignore: avoid_unnecessary_containers
-                  //         Container(
-                  //           child: ClipOval(
-                  //             child: Image.asset(
-                  //               'assets/images/pp2.jpg',
-                  //               width: 50,
-                  //               height: 50,
-                  //               fit: BoxFit.cover,
-                  //             )
-                  //           )
-                  //         ),
-                  //         const SizedBox(width: 5,),
-                  //         Expanded(
-                  //           child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               Text(
-                  //                 "Nama User",
-                  //                 style: GoogleFonts.nunito(
-                  //                   textStyle: const TextStyle(
-                  //                     fontSize: 18, 
-                  //                     fontWeight: FontWeight.bold,
-                  //                     color: Color.fromARGB(255, 113, 9, 49)
-                  //                   )
-                  //                 ),
-                  //               ),
-                  //               Text(
-                  //                 "16 September 2022",
-                  //                 style: GoogleFonts.nunito(
-                  //                   textStyle: const TextStyle(
-                  //                     fontSize: 14,
-                  //                     color: Color.fromARGB(255, 125, 125, 125)
-                  //                   )
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         const SizedBox(width: 55,),
-                  //         Expanded(
-                  //           child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               const SizedBox(height: 10,),
-                  //               Text(
-                  //                 "Lorem Ipsum is simply dummy text of the printing and typesetting",
-                  //                 style: GoogleFonts.nunito(
-                  //                   textStyle: const TextStyle(
-                  //                     fontSize: 16,
-                  //                     fontWeight: FontWeight.w500,
-                  //                     color: Colors.black
-                  //                   )
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
-                  //sini
-                  // const SizedBox(height: 10,),
-                  // Divider(
-                  //   height: 1,
-                  //   color: Color(int.parse(globals.defaultcolor)),
-                  // ),
-                  // const SizedBox(height: 10,),
-                  // Column(
-                  //   children: [
-                  //     // Row(
-                  //     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     //   children: [
-                  //     //     // ignore: avoid_unnecessary_containers
-                  //     //     Container(
-                  //     //       child: ClipOval(
-                  //     //         child: Image.asset(
-                  //     //           'assets/images/pp3.jpg',
-                  //     //           width: 50,
-                  //     //           height: 50,
-                  //     //           fit: BoxFit.cover,
-                  //     //         )
-                  //     //       )
-                  //     //       // Icon(
-                  //     //       //   Icons.account_circle_outlined,
-                  //     //       //   color: Color(int.parse(globals.defaultcolor)),
-                  //     //       //   size: 50,
-                  //     //       // ),
-                  //     //     ),
-                  //     //     const SizedBox(width: 5,),
-                  //     //     // Expanded(
-                  //     //     //   child: Column(
-                  //     //     //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     //     //     children: [
-                  //     //     //       Text(
-                  //     //     //         "Nama User",
-                  //     //     //         style: GoogleFonts.nunito(
-                  //     //     //           textStyle: const TextStyle(
-                  //     //     //             fontSize: 18, 
-                  //     //     //             fontWeight: FontWeight.bold,
-                  //     //     //             color: Color.fromARGB(255, 113, 9, 49)
-                  //     //     //           )
-                  //     //     //         ),
-                  //     //     //       ),
-                  //     //     //       Text(
-                  //     //     //         "16 September 2022",
-                  //     //     //         style: GoogleFonts.nunito(
-                  //     //     //           textStyle: const TextStyle(
-                  //     //     //             fontSize: 14,
-                  //     //     //             color: Color.fromARGB(255, 125, 125, 125)
-                  //     //     //           )
-                  //     //     //         ),
-                  //     //     //       ),
-                  //     //     //     ],
-                  //     //     //   ),
-                  //     //     // ),
-                  //     //   ],
-                  //     // ),
-                  //     Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         const SizedBox(width: 55,),
-                  //         Expanded(
-                  //           child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               const SizedBox(height: 10,),
-                  //               Text(
-                  //                 "Lorem Ipsum is simply dummy text of the printing and typesetting",
-                  //                 style: GoogleFonts.nunito(
-                  //                   textStyle: const TextStyle(
-                  //                     fontSize: 16,
-                  //                     fontWeight: FontWeight.w500,
-                  //                     color: Colors.black
-                  //                   )
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
+                  
                   SizedBox(
-                    height: (MediaQuery.of(context).size.height)/10
+                    height: (MediaQuery.of(context).size.height)/20
                   ),
                   ],
                 ),
@@ -738,7 +601,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                               ),
                               IconButton(
                                 onPressed: () {
-                      
+                                  addKomenDatabase();
                                 }, 
                                 icon: const Icon(Icons.send)
                               )
