@@ -355,43 +355,149 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                       )
                     ),
                   ),
-                  // const SizedBox(height: 20,),
-                  // Container(
-                  //   height: 1,
-                  //   color: Color(int.parse(globals.defaultcolor)),
-                  // ),
-                  // const SizedBox(height: 10,),
-                  // Container(
-                  //   child: ListView.builder(
-                  //     itemCount: kosong.length,
-                  //                //itemCount: listExploreKomen.length,
-                  //               itemBuilder: (context, index) {
-                  //                 return ListTile(
-                  //         // ignore: sized_box_for_whitespace
-                  //         leading: Container(
-                  //           width: 40,
-                  //           height: 40,
-                  //           color: Colors.yellow,
-                  //           //child: Image.asset(listExploreKomen[index].imagePath),
-                  //         ),
-                  //         title: Text(
-                  //           kosong[index].toString(),
-                  //           //"helo",
-                  //           //listExploreKomen[index].namadepan+" "+listExploreKomen[index].namaBelakang,
-                  //           style: GoogleFonts.nunito(
-                  //               textStyle: TextStyle(
-                  //                   fontSize: 18,
-                  //                   fontWeight: FontWeight.w500,
-                  //                   color:
-                  //                       Color(int.parse(globals.defaultcolor)))),
-                  //         ),
-                  //         onTap: () {
-                            
-                  //         },
-                  //       );
-                  //               }
-                  //             ),
-                  // ),
+                  const SizedBox(height: 20,),
+                  Container(
+                    height: 1,
+                    color: Color(int.parse(globals.defaultcolor)),
+                  ),
+                  const SizedBox(height: 10,),
+                  Column(children: [
+                    // Container(child: 
+                    ListView.builder(
+                      //physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                    //itemCount: kosong.length,
+                              itemCount: listExploreKomen.length,
+                              itemBuilder: (context, index) {
+                                // log("lbuilder - ${listExploreKomen[index].idKomen.toString()}");
+                                // log("lbuilder - ${listExploreKomen[index].darimana.toString()}");
+                                // log("lbuilder - ${listExploreKomen[index].isiKomen.toString()}");
+                                // log("lbuilder - ${listExploreKomen[index].tanggalKomen.toString()}");
+                                // log("lbuilder - ${listExploreKomen[index].imagePath.toString()}");
+                                return 
+                                Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // ignore: avoid_unnecessary_containers
+                          Column(
+                            children: [
+                              Container(
+                                
+                                child:listExploreKomen[index].imagePath != "-" 
+                              ? ClipOval(
+                                child: 
+                                Image.network(
+                                  '${globals.urllocal}getimage?id=${listExploreKomen[index].idUser}&folder=user',
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                              : 
+                              const Icon(
+                                Icons.person, size: 40,
+                              ),
+                                // ClipOval(
+                                //   child: 
+                                // )
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 10,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  listExploreKomen[index].namadepan+" "+listExploreKomen[index].namaBelakang,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                      fontSize: 18, 
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 113, 9, 49)
+                                    )
+                                  ),
+                                ),
+                                Text(
+                                  listExploreKomen[index].tanggalKomen,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color.fromARGB(255, 125, 125, 125)
+                                    )
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(width: 55,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 10,),
+                                Text(
+                                  listExploreKomen[index].isiKomen,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black
+                                    )
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                      //           ListTile(
+                                  
+                      //   // ignore: sized_box_for_whitespace
+                      //   leading: Container(
+                      //     width: 40,
+                      //     height: 40,
+                      //     child: globals.imagepath != "-" 
+                      //     ? ClipOval(
+                      //       child: Image.network(
+                      //         '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
+                      //         width: 40,
+                      //         height: 40,
+                      //         fit: BoxFit.cover,
+                      //       ),
+                      //     )
+                      //     : const Icon(
+                      //       Icons.person, size: 40,
+                      //     ),
+                      //   ),
+                      //   title: Text(
+                      //     listExploreKomen[index].namadepan+" "+listExploreKomen[index].namaBelakang,
+                      //     style: GoogleFonts.nunito(
+                      //         textStyle: TextStyle(
+                      //             fontSize: 18,
+                      //             fontWeight: FontWeight.w500,
+                      //             color:
+                      //                 Color(int.parse(globals.defaultcolor)))),
+                      //   ),
+                      //   onTap: () {
+                          
+                      //   },
+                      // );
+                              }
+                            ),
+                    
+                    // )
+                  ],),
+                  
                   // Column(
                   //   children: [
                   //     Row(
@@ -551,6 +657,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                   ),
                   ],
                 ),
+                
               ),
               Positioned(
                 bottom: 0,
@@ -565,7 +672,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           widget.pagefrom == "explore"
-                          ? globals.imagepathrefleksi != "-" 
+                          ? globals.imagepath != "-" 
                             ? ClipOval(
                                 child: Image.network(
                                   '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
