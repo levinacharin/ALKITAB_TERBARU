@@ -34,7 +34,7 @@ class _DetailBLiturgiState extends State<DetailBLiturgi> {
           onPressed: () {
             Navigator.push(
               context, 
-              MaterialPageRoute(builder: (context) => ListRencanaUser())
+              MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'detailbacaliturgi',))
             );
           },
           icon: const Icon(

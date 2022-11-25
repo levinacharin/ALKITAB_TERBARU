@@ -699,7 +699,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
       // ignore: use_build_context_synchronously
       Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => DetailRenungan(index: globals.lastIdRenunganUser, shoulpop: "true", darimana: "tambahrenungank",))
+        MaterialPageRoute(builder: (context) => DetailRenungan(id: globals.lastIdRenunganUser, shoulpop: "true", darimana: "tambahrenungank",))
       );
   }
 

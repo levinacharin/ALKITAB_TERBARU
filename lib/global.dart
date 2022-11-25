@@ -83,7 +83,6 @@ String idexplore = "";
 String tanggalposting = "";
 String komentar = "";
 String suka = "";
-
 String lastIdRDatabase = "";
 // end of explore
 
@@ -95,7 +94,7 @@ String imagepathrencana = "";
 List<DetailRencana> listDetailRencana = []; // dari menu komunitas
 List listDetailRUser = []; // dari menu user
 
-List<String> statusBaca = []; // kasih status per konten nya
+// List<String> statusBaca = []; // kasih status per konten nya
 // end of rencana bacaan
 
 

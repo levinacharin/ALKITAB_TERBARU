@@ -671,14 +671,13 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
   addIdRencanaSP(String idrencana) async {
     await getIdRencanaSP();
     listIdRencana.add(idrencana);
-    print("listIdRencana: $listIdRencana");
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setStringList('listIdRencana', listIdRencana);
 
     // ignore: use_build_context_synchronously
     final data = await Navigator.push(
       context, 
-      MaterialPageRoute(builder: (context) => ListRencanaUser())
+      MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'komunitas',))
     );
 
     if (data == "refresh") {
@@ -782,6 +781,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
         listTempData[i]['Judul Rencana'] +
         '","Deskripsi Rencana":"' +
         listTempData[i]['Deskripsi Rencana'] +
+        '","Image Path":"' +
+        listTempData[i]['Image Path'] +
         '","Kitab Bacaan":"' +
         listTempData[i]['Kitab Bacaan'] +
         '","Ayat Bacaan":"' +
@@ -792,13 +793,23 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
         listTempData[i]['Isi Renungan'] +
         '","Link Renungan":"' +
         listTempData[i]['Link Renungan'] +
+        '","Status Ayat":"' +
+        listTempData[i]['Status Ayat'] +
+        '","Status Renungan":"' +
+        listTempData[i]['Status Renungan'] +
         '","Status Selesai":"' +
         listTempData[i]['Status Selesai'] +
         '"},';
       }
     }
+    String tempstatusrenungan = "false";
     for (int i = 0; i < listDetailRencana.length; i++) {
+      tempstatusrenungan = "false";
       temp = listDetailRencana[i].ayatbacaan.replaceAll('"', '${String.fromCharCode(92)}"');
+      if (listDetailRencana[i].judulrenungan == "-") {
+        tempstatusrenungan = "true";
+      }
+      
       // ignore: prefer_interpolation_to_compose_strings
       dataRencana = dataRencana + "{"
       '"Id Rencana":"' +
@@ -809,6 +820,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
       listRencana[index].judulrencana + 
       '","Deskripsi Rencana":"' +
       listRencana[index].deskripsirencana +
+      '","Image Path":"' +
+      listRencana[index].imagepath +
       '","Kitab Bacaan":"' +
       listDetailRencana[i].kitabbacaan +
       '","Ayat Bacaan":"' +
@@ -819,6 +832,10 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
       listDetailRencana[i].isirenungan +
       '","Link Renungan":"' +
       listDetailRencana[i].linkrenungan +
+      '","Status Ayat":"' +
+      "false" +
+      '","Status Renungan":"' + 
+      tempstatusrenungan +
       '","Status Selesai":"' +
       'false"}';
       if (i != listDetailRencana.length-1) {
@@ -861,7 +878,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
                   onPressed: () {
                     Navigator.push(
                       context, 
-                      MaterialPageRoute(builder: (context) => NotifikasiPage())
+                      MaterialPageRoute(builder: (context) => const NotifikasiPage())
                       
                     );
                   }, 

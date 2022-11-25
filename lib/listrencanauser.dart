@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:alkitab/detailbacaliturgi.dart';
+import 'package:alkitab/detailkomunitas.dart';
 import 'package:alkitab/detailrencanabaca.dart';
 import 'package:alkitab/homepage.dart';
 import 'package:alkitab/pecahAyatClass.dart';
@@ -59,7 +60,11 @@ class BacaanLiturgi {
 }
 
 class ListRencanaUser extends StatefulWidget {
-  const ListRencanaUser({super.key});
+  final String pagefrom;
+  const ListRencanaUser({
+    super.key,
+    required this.pagefrom
+  });
 
   @override
   State<ListRencanaUser> createState() => _ListRencanaUserState();
@@ -68,6 +73,7 @@ class ListRencanaUser extends StatefulWidget {
 class _ListRencanaUserState extends State<ListRencanaUser> {
   List listDetailRencana = [];
   List<String> itemJudulRencana = [];
+  List<String> itemIdRencana = [];
 
   List<BacaanLiturgi> listBacaLiturgi = [];
   DateTime currentDate = DateTime.now();
@@ -117,9 +123,10 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
         setState(() {
           for (int i = 0; i < listDetailRencana.length; i++) {
             itemJudulRencana.add(listDetailRencana[i]['Judul Rencana']);
-            print("status selesai list detail rencana awal: ${listDetailRencana[i]['Status Selesai']}");
+            itemIdRencana.add(listDetailRencana[i]['Id Rencana']);
           }
           itemJudulRencana = itemJudulRencana.toSet().toList();
+          itemIdRencana = itemIdRencana.toSet().toList();
         });
       }
     }
@@ -138,20 +145,6 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     });
   }
 
-  List<String> listStatusBaca = [];
-  saveStatusBaca(List<String> statusBaca, String idrencana) async {
-    setState(() {
-      if (listStatusBaca.length != 0) {
-        
-      }
-      listStatusBaca.add(idrencana);
-      for (int i = 0; i < statusBaca.length; i++) {
-        listStatusBaca.add(statusBaca[i]);
-      }
-      print("list status baca: $listStatusBaca");
-    });
-  }
-
   List listDetailTemp = [];
   sendData(String idrencana) async {
     setState(() {
@@ -163,28 +156,6 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
       }
       globals.listDetailRUser.clear();
       globals.listDetailRUser = listDetailTemp;
-
-      globals.statusBaca.clear();
-      for (int i = 0; i < globals.listDetailRUser.length; i++) {
-        if (globals.listDetailRUser[i]['Status Selesai'] == "true") {
-          globals.statusBaca.add("ayat-true");
-
-          if (globals.listDetailRUser[i]['Judul Renungan'] == "-") {
-            globals.statusBaca.add("-");
-          } else {
-            globals.statusBaca.add("renungan-true");
-          }
-
-        } else {
-          globals.statusBaca.add("ayat-false");
-
-          if (globals.listDetailRUser[i]['Judul Renungan'] == "-") {
-            globals.statusBaca.add("-");
-          } else {
-            globals.statusBaca.add("renungan-false");
-          }
-        }
-      }
     });
   }
 
@@ -203,8 +174,6 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
             idx++;
           }
         }
-
-        // writeData();
       }
 
       listScore = [];
@@ -252,7 +221,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
 
       globals.listDetailRUser.clear();
       globals.idrencana = "";
-      globals.statusBaca.clear();
+      // globals.statusBaca.clear();
       
       print("list score: $listScore");
     });
@@ -268,7 +237,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     getLiturgi(_currentdate );
     formatDatetoString();
 
-    saveStatusBaca(globals.statusBaca, globals.idrencana);
+    // saveStatusBaca(globals.idrencana);
   }
 
   void formatDatetoString() {
@@ -301,50 +270,6 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     });
   }
 
-  String dataRencana = "";
-  String temp = "";
-  // write to Json File
-  void writeData() async {
-    String path = '/storage/emulated/0/Download/Rencanajson.txt';
-
-    dataRencana = "";
-    dataRencana = "$dataRencana[";
-    for (int i = 0; i < listDetailRencana.length; i++) {
-      temp = listDetailRencana[i]['Ayat Bacaan'].toString().replaceAll('"', '${String.fromCharCode(92)}"');
-
-      // ignore: prefer_interpolation_to_compose_strings
-      dataRencana = dataRencana + "{"
-      '"Id Rencana":"' +
-      listDetailRencana[i]['Id Rencana'] + 
-      '","Tanggal Rencana":"' +
-      listDetailRencana[i]['Tanggal Rencana'] +
-      '","Judul Rencana":"' +
-      listDetailRencana[i]['Judul Rencana'] +
-      '","Deskripsi Rencana":"' +
-      listDetailRencana[i]['Deskripsi Rencana'] +
-      '","Kitab Bacaan":"' +
-      listDetailRencana[i]['Kitab Bacaan'] +
-      '","Ayat Bacaan":"' +
-      listDetailRencana[i]['Ayat Bacaan'] +
-      '","Judul Renungan":"' +
-      listDetailRencana[i]['Judul Renungan'] +
-      '","Isi Renungan":"' +
-      listDetailRencana[i]['Isi Renungan'] +
-      '","Link Renungan":"' +
-      listDetailRencana[i]['Link Renungan'] +
-      '","Status Selesai":"' +
-      listDetailRencana[i]['Status Selesai'];
-      if (i != listDetailRencana.length-1) {
-        // ignore: prefer_interpolation_to_compose_strings
-        dataRencana = dataRencana + ",";
-      }
-    }
-    dataRencana = "$dataRencana]";
-    dataRencana = dataRencana.replaceAll("\n", "<br>");
-
-    await File(path).writeAsString(dataRencana);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -353,10 +278,17 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
-            );
+            if (widget.pagefrom == "komunitas") {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+              );
+            } else {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
+              );
+            }
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -387,7 +319,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
             child: TextField(
               cursorColor: Color(int.parse(globals.defaultcolor)),
               decoration: InputDecoration(
-                fillColor: Color.fromARGB(255, 253, 255, 252),
+                fillColor: const Color.fromARGB(255, 253, 255, 252),
                 filled: true,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -405,7 +337,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
                 hintStyle: TextStyle(
                   color: Colors.grey[400]
                 ),
-                contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 5)
+                contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)
               ),
               style: GoogleFonts.nunito(
                 textStyle: const TextStyle(
@@ -483,11 +415,13 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                // ignore: sized_box_for_whitespace
                                 Container(
                                   width: 100,
                                   height: 80,
-                                  child: Image.asset(
-                                    "assets/images/pp3.jpg"
+                                  child: Image.network(
+                                    '${globals.urllocal}getimage?id=${itemIdRencana[index]}&folder=rencana',
+                                    fit: BoxFit.cover ,
                                   ),
                                 ),
                                 const SizedBox(width: 5,),

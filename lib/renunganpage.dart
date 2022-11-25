@@ -1081,7 +1081,7 @@ class _RenunganPageState extends State<RenunganPage> {
   String dataRenungan = '';
   List listTempData = [];
 
-  void writeData() async {
+  void  writeData() async {
     var temp = ""; // temp bacaan
     // ignore: non_constant_identifier_names
     var temp_berkesan = "";
@@ -1289,7 +1289,13 @@ class _RenunganPageState extends State<RenunganPage> {
     // end of add json to string
 
     // write string of json to local file
-    // File(path).writeAsString(dataRenungan);
+    File(path).writeAsString(dataRenungan);
+
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) =>  DetailRenungan(id: globals.lastIdRenunganUser, shoulpop: "false"))
+    );
 
     // if (widget.darimana == "detailrenungan") {
     //   // ignore: use_build_context_synchronously
