@@ -10,6 +10,62 @@ import 'package:flutter_share/flutter_share.dart';
 //import './homepage.dart';
 import './global.dart' as globals;
 
+class ExploreKomen{
+
+  String idKomen;
+  String darimana;
+  String idUser;
+  String isiKomen;
+  String tanggalKomen;
+  String namadepan;
+  String namaBelakang;
+  String imagePath;
+  
+
+  ExploreKomen({
+    required this.idKomen,
+    required this.darimana,
+    required this.idUser,
+    required this.isiKomen,
+    required this.tanggalKomen,
+    required this.namadepan,
+    required this.namaBelakang,
+    required this.imagePath,
+  });
+
+  factory ExploreKomen.createData(Map<String,dynamic> object){
+    return ExploreKomen(
+      idKomen: object['idKomen'].toString(), 
+      darimana: object['darimana'].toString(), 
+      idUser: object['idUser'].toString(), 
+      isiKomen: object['isiKomen'].toString(), 
+      tanggalKomen: object['tanggalKomen'].toString(), 
+      namadepan: object['namadepan'].toString(), 
+      namaBelakang: object['namabelakang'].toString(), 
+      imagePath: object['imagepath'].toString());
+  }
+
+  static Future<List<ExploreKomen>> getExploreKomen() async {
+    var url = "${globals.urllocal}getkomen?idKomen=${globals.idexplore}&darimana=explore";
+    var apiResult = await http.get(Uri.parse(url), headers: {
+      "Accept" : "application/json",
+      "Access-Control-Allow-Origin" : "*"
+    });
+
+    var jsonObject = json.decode(apiResult.body);
+    var data = (jsonObject as Map<String, dynamic>)['data'];
+    List<ExploreKomen> listData = [];
+    if (data.toString() == "null") {
+      return listData;
+    } else {
+      for (int i = 0; i < data.length; i++) {
+        listData.add(ExploreKomen.createData(data[i]));
+      }
+      return listData;
+    }
+  }
+}
+
 class ListExplore {
   String idexplore;
   String iduser;
