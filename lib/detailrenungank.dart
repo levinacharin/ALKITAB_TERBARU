@@ -1,4 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
+import 'dart:developer';
+
+import 'package:alkitab/explore.dart';
 import 'package:alkitab/tambahrenungank.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -10,6 +13,43 @@ import 'dart:convert';
 import './global.dart' as globals;
 import 'detailrefleksiuser.dart';
 import 'listrencanauser.dart';
+
+class RefleksiLike {
+  String idLike;
+  String darimana;
+  String idUser;
+
+  RefleksiLike(
+      {required this.idLike, required this.darimana, required this.idUser});
+
+  factory RefleksiLike.createData(Map<String, dynamic> object) {
+    return RefleksiLike(
+        idLike: object['idLike'].toString(),
+        darimana: object['darimana'].toString(),
+        idUser: object['idUser'].toString());
+  }
+
+  static Future<List<RefleksiLike>> getRefleksiLike(
+      String darimana, String id) async {
+    var url = "${globals.urllocal}getlike?idLike=${id}&darimana=$darimana";
+    var apiResult = await http.get(Uri.parse(url), headers: {
+      "Accept": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    var jsonObject = json.decode(apiResult.body);
+    var data = (jsonObject as Map<String, dynamic>)['data'];
+    List<RefleksiLike> listData = [];
+    if (data.toString() == "null") {
+      return listData;
+    } else {
+      for (int i = 0; i < data.length; i++) {
+        listData.add(RefleksiLike.createData(data[i]));
+      }
+      return listData;
+    }
+  }
+}
 
 class RenunganKomunitas {
   String idrenungankomunitas;
@@ -78,6 +118,7 @@ class RefleksiUser {
   String imagepath;
   String ayatberkesan;
   String tindakansaya;
+  String? suka;
 
   RefleksiUser({
     required this.idrefleksi,
@@ -88,7 +129,8 @@ class RefleksiUser {
     required this.namabelakang,
     required this.imagepath,
     required this.ayatberkesan,
-    required this.tindakansaya
+    required this.tindakansaya,
+    this.suka
   });
 
   factory RefleksiUser.createData(Map<String, dynamic> object) {
@@ -156,7 +198,31 @@ class DetailRenunganKomunitas extends StatefulWidget {
 }
 
 class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
-  bool like=false;
+
+   void addLikeDatabase(String idlike) async {
+    var url = "${globals.urllocal}simpanlike";
+    var response = await http.post(Uri.parse(url), body: {
+      "idLike": idlike,
+      "darimana": "refleksi",
+      "idUser": globals.idUser,
+    });
+  
+  }
+
+  Future<http.Response> deleteLikeDatabase(String idLikeTemp, String darimana, String idUserTemp) async {
+    // print("idkomunitas: ${globals.idkomunitas} - iduser: ${globals.idUser}");
+    var url = "${globals.urllocal}deletelike?idLike=$idLikeTemp&darimana=$darimana&idUser=$idUserTemp";
+    var response = await http.delete(Uri.parse(url), 
+    headers: <String, String> {
+      'Content-Type' : 'application/json; charset=UTF-8',
+    });
+    
+    return response;
+  }
+
+  
+
+  // bool like=false;
   void sharerenungan(int index)async{
     // globals.idrenungankomunitas = listRenungan[index].idrenungankomunitas;
     //                             globals.tanggalrenungan = listRenungan[index].tanggalrenungan;
@@ -195,10 +261,11 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
   }
   List<RefleksiUser> listRefleksi = [];
   bool hasRefleksi = false;
+  List<bool> listShowUserLikeRefleksi=[];
 
   Future<void> getListRefleksi() async {
     RefleksiUser.getData(globals.idrenungankomunitas).then((value) async {
-      setState(() {
+      setState(() async {
         listRefleksi = value;
 
         String tanggaltemp = "";
@@ -206,8 +273,46 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
         String bulan = "";
         String tahun = "";
         int count = 0;
+
+        int indexbuatlistygdilikeuser=0;
         hasRefleksi = false;
+
         for (int i = 0; i < listRefleksi.length; i++) {
+           listShowUserLikeRefleksi.add(false);
+          
+
+          //log("atas likenih - ${listRefleksi[i].idexplore}");
+
+          List<RefleksiLike> listRefleksiLike = [];
+          await RefleksiLike.getRefleksiLike("refleksi", listRefleksi[i].idrefleksi).then((value) async {
+            setState(() {
+              listRefleksiLike = [];
+              listRefleksiLike = value; //isinya list per detail like dari explore yg dah difilter, apakah udah dari explore dan idexplore
+            });
+          });
+          //log("benergasihhh ");
+          //log("benergasihhh ${value}");
+
+          for(int j=0;j<listRefleksiLike.length;j++){
+            log("benergasihhh cekall $j - ${listRefleksiLike[j].idUser} ${globals.idUser}");
+            if(listRefleksiLike[j].idUser==globals.idUser){
+              listShowUserLikeRefleksi[indexbuatlistygdilikeuser]=true;
+              //break;
+            }else{
+              listShowUserLikeRefleksi[indexbuatlistygdilikeuser]=false;
+            }
+            log("benergasihhh - ${listShowUserLikeRefleksi[indexbuatlistygdilikeuser]}");
+            
+          }
+          
+          indexbuatlistygdilikeuser++;
+
+
+
+          //log("atas likenih - ${listExplore[i].iduser}");
+
+          
+          listRefleksi[i].suka = listRefleksiLike.length.toString();
           if(listRefleksi[i].iduser == globals.idUser) {
             hasRefleksi = true;
           }
@@ -518,6 +623,7 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
               shrinkWrap: true,
               itemCount: listRefleksi.length,
               itemBuilder: (context, index) {
+                String? jumlahlike = listRefleksi[index].suka;
                 return Column(
                   children: [
                     Card(
@@ -633,17 +739,23 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    if(like==false){
-                                      setState(() {
-                                        like=true;
-                                      });
-                                      
-                                    }else{
-                                      setState(() {
-                                        like=false;
-                                      });
-                                      
-                                    }
+                                    if(listShowUserLikeRefleksi[index] == true){
+                                          setState(() async {
+                                            await deleteLikeDatabase(listRefleksi[index].idrefleksi,"refleksi",globals.idUser);
+                                            getListRefleksi();
+                                            listShowUserLikeRefleksi[index] = false;
+                                            log("hapus likenihhh");
+                                          });
+                                          
+                                        }else{
+                                          setState(() {
+                                            addLikeDatabase(
+                                            listRefleksi[index].idrefleksi);
+                                            getListRefleksi();
+                                            log("likenihhh");
+                                          });
+                                          
+                                        }
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(8),
@@ -664,15 +776,18 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                                         Container(
                                             width: 20,
                                             height: 20,
-                                            child: (like?Image.asset(
-                                                "assets/images/icon_like_red.png"):Image.asset(
-                                                "assets/images/icon_like_black.png"))
-                                            ,
+                                            // // child: (like?Image.asset(
+                                            // //     "assets/images/icon_like_red.png"):Image.asset(
+                                            // //     "assets/images/icon_like_black.png"))
+                                            // // ,
                                             // child: Image.asset("assets/images/komunitas_icon.png"),
+                                            child: (listShowUserLikeRefleksi[index] == true?Image.asset(
+                                                  "assets/images/icon_like_red.png"):Image.asset(
+                                                  "assets/images/icon_like_black.png"))
                                           ),
                                         const SizedBox(width: 10,),
                                         Text(
-                                          "01",
+                                          jumlahlike!,
                                           style: GoogleFonts.nunito(
                                             textStyle: const TextStyle(
                                               fontSize: 14,

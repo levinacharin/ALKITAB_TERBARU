@@ -196,18 +196,6 @@ class Explore extends StatefulWidget {
 //bool like=false;
 
 class _ExploreState extends State<Explore> {
-  // List getExploreLikePageIni(String idex) {
-  //   List<ExploreLike> listExploreLike = [];
-  //   ExploreLike.getExploreLike("explore", idex).then((value) async {
-  //     setState(() {
-  //       listExploreLike = [];
-  //       listExploreLike = value;
-  //       log("idnih isinya ada berapa like - ${listExploreLike.length}");
-  //     });
-  //   });
-
-  //   return listExploreLike;
-  // }
 
   void addLikeDatabase(String idlike) async {
     var url = "${globals.urllocal}simpanlike";
@@ -216,30 +204,32 @@ class _ExploreState extends State<Explore> {
       "darimana": "explore",
       "idUser": globals.idUser,
     });
-    // if (response.statusCode == 200) {
-
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => Explore())
-    //   );
-    // }
+  
   }
 
-  // bool sudahdilikeapaga(int index){
-  //   bool sudahlike=false;
-  //   String idexploreterlike = listExplore[index].idexplore;
+  Future<http.Response> deleteLikeDatabase(String idLikeTemp, String darimana, String idUserTemp) async {
+    // print("idkomunitas: ${globals.idkomunitas} - iduser: ${globals.idUser}");
+    var url = "${globals.urllocal}deletelike?idLike=$idLikeTemp&darimana=$darimana&idUser=$idUserTemp";
+    var response = await http.delete(Uri.parse(url), 
+    headers: <String, String> {
+      'Content-Type' : 'application/json; charset=UTF-8',
+    });
+    
+    // if (response.statusCode == 200) {
+    //   // ignore: use_build_context_synchronously
+    //   Navigator.push(
+    //     context, 
+    //     MaterialPageRoute(builder: (context) => const ListKomunitas())
+    //   );
+    // }
 
-  //   for(int i=0;i<)
+    return response;
+  }
 
-  //   // for(int i=0;i<listExplore.length;i++){
-  //   //   if(i==)
-  //   // }
-
-  //   return sudahlike;
-  // }
+  
 
   List<ListExplore> listExplore = [];
+  List<bool> listShowUserLikeExplore=[];
   Future<void> getListExplore() async {
     ListExplore.getAllData().then((value) async {
       setState(() async {
@@ -251,15 +241,43 @@ class _ExploreState extends State<Explore> {
         String tahun = "";
         int count = 0;
 
+        //listexplore = semua explore yg ada
+        //listShowUserLikeExplore[listExplore.length];
+        int indexbuatlistygdilikeuser=0;
+    
         for (int i = 0; i < listExplore.length; i++) {
+          listShowUserLikeExplore.add(false);
+          
+
+          //log("atas likenih - ${listExplore[i].idexplore}");
 
           List<ExploreLike> listExploreLike = [];
           await ExploreLike.getExploreLike("explore", listExplore[i].idexplore).then((value) async {
             setState(() {
               listExploreLike = [];
-              listExploreLike = value;
+              listExploreLike = value; //isinya list per detail like dari explore yg dah difilter, apakah udah dari explore dan idexplore
             });
           });
+          //log("benergasihhh ");
+          //log("benergasihhh ${value}");
+
+          for(int j=0;j<listExploreLike.length;j++){
+            log("benergasihhh cekall $j - ${listExploreLike[j].idUser} ${globals.idUser}");
+            if(listExploreLike[j].idUser==globals.idUser){
+              listShowUserLikeExplore[indexbuatlistygdilikeuser]=true;
+              //break;
+            }else{
+              listShowUserLikeExplore[indexbuatlistygdilikeuser]=false;
+            }
+            log("benergasihhh - ${listShowUserLikeExplore[indexbuatlistygdilikeuser]}");
+            
+          }
+          
+          indexbuatlistygdilikeuser++;
+
+
+
+          //log("atas likenih - ${listExplore[i].iduser}");
 
           
           listExplore[i].suka = listExploreLike.length.toString();
@@ -329,6 +347,10 @@ class _ExploreState extends State<Explore> {
           tahun = "";
           count = 0;
         }
+
+        // for(int i=0;i<listExplore.length;i++){
+
+        // }
       });
     });
   }
@@ -371,6 +393,8 @@ class _ExploreState extends State<Explore> {
       text: renunganfull,
     );
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -437,6 +461,7 @@ class _ExploreState extends State<Explore> {
             child: ListView.builder(
                 itemCount: listExplore.length,
                 itemBuilder: (context, index) {
+                 
                   return Column(
                     children: [
                       Padding(
@@ -601,20 +626,25 @@ class _ExploreState extends State<Explore> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        addLikeDatabase(
+                                       // like=!like;
+                                        if(listShowUserLikeExplore[index] == true){
+                                          setState(() async {
+                                            await deleteLikeDatabase(listExplore[index].idexplore,"explore",globals.idUser);
+                                            getListExplore();
+                                            listShowUserLikeExplore[index] = false;
+                                            log("hapus likenihhh");
+                                          });
+                                          
+                                        }else{
+                                          setState(() {
+                                            addLikeDatabase(
                                             listExplore[index].idexplore);
-                                        log("likenihhh");
-                                        // if(like==false){
-                                        //   setState(() {
-                                        //     like=true;
-                                        //   });
-
-                                        // }else{
-                                        //   setState(() {
-                                        //     like=false;
-                                        //   });
-
-                                        // }
+                                            getListExplore();
+                                            log("likenihhh");
+                                          });
+                                          
+                                        }
+                                        
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(8.0),
@@ -636,12 +666,10 @@ class _ExploreState extends State<Explore> {
                                             Container(
                                               width: 20,
                                               height: 20,
-                                              // child: (like?Image.asset(
-                                              //     "assets/images/icon_like_red.png"):Image.asset(
-                                              //     "assets/images/icon_like_black.png"))
-                                              child: Image.asset(
-                                                  "assets/images/icon_like_red.png"),
-                                              // child: Image.asset("assets/images/komunitas_icon.png"),
+                                              child: (listShowUserLikeExplore[index] == true?Image.asset(
+                                                  "assets/images/icon_like_red.png"):Image.asset(
+                                                  "assets/images/icon_like_black.png"))
+                                            
                                             ),
                                             const SizedBox(
                                               width: 10,
@@ -678,20 +706,20 @@ class _ExploreState extends State<Explore> {
                                           const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
-                                            listExplore[index].komentar,
-                                            style: GoogleFonts.nunito(
-                                                textStyle: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 125, 125, 125))),
-                                          )
+                                          // Text(
+                                          //   listExplore[index].komentar,
+                                          //   style: GoogleFonts.nunito(
+                                          //       textStyle: const TextStyle(
+                                          //           fontSize: 14,
+                                          //           fontWeight: FontWeight.bold,
+                                          //           color: Color.fromARGB(
+                                          //               255, 125, 125, 125))),
+                                          // )
                                         ],
                                       ),
                                     ),
                                     const SizedBox(
-                                      width: 20,
+                                      width: 10,
                                     ),
                                     GestureDetector(
                                       onTap: () {
@@ -708,15 +736,15 @@ class _ExploreState extends State<Explore> {
                                           const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
-                                            "0",
-                                            style: GoogleFonts.nunito(
-                                                textStyle: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 125, 125, 125))),
-                                          )
+                                          // Text(
+                                          //   "0",
+                                          //   style: GoogleFonts.nunito(
+                                          //       textStyle: const TextStyle(
+                                          //           fontSize: 14,
+                                          //           fontWeight: FontWeight.bold,
+                                          //           color: Color.fromARGB(
+                                          //               255, 125, 125, 125))),
+                                          // )
                                         ],
                                       ),
                                     )
