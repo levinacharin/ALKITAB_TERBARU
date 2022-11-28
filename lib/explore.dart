@@ -461,7 +461,7 @@ class _ExploreState extends State<Explore> {
             child: ListView.builder(
                 itemCount: listExplore.length,
                 itemBuilder: (context, index) {
-                 
+                
                   return Column(
                     children: [
                       Padding(

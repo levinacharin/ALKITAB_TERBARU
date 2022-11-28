@@ -6,6 +6,8 @@ import 'detailkomunitas.dart';
 import 'homepage.dart';
 import 'mergeayat.dart';
 
+bool backsound_mode = false;
+
 // cPasal pasalC = cPasal();
 // List<cPasal> listPasalPerKitab = [];
 

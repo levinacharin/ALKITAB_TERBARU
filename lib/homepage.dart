@@ -566,7 +566,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // ignore: non_constant_identifier_names
   bool sticker_mode = true;
 
-  bool backsound_mode = false;
+  // bool backsound_mode = false;
   // final player = AudioPlayer();
   // bool isPlaying = false;
 
@@ -2600,7 +2600,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
-    setLagu(backsound_mode);
+    setLagu(globals.backsound_mode);
 
    // readFileHeightLayout();
 
@@ -3351,7 +3351,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         setState(() {
           // backsound_mode = true;
-          setLagu(backsound_mode);
+          setLagu(globals.backsound_mode);
 
         });
         break;
@@ -3774,12 +3774,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             
                             Switch(
                               // This bool value toggles the switch.
-                              value: backsound_mode,
+                              value: globals.backsound_mode,
                               activeColor: Color(0xFF373A54),
                               onChanged: (bool value) {
                                 setState(() {
-                                  backsound_mode = value;
-                                  setLagu(backsound_mode);
+                                  globals.backsound_mode = value;
+                                  setLagu(globals.backsound_mode);
                                 });
                                 // This is called when the user toggles the switch.
                               },
