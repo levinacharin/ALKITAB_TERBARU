@@ -7,6 +7,7 @@ import 'homepage.dart';
 import 'mergeayat.dart';
 
 bool backsound_mode = false;
+bool dahpernahdinyalainlagunya=false;
 
 // cPasal pasalC = cPasal();
 // List<cPasal> listPasalPerKitab = [];

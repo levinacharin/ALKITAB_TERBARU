@@ -2605,7 +2605,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
-    setLagu(globals.backsound_mode);
+    setLagu(globals.backsound_mode, "${widget.daripagemana}");
 
    // readFileHeightLayout();
 
@@ -3428,43 +3428,69 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.inactive:
         setState(() {
-          //backsound_mode = false;
-          setLagu(false);
+          log("applifecycle inactive");
+          setLagu(false, "inactive");
         });
         break;
       case AppLifecycleState.resumed:
         setState(() {
-          // backsound_mode = true;
-          setLagu(globals.backsound_mode);
+          log("applifecycle resume");
+          setLagu(globals.backsound_mode,"resume");
 
         });
         break;
       case AppLifecycleState.paused:
         setState(() {
-          //backsound_mode = false;
-          setLagu(false);
+          log("applifecycle pause");
+          setLagu(false,"pause");
         });
 
         break;
       case AppLifecycleState.detached:
         setState(() {
-          //backsound_mode = false;
-          setLagu(false);
+          log("applifecycle detached");
+          setLagu(false,"detached");
         });
         break;
     }
   }
 
-  void setLagu(bool nyalaga) {
-    if (nyalaga == true) {
-      setState(() {
-        FlameAudio.bgm.play('hereimtoworship.mp3');
-      });
+  void setLagu(bool nyalaga, String darimana) {
+    if (darimana == "splashscreen") {
+      
+      if (nyalaga == true) {
+        log("lagu dari splashscreen on");
+        setState(() {
+          FlameAudio.bgm.play('hereimtoworship.mp3');
+        });
+      } else {
+        log("lagu dari splashscreen off");
+        setState(() {
+          FlameAudio.bgm.stop();
+        });
+      }
     } else {
-      setState(() {
-        FlameAudio.bgm.stop();
-      });
+      if (nyalaga == true) {
+        log("lagu GA dari splashscreen on");
+        setState(() {
+          if(globals.dahpernahdinyalainlagunya==false){
+            globals.dahpernahdinyalainlagunya=true;
+            log("ga dari splashscreen play");
+            FlameAudio.bgm.play('hereimtoworship.mp3');
+          }else{
+            log("ga dari splashscreen resume");
+            FlameAudio.bgm.resume();
+          }
+          
+        });
+      } else {
+        log("lagu GA dari splashscreen oFF");
+        setState(() {
+          FlameAudio.bgm.stop();
+        });
+      }
     }
+    
   }
 
   late LogoutTimerModel timerModel;
@@ -3863,7 +3889,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               onChanged: (bool value) {
                                 setState(() {
                                   globals.backsound_mode = value;
-                                  setLagu(globals.backsound_mode);
+                                  // if(globals.dahpernahdinyalainlagunya==false){
+                                  //   if(value==true){
+                                  //     globals.dahpernahdinyalainlagunya=true;
+                                  //   }
+                                  // }
+                                  setLagu(globals.backsound_mode,"onoff");
                                 });
                                 // This is called when the user toggles the switch.
                               },
