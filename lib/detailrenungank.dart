@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 import 'dart:developer';
 
+import 'package:alkitab/detailkomunitas.dart';
 import 'package:alkitab/explore.dart';
 import 'package:alkitab/tambahrenungank.dart';
 import 'package:flutter/material.dart';
@@ -395,12 +396,10 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            if (widget.darimana == "tambahrenungank") {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            } else {
-              Navigator.pop(context);
-            }
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+            );
           }, 
           icon: const Icon(
             Icons.arrow_back,

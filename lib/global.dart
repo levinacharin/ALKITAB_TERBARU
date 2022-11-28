@@ -39,6 +39,8 @@ double sizeStack = 0.0;
 int lastIdCatatan = 0;  // untuk detail catatan setelah add
 int lastIdRenunganUser = 1;  // untuk detail renungan setelah add
 
+bool logininput = false;
+
 bool call = true;
 
 bool buatkomunitas = false;

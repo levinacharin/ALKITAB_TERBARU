@@ -808,6 +808,7 @@ class _RenunganPageState extends State<RenunganPage> {
   @override
   void initState() {
     super.initState();
+
     tanggaldipilih = "${date.day}/${date.month}/${date.year}";
     if (widget.status == 'edit') {
       updateData();
@@ -1086,7 +1087,7 @@ class _RenunganPageState extends State<RenunganPage> {
     // ignore: non_constant_identifier_names
     var temp_berkesan = "";
     // read data proses
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -1296,28 +1297,11 @@ class _RenunganPageState extends State<RenunganPage> {
       context, 
       MaterialPageRoute(builder: (context) =>  DetailRenungan(id: globals.lastIdRenunganUser, shoulpop: "false"))
     );
-
-    // if (widget.darimana == "detailrenungan") {
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.pop(context, "refresh");
-    // } else if (widget.darimana == "listrenungan") {
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.push(
-    //     context, 
-    //     MaterialPageRoute(builder: (context) => DetailRenungan(index: widget.index, shoulpop: "true", darimana: widget.darimana,))
-    //   );
-    // } else if (widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan") {
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.push(
-    //     context, 
-    //     MaterialPageRoute(builder: (context) => DetailRenungan(index: globals.lastIdRenunganUser, shoulpop: "true", darimana: widget.darimana,))
-    //   );
-    // }
   }
 
   void updateData() async {
     // read data proses
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
     if (directoryExists || fileExists) {
@@ -1330,23 +1314,44 @@ class _RenunganPageState extends State<RenunganPage> {
       });
     }
     // end of read data proses
-
-    setState(() {
-      tanggaldipilih = listTempData[widget.index]['Tanggal'].toString();
-      ctr_judul.text = listTempData[widget.index]['Judul'].toString();
-      ctr_abacaan.text = listTempData[widget.index]['Kitab'].toString();
-      ctr_popupabacaan.text = listTempData[widget.index]['Ayat Bacaan']
-          .toString()
-          .replaceAll("<br>", "\n");
-      ctr_aberkesan.text = listTempData[widget.index]['Ayat Berkesan']
-          .toString()
-          .toString()
-          .replaceAll("<br>", "\n");
-      ctr_renungan.text = listTempData[widget.index]['Isi Renungan'].toString();
-      ctr_tindakan.text = listTempData[widget.index]['Tindakan Saya'].toString();
-      ctr_linkrenungan.text = listTempData[widget.index]['Link Renungan'].toString();
-      ctr_tagline.text = listTempData[widget.index]['Tagline'].toString();
-    });
+    
+    if (widget.darimana == "listrenungan") {
+      setState(() {
+        tanggaldipilih = listTempData[widget.index]['Tanggal'].toString();
+        ctr_judul.text = listTempData[widget.index]['Judul'].toString();
+        ctr_abacaan.text = listTempData[widget.index]['Kitab'].toString();
+        ctr_popupabacaan.text = listTempData[widget.index]['Ayat Bacaan']
+            .toString()
+            .replaceAll("<br>", "\n");
+        ctr_aberkesan.text = listTempData[widget.index]['Ayat Berkesan']
+            .toString()
+            .toString()
+            .replaceAll("<br>", "\n");
+        ctr_renungan.text = listTempData[widget.index]['Isi Renungan'].toString();
+        ctr_tindakan.text = listTempData[widget.index]['Tindakan Saya'].toString();
+        ctr_linkrenungan.text = listTempData[widget.index]['Link Renungan'].toString();
+        ctr_tagline.text = listTempData[widget.index]['Tagline'].toString();
+      });
+    } else if (widget.darimana == "detailrenungan") {
+      for (int i = 0; i < listTempData.length; i++) {
+        if (listTempData[i]['Id Renungan User'] == widget.index.toString()) {
+          tanggaldipilih = listTempData[i]['Tanggal'].toString();
+          ctr_judul.text = listTempData[i]['Judul'].toString();
+          ctr_abacaan.text = listTempData[i]['Kitab'].toString();
+          ctr_popupabacaan.text = listTempData[i]['Ayat Bacaan']
+              .toString()
+              .replaceAll("<br>", "\n");
+          ctr_aberkesan.text = listTempData[i]['Ayat Berkesan']
+              .toString()
+              .toString()
+              .replaceAll("<br>", "\n");
+          ctr_renungan.text = listTempData[i]['Isi Renungan'].toString();
+          ctr_tindakan.text = listTempData[i]['Tindakan Saya'].toString();
+          ctr_linkrenungan.text = listTempData[i]['Link Renungan'].toString();
+          ctr_tagline.text = listTempData[i]['Tagline'].toString();
+        }
+      }
+    }
   }
   // END OF SERVICES
   

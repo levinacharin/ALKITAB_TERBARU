@@ -100,6 +100,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
 
         for (int i = 0; i < listBacaLiturgi.length; i++) {
           if (listBacaLiturgi[i].kitab != "-") {
+            // ignore: prefer_interpolation_to_compose_strings
             _infobacaan = _infobacaan + "\n" + listBacaLiturgi[i].content + ": " + listBacaLiturgi[i].kitab;
           }
         }
@@ -110,7 +111,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
 
   // read file Rencanajson
   void readFile() async {
-    String path = '/storage/emulated/0/Download/Rencanajson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -141,6 +142,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     listIdRencana = sharedPreferences.getStringList('listIdRencana') ?? [];
 
     setState(() {
+      print("list id rencana: $listIdRencana");
       listIdRencana = listIdRencana.toSet().toList();
     });
   }
@@ -272,223 +274,230 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            if (widget.pagefrom == "komunitas") {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-              );
-            } else {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
-              );
-            }
-          },
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: Color.fromARGB(255, 113, 9, 49),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              if (widget.pagefrom == "komunitas") {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+                );
+              } else {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
+                );
+              }
+            },
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: Color.fromARGB(255, 113, 9, 49),
+            ),
           ),
         ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Text(
-              "Rencana Bacaanku",
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 113, 9, 49)
-                )
-              ),
-            ),
-          ),
-          const SizedBox(height: 10,),
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            height: 40,
-            child: TextField(
-              cursorColor: Color(int.parse(globals.defaultcolor)),
-              decoration: InputDecoration(
-                fillColor: const Color.fromARGB(255, 253, 255, 252),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1, 
-                    color: Color(int.parse(globals.defaultcolor))
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Text(
+                  "Rencana Bacaanku",
+                  style: GoogleFonts.nunito(
+                    textStyle: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 113, 9, 49)
+                    )
                   ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1, 
-                    color: Color(int.parse(globals.defaultcolor))
-                  ),
-                ),
-                hintText: 'Cari',
-                hintStyle: TextStyle(
-                  color: Colors.grey[400]
-                ),
-                contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)
               ),
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black
-                )
-              ),
-            ),
-          ),
-          const SizedBox(height: 20,),
-          GestureDetector(
-            onTap: () {
-              globals.listBacaLiturgi = listBacaLiturgi;
-              globals.informasiliturgi = _infobacaan;
-              globals.titletanggal = titletanggal;
-
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const DetailBLiturgi())
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Card(
-                elevation: 4,
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Bacaan Liturgi Hari Ini",
-                        style: GoogleFonts.nunito(
-                          textStyle: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 113, 9, 49)
-                          )
-                        ),
+              const SizedBox(height: 10,),
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                height: 40,
+                child: TextField(
+                  cursorColor: Color(int.parse(globals.defaultcolor)),
+                  decoration: InputDecoration(
+                    fillColor: const Color.fromARGB(255, 253, 255, 252),
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1, 
+                        color: Color(int.parse(globals.defaultcolor))
                       ),
-                      const SizedBox(height: 20,),
-                      Text(
-                        _infobacaan,
-                        style: GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                            color: Color(int.parse(globals.defaultcolor)),
-                          )
-                        ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1, 
+                        color: Color(int.parse(globals.defaultcolor))
                       ),
-                    ],
+                    ),
+                    hintText: 'Cari',
+                    hintStyle: TextStyle(
+                      color: Colors.grey[400]
+                    ),
+                    contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)
+                  ),
+                  style: GoogleFonts.nunito(
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black
+                    )
                   ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 20,),
-          Expanded(
-            child: ListView.builder(
-              itemCount: itemJudulRencana.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        child: Card(
-                          elevation: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // ignore: sized_box_for_whitespace
-                                Container(
-                                  width: 100,
-                                  height: 80,
-                                  child: Image.network(
-                                    '${globals.urllocal}getimage?id=${itemIdRencana[index]}&folder=rencana',
-                                    fit: BoxFit.cover ,
-                                  ),
-                                ),
-                                const SizedBox(width: 5,),
-                                Expanded(
-                                  child: Text(
-                                    itemJudulRencana[index],
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color.fromARGB(255, 113, 9, 49)
-                                      )
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 5,),
-                                Container(
-                                  width: 45,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: listScore[index] != 100 
-                                              ? Color(int.parse(globals.defaultcolor))
-                                              : Colors.green,
-                                      width: 2
-                                    )
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "${listScore[index]}%",
-                                      style: GoogleFonts.nunito(
-                                        textStyle: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(int.parse(globals.defaultcolor))
-                                        )
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
+              const SizedBox(height: 20,),
+              GestureDetector(
+                onTap: () {
+                  globals.listBacaLiturgi = listBacaLiturgi;
+                  globals.informasiliturgi = _infobacaan;
+                  globals.titletanggal = titletanggal;
+        
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const DetailBLiturgi())
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Card(
+                    elevation: 4,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Bacaan Liturgi Hari Ini",
+                            style: GoogleFonts.nunito(
+                              textStyle: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(255, 113, 9, 49)
+                              )
                             ),
                           ),
-                        ),
-                        onTap: () async {
-                          await sendData(listIdRencana[index]);
-
-                          globals.idrencana = "";
-                          globals.idrencana = listIdRencana[index];
-  
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: "user",))
-                          );
-                        },
+                          const SizedBox(height: 20,),
+                          Text(
+                            _infobacaan,
+                            style: GoogleFonts.nunito(
+                              textStyle: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Color(int.parse(globals.defaultcolor)),
+                              )
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 10,)
-                    ],
+                    ),
                   ),
-                );
-              },
-            )
-          )
-        ],
-      )
+                ),
+              ),
+              const SizedBox(height: 20,),
+              Container(
+                child: ListView.builder(
+                  itemCount: itemJudulRencana.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            child: Card(
+                              elevation: 4,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // ignore: sized_box_for_whitespace
+                                    Container(
+                                      width: 100,
+                                      height: 80,
+                                      child: Image.network(
+                                        '${globals.urllocal}getimage?id=${itemIdRencana[index]}&folder=rencana',
+                                        fit: BoxFit.cover ,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5,),
+                                    Expanded(
+                                      child: Text(
+                                        itemJudulRencana[index],
+                                        style: GoogleFonts.nunito(
+                                          textStyle: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color.fromARGB(255, 113, 9, 49)
+                                          )
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5,),
+                                    Container(
+                                      width: 45,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: listScore[index] != 100 
+                                                  ? Color(int.parse(globals.defaultcolor))
+                                                  : Colors.green,
+                                          width: 2
+                                        )
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "${listScore[index]}%",
+                                          style: GoogleFonts.nunito(
+                                            textStyle: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(int.parse(globals.defaultcolor))
+                                            )
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () async {
+                              await sendData(listIdRencana[index]);
+        
+                              globals.idrencana = "";
+                              globals.idrencana = listIdRencana[index];
+          
+                              // ignore: use_build_context_synchronously
+                              Navigator.push(
+                                context, 
+                                MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: "user",))
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 10,)
+                        ],
+                      ),
+                    );
+                  },
+                )
+              )
+            ],
+          ),
+        )
+      ),
     );
   }
 }

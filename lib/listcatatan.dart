@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:io';
 import 'dart:convert';
+import 'package:alkitab/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 import './detailcatatan.dart';
-//import './homepage.dart';
 import './catatanpage.dart';
 import './global.dart' as globals;
 
@@ -23,12 +24,6 @@ class _ListCatatanState extends State<ListCatatan> {
     readFile();
   }
 
-  Future reloadPage() async {
-    await Future.delayed(Duration(seconds: 2));
-    readFile();
-    setState(() { });
-  }
-
   // SERVICES FILE TEXT 
   List listDataCat = []; // read and display
   List listDataTemp = []; // temp
@@ -39,7 +34,7 @@ class _ListCatatanState extends State<ListCatatan> {
   List<String> itemTagline = [];
 
   void readFile() async {
-    String path = '/storage/emulated/0/Download/Catatanjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -105,22 +100,43 @@ class _ListCatatanState extends State<ListCatatan> {
     dataCatatan = dataCatatan.replaceAll("\n", "<br>");
     // log("data catatan: $dataCatatan");
     // write string to text file
-    String path = '/storage/emulated/0/Download/Catatanjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
     File(path).writeAsString(dataCatatan);
+
+    uploadFileLokal();
   }
   // END OF SERVICES
 
+  Future<void> uploadFileLokal() async {
+    String path1 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
+    var url1 = '${globals.urllocal}uploaddatalokal';
+    var request1  = http.MultipartRequest("POST", Uri.parse(url1));
+    request1.fields['id'] = globals.idUser;
+    request1.fields['folder'] = 'Catatanjson';
+    request1.files.add(
+      await http.MultipartFile.fromPath('filejson', path1)
+    );
+    // ignore: unused_local_variable
+    var res1 = await request1.send();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: reloadPage,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listcatatan"))
+              );
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)
@@ -161,7 +177,7 @@ class _ListCatatanState extends State<ListCatatan> {
                     // print("result: $listfordisplay");
                     listDataCat = [];
                     listDataCat = listfordisplay;
-    
+      
                     itemAyatBacaan = [];
                     itemCatatan = [];
                     itemTagline = [];
@@ -272,7 +288,7 @@ class _ListCatatanState extends State<ListCatatan> {
                                               context, 
                                               MaterialPageRoute(builder: (context) => CatatanPage(status: 'edit', index: index, darimana: "listcatatan",))
                                             );
-
+    
                                           } else if (value == 2) {
                                             deleteData(index);
                                           }

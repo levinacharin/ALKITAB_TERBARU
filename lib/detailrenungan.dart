@@ -39,7 +39,7 @@ class _DetailRenunganState extends State<DetailRenungan> {
   bool shouldPop = false;
 
   void readFile() async {
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -89,16 +89,20 @@ class _DetailRenunganState extends State<DetailRenungan> {
           backgroundColor: Colors.transparent,
           leading: IconButton(
             onPressed: () {
-              if (widget.darimana == "listrenungan" || widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan") {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else if (widget.darimana == "tambahrenungank") {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else {
-                Navigator.pop(context);
-              }
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const ListRenungan())
+              );
+              // if (widget.darimana == "listrenungan" || widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan") {
+              //   Navigator.pop(context);
+              //   Navigator.pop(context);
+              // } else if (widget.darimana == "tambahrenungank") {
+              //   Navigator.pop(context);
+              //   Navigator.pop(context);
+              //   Navigator.pop(context);
+              // } else {
+              //   Navigator.pop(context);
+              // }
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49),

@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:developer';
 
-import 'package:alkitab/classrencanabacaan.dart';
 import 'package:alkitab/detailkomunitas.dart';
 import 'package:alkitab/isirencanabaca.dart';
 import 'package:alkitab/listrencanauser.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:readmore/readmore.dart';
 
@@ -130,7 +130,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
   Future<void> writeData() async {
     var temp = '';
 
-    String path = '/storage/emulated/0/Download/Rencanajson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -152,6 +152,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
 
     dataRencana = '';
     dataRencana = "$dataRencana[";
+    print("length temp data: ${listTempData.length} - globals list user: ${globals.listDetailRUser.length}");
     if (listTempData.isNotEmpty) {
       for (int i = 0; i < listTempData.length; i++) {
         temp = listTempData[i]['Ayat Bacaan'].toString().replaceAll('"', '${String.fromCharCode(92)}"');
@@ -159,8 +160,10 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
           listTempData[i]['Status Ayat'] = globals.listDetailRUser[countidx]['Status Ayat'];
           listTempData[i]['Status Renungan'] = globals.listDetailRUser[countidx]['Status Renungan'];
           listTempData[i]['Status Selesai'] = globals.listDetailRUser[countidx]['Status Selesai'];
-
-          countidx++;
+          
+          if (countidx != globals.listDetailRUser.length-1) {
+            countidx++;
+          }
         }
 
         dataRencana = "$dataRencana{";
@@ -205,6 +208,21 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
     }
 
     await File(path).writeAsString(dataRencana);
+
+    uploadFileLokal();
+  }
+
+  Future<void> uploadFileLokal() async {
+    String path4 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
+    var url4 = '${globals.urllocal}uploaddatalokal';
+    var request4  = http.MultipartRequest("POST", Uri.parse(url4));
+    request4.fields['id'] = globals.idUser;
+    request4.fields['folder'] = 'Rencanajson';
+    request4.files.add(
+      await http.MultipartFile.fromPath('filejson', path4)
+    );
+    // ignore: unused_local_variable
+    var res4 = await request4.send();
   }
 
   @override
@@ -257,7 +275,8 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
             const SizedBox(height: 10,),
             // ignore: sized_box_for_whitespace
             Container(
-              height: 100,
+              height: 90,
+              margin: const EdgeInsets.only(top: 4, bottom: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

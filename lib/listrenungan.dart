@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:alkitab/detailrenungank.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +12,7 @@ import './detailrenungan.dart';
 //import './homepage.dart';
 import './renunganpage.dart';
 import './global.dart' as globals;
+import 'homepage.dart';
 
 class ListRenungan extends StatefulWidget {
   const ListRenungan({super.key});
@@ -61,12 +63,6 @@ class _ListRenunganState extends State<ListRenungan> {
     //getExplore sama dengan get Refleksi
   }
 
-  Future reloadPage() async {
-    await Future.delayed(Duration(seconds: 2));
-    readFile();
-    setState(() { });
-  }
-
   // SERVICES FILE JSON TEXT
   List listDataRenungan = []; // read and display
   List listDataTemp = []; // temp
@@ -79,7 +75,7 @@ class _ListRenunganState extends State<ListRenungan> {
   List<String> itemTagline = [];
 
   void readFile() async {
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -171,8 +167,10 @@ class _ListRenunganState extends State<ListRenungan> {
     dataRenungan = dataRenungan + "]";
     dataRenungan = dataRenungan.replaceAll("\n", "<br>");
     // write string to text file
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     File(path).writeAsString(dataRenungan);
+
+    uploadFileLokal();
   }
   // END OF SERVICE
 
@@ -266,17 +264,35 @@ class _ListRenunganState extends State<ListRenungan> {
     addToExplore();
   }
 
+  Future<void> uploadFileLokal() async {
+    String path5 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
+    var url5 = '${globals.urllocal}uploaddatalokal';
+    var request5  = http.MultipartRequest("POST", Uri.parse(url5));
+    request5.fields['id'] = globals.idUser;
+    request5.fields['folder'] = 'Renunganjson';
+    request5.files.add(
+      await http.MultipartFile.fromPath('filejson', path5)
+    );
+    // ignore: unused_local_variable
+    var res5 = await request5.send();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: reloadPage,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrenungan"))
+              );
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)
@@ -319,7 +335,7 @@ class _ListRenunganState extends State<ListRenungan> {
                     
                     listDataRenungan = [];
                     listDataRenungan = listfordisplay;
-    
+      
                     itemJudul = [];
                     itemTanggal = [];
                     itemKitab = [];

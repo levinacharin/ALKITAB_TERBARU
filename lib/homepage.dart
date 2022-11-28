@@ -14,6 +14,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import './listalkitab.dart';
 import './mergeayat.dart';
 import './listcatatan.dart';
@@ -2083,7 +2084,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   List listTempHighlightData = [];
   // get local file
   Future<File> get _localFile async {
-    return File('/storage/emulated/0/Download/listHighlightUser.txt');
+    return File('/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt');
   }
 
   // write data
@@ -2192,6 +2193,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     await file.writeAsString(dataHighlight);
     await readFile();
     await addPages("selectayat");
+
+    uploadFileLokal();
   }
 
   Future<void> deleteHighlightData(
@@ -2235,7 +2238,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // read data
   Future<void> readFile() async {
-    String path = '/storage/emulated/0/Download/listHighlightUser.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -2263,7 +2266,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   //int yangSudahDimasukinKeFileUnderlined = 0;
   //List listTempHighlightData = [];
   Future<File> get _localFileUnderlined async {
-    return File('/storage/emulated/0/Download/Underline.txt');
+    return File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt');
   }
 
   // write data
@@ -2358,6 +2361,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       await file.writeAsString("");
     } else {
       await file.writeAsString(dataUnderline);
+
+      uploadFileLokal();
     }
 
     // log("hasil baca - setelah write");
@@ -2629,7 +2634,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     getAllDataFromJson();
 
-    getAkunfromLokal(); // Shared Preferences
+    getAkunfromLokal(); // Shared Preferences, auto login
+
+    if (globals.logininput == true) {
+      readFileCatatan();
+      readFileStiker();
+    }
 
     timerModel = LogoutTimerModel();
     timerModel.updateTimestamp(DateTime.now());
@@ -2818,6 +2828,35 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
+  List listDetailRencana = [];
+  List<String> listIdRencana = [];
+  void readFileCatatan() async {
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
+    bool directoryExists = await Directory(path).exists();
+    bool fileExists = await File(path).exists();
+
+    if (directoryExists || fileExists) {
+      final contents = await File(path).readAsString();
+      listDetailRencana = [];
+      listIdRencana = [];
+
+      if (contents.isNotEmpty) {
+        listDetailRencana = json.decode(contents);
+        
+        setState(() {
+          for (int i = 0; i < listDetailRencana.length; i++) {
+            listIdRencana.add(listDetailRencana[i]['Id Rencana']);
+          }
+
+          listIdRencana = listIdRencana.toSet().toList();
+        });
+
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setStringList('listIdRencana', listIdRencana);
+      }
+    } 
+  }
+
   //SHARED PREFERENCES BOOKMARKED
   List<String> listindexbookmarked = [];
   addBookMarkedSP(String dexkitab, String salkitab, String yatkitab,
@@ -2917,14 +2956,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   //FILE STICKERS
   bool kosonginfilestiker=false;
   Future<File> get _localFileStiker async {
-    return File('/storage/emulated/0/Download/listStiker.txt');
+    return File('/storage/emulated/0/Download/Alkitab Renungan Mobile/listStiker.txt');
   }
   Future<void> writeDataStiker() async {
-   
+  
     final file = await _localFileStiker;
     List tempStiker = listpositionSP;
     
-    log("panjang stiker SP ${tempStiker.length}");
+    print("write file stiker SP ${tempStiker.length}");
     String datajsonstiker="";
 
     if(tempStiker.isNotEmpty){
@@ -2949,6 +2988,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await file.writeAsString("");
       }else{
         await file.writeAsString(datajsonstiker);
+
+        uploadFileLokal();
       }
       
       readFileStiker();
@@ -2961,9 +3002,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // read data
   List<String> listbacajsonstiker = [];
   Future<void> readFileStiker() async {
+    print("masuk read stiker sp");
 
     final file = await _localFileStiker;
-   
+
+    listbacajsonstiker = [];
     List tempbacadrjson=[];
     // Read the file-
     final contents = await file.readAsString();
@@ -2973,7 +3016,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         listbacajsonstiker.add(tempbacadrjson[i]["Isi"]);
 
       }
-      log("stiker SP panjang - ${listbacajsonstiker.length}");
+    }
+
+    if (globals.logininput == true) {
+      getStickerSP("setelahlogin");
     }
   }
   //END OF FILE STICKERS
@@ -2997,6 +3043,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         4, listposition[listposition.length - 1].lokasipasal.toString());
 
     await writeDataStiker();
+    print("masuk add stiker SP");
     
     SharedPreferences stickerSP = await SharedPreferences.getInstance();
     stickerSP.setStringList('ListOfStickers', listpositionSP);
@@ -3017,7 +3064,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
     await writeDataStiker();
 
-    log("updatestiker - ${listpositionSP.length}");
+    print("update stiker SP - ${listpositionSP.length}");
 
     SharedPreferences stickerSP = await SharedPreferences.getInstance();
     await stickerSP.clear();
@@ -3086,7 +3133,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
     }
 
-    log("stiker total ada - ${listposition.length}");
+    log("stiker  SP total ada - ${listposition.length}");
 
     
     //return listpositionSP;
@@ -3337,6 +3384,43 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // }
 
   // END OF SHARED PREFERENCES
+
+  // UPLOAD FILE TO SERVER
+  Future<void> uploadFileLokal() async {
+    String path2 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt';
+    var url2 = '${globals.urllocal}uploaddatalokal';
+    var request2  = http.MultipartRequest("POST", Uri.parse(url2));
+    request2.fields['id'] = globals.idUser;
+    request2.fields['folder'] = 'listHighlightUser';
+    request2.files.add(
+      await http.MultipartFile.fromPath('filejson', path2)
+    );
+    // ignore: unused_local_variable
+    var res2 = await request2.send();
+
+    String path3 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/listStiker.txt';
+    var url3 = '${globals.urllocal}uploaddatalokal';
+    var request3  = http.MultipartRequest("POST", Uri.parse(url3));
+    request3.fields['id'] = globals.idUser;
+    request3.fields['folder'] = 'listStiker';
+    request3.files.add(
+      await http.MultipartFile.fromPath('filejson', path3)
+    );
+    // ignore: unused_local_variable
+    var res3 = await request3.send();
+
+    String path6 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt';
+    var url6 = '${globals.urllocal}uploaddatalokal';
+    var request6 = http.MultipartRequest("POST", Uri.parse(url6));
+    request6.fields['id'] = globals.idUser;
+    request6.fields['folder'] = 'Underline';
+    request6.files.add(
+      await http.MultipartFile.fromPath('filejson', path6)
+    );
+    // ignore: unused_local_variable
+    var res6 = await request6.send();
+  }
+  // END OF UPLOAD FILE TO SERVER
 
   // @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -3889,8 +3973,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 child: FabCircularMenu(
                                     fabElevation: 30,
                                     fabSize: 70,
-                                    fabColor:
-                                        Color(int.parse(globals.defaultcolor)),
+                                    ringColor: Colors.white,
+                                    fabColor: Color(int.parse(globals.defaultcolor)),
                                     //fabMargin: EdgeInsets.all(10),
                                     fabCloseIcon: Image.asset(fabopenicon),
                                     fabOpenIcon: Text("+\nSticker",
