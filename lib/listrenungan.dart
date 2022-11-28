@@ -12,6 +12,7 @@ import './detailrenungan.dart';
 //import './homepage.dart';
 import './renunganpage.dart';
 import './global.dart' as globals;
+import 'homepage.dart';
 
 class ListRenungan extends StatefulWidget {
   const ListRenungan({super.key});
@@ -60,12 +61,6 @@ class _ListRenunganState extends State<ListRenungan> {
     readFile();
     getRefleksi();
     //getExplore sama dengan get Refleksi
-  }
-
-  Future reloadPage() async {
-    await Future.delayed(Duration(seconds: 2));
-    readFile();
-    setState(() { });
   }
 
   // SERVICES FILE JSON TEXT
@@ -174,6 +169,8 @@ class _ListRenunganState extends State<ListRenungan> {
     // write string to text file
     String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     File(path).writeAsString(dataRenungan);
+
+    uploadFileLokal();
   }
   // END OF SERVICE
 
@@ -267,45 +264,39 @@ class _ListRenunganState extends State<ListRenungan> {
     addToExplore();
   }
 
-  // ignore: unused_field
-  static var httpClient = HttpClient();
-  Future<File> getFileServer() async {
-    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=Renunganjson';
-    var request = await httpClient.getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt');
-    await file.writeAsBytes(bytes);
-    return file;
+  Future<void> uploadFileLokal() async {
+    String path5 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
+    var url5 = '${globals.urllocal}uploaddatalokal';
+    var request5  = http.MultipartRequest("POST", Uri.parse(url5));
+    request5.fields['id'] = globals.idUser;
+    request5.fields['folder'] = 'Renunganjson';
+    request5.files.add(
+      await http.MultipartFile.fromPath('filejson', path5)
+    );
+    // ignore: unused_local_variable
+    var res5 = await request5.send();
   }
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: reloadPage,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrenungan"))
+              );
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)
           ),
-          // actions: [
-          //   IconButton(
-          //     onPressed: () {
-          //       // uploadFileLokal();
-          //       getFileServer();
-          //     }, 
-          //     icon: Icon(
-          //       Icons.ios_share,
-          //       color: const Color.fromARGB(255, 113, 9, 49),
-          //     )
-          //   )
-          // ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,7 +335,7 @@ class _ListRenunganState extends State<ListRenungan> {
                     
                     listDataRenungan = [];
                     listDataRenungan = listfordisplay;
-    
+      
                     itemJudul = [];
                     itemTanggal = [];
                     itemKitab = [];

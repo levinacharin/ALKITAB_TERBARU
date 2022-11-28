@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:developer';
 
-import 'package:alkitab/classrencanabacaan.dart';
 import 'package:alkitab/detailkomunitas.dart';
 import 'package:alkitab/isirencanabaca.dart';
 import 'package:alkitab/listrencanauser.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:readmore/readmore.dart';
 
@@ -209,6 +209,20 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
 
     await File(path).writeAsString(dataRencana);
 
+    uploadFileLokal();
+  }
+
+  Future<void> uploadFileLokal() async {
+    String path4 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
+    var url4 = '${globals.urllocal}uploaddatalokal';
+    var request4  = http.MultipartRequest("POST", Uri.parse(url4));
+    request4.fields['id'] = globals.idUser;
+    request4.fields['folder'] = 'Rencanajson';
+    request4.files.add(
+      await http.MultipartFile.fromPath('filejson', path4)
+    );
+    // ignore: unused_local_variable
+    var res4 = await request4.send();
   }
 
   @override

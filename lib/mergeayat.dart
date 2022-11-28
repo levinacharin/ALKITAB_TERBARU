@@ -549,167 +549,172 @@ Future<void> listenTextFieldSearch()async{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(int.parse(globals.defaultcolor)),
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            // ignore: non_constant_identifier_names
-            bool status_similar = false;
-            for (int i = 0; i < listRiwayat.length; i++) {
-              if(listRiwayat[i] == searchKitabController.text) {
-                status_similar = true;
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(int.parse(globals.defaultcolor)),
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              // ignore: non_constant_identifier_names
+              bool status_similar = false;
+              for (int i = 0; i < listRiwayat.length; i++) {
+                if(listRiwayat[i] == searchKitabController.text) {
+                  status_similar = true;
+                }
               }
-            }
-            if (searchKitabController.text.isNotEmpty && status_similar == false) {
-              listRiwayat.add(searchKitabController.text);
-              listIsiRiwayat.add(hasil);
-            }
-            saveRiwayat();
-            Navigator.pop(context);
-            // Navigator.push(
-            //   context, 
-            //   MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "mergeayat"))
-            // );
-          }, 
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          )
+              if (searchKitabController.text.isNotEmpty && status_similar == false) {
+                listRiwayat.add(searchKitabController.text);
+                listIsiRiwayat.add(hasil);
+              }
+              saveRiwayat();
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "mergeayat"))
+              // );
+            }, 
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )
+          ),
         ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(right:16, left: 16, top: 10),
-            child: TextField(
-              controller: searchKitabController,
-                onChanged: (searchKitabController) async {
-                  if(searchKitabController.isNotEmpty){
-                    setState(() async {
-                      await listenTextFieldSearch();
-                    });
-                  }else{
-                    setState(() {
-                      hasil="";
-                    });
-                    
-                  }
-                },
-              cursorColor: const Color.fromARGB(255, 95, 95, 95),
-              decoration: InputDecoration(
-                fillColor: Colors.transparent,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(width: 3, color: Color(int.parse(globals.defaultcolor))),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(right:16, left: 16, top: 10),
+              child: TextField(
+                controller: searchKitabController,
+                  onChanged: (searchKitabController) async {
+                    if(searchKitabController.isNotEmpty){
+                      setState(() async {
+                        await listenTextFieldSearch();
+                      });
+                    }else{
+                      setState(() {
+                        hasil="";
+                      });
+                      
+                    }
+                  },
+                cursorColor: const Color.fromARGB(255, 95, 95, 95),
+                decoration: InputDecoration(
+                  fillColor: Colors.transparent,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(width: 3, color: Color(int.parse(globals.defaultcolor))),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Color(int.parse(globals.defaultcolor))),
+                  ),
+                  hintText: 'Kejadian 1:1-10,17,21 ; 1 Samuel 2:3 ...',
+                  contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(width: 1, color: Color(int.parse(globals.defaultcolor))),
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black
+                  )
                 ),
-                hintText: 'Kejadian 1:1-10,17,21 ; 1 Samuel 2:3 ...',
-                contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)
-              ),
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black
-                )
-              ),
-              maxLines: 2,
-            ),
-          ),
-          const SizedBox(height: 5,),
-          Container(
-            padding: const EdgeInsets.only(left: 16, top: 8),
-            child: Text(
-              "Riwayat",
-              style: GoogleFonts.nunito(
-                textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600, 
-                  color: Color.fromARGB(255, 113, 9, 49)
-                )
+                maxLines: 2,
               ),
             ),
-          ),
-  
-          Container(
-            height: 100,
-            padding: const EdgeInsets.only(left: 16, right: 4),
-            child: ListView.builder(
-              itemCount: listRiwayat.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          listRiwayat[index],
-                          style: GoogleFonts.nunito(
-                            textStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500
-                            )
+            const SizedBox(height: 5,),
+            Container(
+              padding: const EdgeInsets.only(left: 16, top: 8),
+              child: Text(
+                "Riwayat",
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600, 
+                    color: Color.fromARGB(255, 113, 9, 49)
+                  )
+                ),
+              ),
+            ),
+      
+            Container(
+              height: 100,
+              padding: const EdgeInsets.only(left: 16, right: 4),
+              child: ListView.builder(
+                itemCount: listRiwayat.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            listRiwayat[index],
+                            style: GoogleFonts.nunito(
+                              textStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500
+                              )
+                            ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            listRiwayat.removeAt(index);
-                            listIsiRiwayat.removeAt(index);
-                          });
-                          saveRiwayat();
-                        }, 
-                        icon: const Icon(
-                          Icons.cancel_outlined,
-                          size: 20,
-                        )
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    setState(() {
-                      searchKitabController.text = listRiwayat[index];
-                      hasil = listIsiRiwayat[index];
-                    });
-                    
-                  },
-                );
-              },
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              listRiwayat.removeAt(index);
+                              listIsiRiwayat.removeAt(index);
+                            });
+                            saveRiwayat();
+                          }, 
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            size: 20,
+                          )
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      setState(() {
+                        searchKitabController.text = listRiwayat[index];
+                        hasil = listIsiRiwayat[index];
+                      });
+                      
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-  
-          Container(
-            height: 1,
-            margin: const EdgeInsets.only(left: 8, right: 8),
-            color: Color(int.parse(globals.defaultcolor)),
-          ),
-  
-          Expanded(
-            child: SingleChildScrollView(
-              child: 
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  hasil,
-                  style: GoogleFonts.nunito(
-                    textStyle: const TextStyle(
-                      fontSize: 18, 
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black
-                    )
+      
+            Container(
+              height: 1,
+              margin: const EdgeInsets.only(left: 8, right: 8),
+              color: Color(int.parse(globals.defaultcolor)),
+            ),
+      
+            Expanded(
+              child: SingleChildScrollView(
+                child: 
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    hasil,
+                    style: GoogleFonts.nunito(
+                      textStyle: const TextStyle(
+                        fontSize: 18, 
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                      )
+                    ),
+                    textAlign: TextAlign.justify,
                   ),
-                  textAlign: TextAlign.justify,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

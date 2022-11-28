@@ -399,376 +399,380 @@ class _ExploreState extends State<Explore> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "explore"))
-            );
-          },
-          icon: const Icon(Icons.arrow_back,
-            color: Color.fromARGB(255, 113, 9, 49)
-          )
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "explore"))
+              );
+            },
+            icon: const Icon(Icons.arrow_back,
+              color: Color.fromARGB(255, 113, 9, 49)
+            )
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(top: 16, right: 16),
+              child: Text(
+                "Explore",
+                style: GoogleFonts.nunito(
+                    textStyle: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 113, 9, 49))),
+              ),
+            )
+          ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16, right: 16),
-            child: Text(
-              "Explore",
-              style: GoogleFonts.nunito(
-                  textStyle: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 113, 9, 49))),
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 20,
             ),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            height: 40,
-            child: TextField(
-              controller: controller,
-              cursorColor: const Color.fromARGB(255, 95, 95, 95),
-              decoration: InputDecoration(
-                  fillColor: const Color.fromARGB(255, 253, 255, 252),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 3,
-                        color: Color(int.parse(globals.defaultcolor))),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 1,
-                        color: Color(int.parse(globals.defaultcolor))),
-                  ),
-                  hintText: 'Cari Renungan',
-                  hintStyle: TextStyle(color: Colors.grey[400]),
-                  contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)),
-              style: GoogleFonts.nunito(
-                  textStyle:
-                      const TextStyle(fontSize: 16, color: Colors.black)),
+            Container(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              height: 40,
+              child: TextField(
+                controller: controller,
+                cursorColor: const Color.fromARGB(255, 95, 95, 95),
+                decoration: InputDecoration(
+                    fillColor: const Color.fromARGB(255, 253, 255, 252),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 3,
+                          color: Color(int.parse(globals.defaultcolor))),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 1,
+                          color: Color(int.parse(globals.defaultcolor))),
+                    ),
+                    hintText: 'Cari Renungan',
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)),
+                style: GoogleFonts.nunito(
+                    textStyle:
+                        const TextStyle(fontSize: 16, color: Colors.black)),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: listExplore.length,
-                itemBuilder: (context, index) {
-                 
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                        child: Card(
-                          elevation: 3,
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      globals.idexplore =
-                                          listExplore[index].idexplore;
-                                      globals.iduserrefleksi =
-                                          listExplore[index].iduser;
-                                      globals.idrefleksi =
-                                          listExplore[index].idrefleksi;
-                                      globals.idrenungankomunitas =
-                                          listExplore[index].idrenungan;
-                                      globals.tanggalposting =
-                                          listExplore[index].tanggalposting;
-                                      globals.namaduserrefleksi =
-                                          listExplore[index].namadepan;
-                                      globals.namabuserrefleksi =
-                                          listExplore[index].namabelakang;
-                                      globals.imagepathrefleksi =
-                                          listExplore[index].imagepath;
-                                      globals.judulrenungan =
-                                          listExplore[index].judul;
-                                      globals.kitabbacaan =
-                                          listExplore[index].kitabbacaan;
-                                      globals.ayatbacaan =
-                                          listExplore[index].ayatbacaan;
-                                      globals.isirenungan =
-                                          listExplore[index].isirenungan;
-                                      globals.linkrenungan =
-                                          listExplore[index].linkrenungan;
-                                      globals.tagline =
-                                          listExplore[index].tagline;
-                                      globals.ayatberkesan =
-                                          listExplore[index].ayatberkesan;
-                                      globals.tindakansaya =
-                                          listExplore[index].tindakansaya;
-                                      globals.komentar =
-                                          listExplore[index].komentar;
-                                      globals.suka = listExplore[index].suka;
-                                    });
-
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DetailRefleksiUser(
-                                                  pagefrom: 'explore',
-                                                )));
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: listExplore.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                          child: Card(
+                            elevation: 3,
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        globals.idexplore =
+                                            listExplore[index].idexplore;
+                                        globals.iduserrefleksi =
+                                            listExplore[index].iduser;
+                                        globals.idrefleksi =
+                                            listExplore[index].idrefleksi;
+                                        globals.idrenungankomunitas =
+                                            listExplore[index].idrenungan;
+                                        globals.tanggalposting =
+                                            listExplore[index].tanggalposting;
+                                        globals.namaduserrefleksi =
+                                            listExplore[index].namadepan;
+                                        globals.namabuserrefleksi =
+                                            listExplore[index].namabelakang;
+                                        globals.imagepathrefleksi =
+                                            listExplore[index].imagepath;
+                                        globals.judulrenungan =
+                                            listExplore[index].judul;
+                                        globals.kitabbacaan =
+                                            listExplore[index].kitabbacaan;
+                                        globals.ayatbacaan =
+                                            listExplore[index].ayatbacaan;
+                                        globals.isirenungan =
+                                            listExplore[index].isirenungan;
+                                        globals.linkrenungan =
+                                            listExplore[index].linkrenungan;
+                                        globals.tagline =
+                                            listExplore[index].tagline;
+                                        globals.ayatberkesan =
+                                            listExplore[index].ayatberkesan;
+                                        globals.tindakansaya =
+                                            listExplore[index].tindakansaya;
+                                        globals.komentar =
+                                            listExplore[index].komentar;
+                                        globals.suka = listExplore[index].suka;
+                                      });
+    
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const DetailRefleksiUser(
+                                                    pagefrom: 'explore',
+                                                  )));
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                listExplore[index].imagepath !=
+                                                        "-"
+                                                    ? ClipOval(
+                                                        child: Image.network(
+                                                          '${globals.urllocal}getimage?id=${listExplore[index].iduser}&folder=user',
+                                                          width: 60,
+                                                          height: 60,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      )
+                                                    : Icon(
+                                                        Icons
+                                                            .account_circle_outlined,
+                                                        color: Color(int.parse(
+                                                            globals
+                                                                .defaultcolor)),
+                                                        size: 60,
+                                                      )
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "${listExplore[index].namadepan} ${listExplore[index].namabelakang}",
+                                                  style: GoogleFonts.nunito(
+                                                      textStyle: const TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color.fromARGB(
+                                                              255, 113, 9, 49))),
+                                                ),
+                                                Text(
+                                                  listExplore[index]
+                                                      .tanggalposting,
+                                                  style: GoogleFonts.nunito(
+                                                      textStyle: const TextStyle(
+                                                          fontSize: 14,
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              125,
+                                                              125,
+                                                              125))),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          listExplore[index].judul,
+                                          style: GoogleFonts.nunito(
+                                              textStyle: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(int.parse(
+                                                      globals.defaultcolor)))),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          listExplore[index].isirenungan,
+                                          style: GoogleFonts.nunito(
+                                              textStyle: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black)),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(32, 0, 32, 0),
+                                    height: 1,
+                                    color:
+                                        const Color.fromARGB(255, 125, 125, 125),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
+                                      GestureDetector(
+                                        onTap: () {
+                                         // like=!like;
+                                          if(listShowUserLikeExplore[index] == true){
+                                            setState(() async {
+                                              await deleteLikeDatabase(listExplore[index].idexplore,"explore",globals.idUser);
+                                              getListExplore();
+                                              listShowUserLikeExplore[index] = false;
+                                              log("hapus likenihhh");
+                                            });
+                                            
+                                          }else{
+                                            setState(() {
+                                              addLikeDatabase(
+                                              listExplore[index].idexplore);
+                                              getListExplore();
+                                              log("likenihhh");
+                                            });
+                                            
+                                          }
+                                          
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 1),
+                                                )
+                                              ]),
+                                          child: Row(
                                             children: [
-                                              listExplore[index].imagepath !=
-                                                      "-"
-                                                  ? ClipOval(
-                                                      child: Image.network(
-                                                        '${globals.urllocal}getimage?id=${listExplore[index].iduser}&folder=user',
-                                                        width: 60,
-                                                        height: 60,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    )
-                                                  : Icon(
-                                                      Icons
-                                                          .account_circle_outlined,
-                                                      color: Color(int.parse(
-                                                          globals
-                                                              .defaultcolor)),
-                                                      size: 60,
-                                                    )
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "${listExplore[index].namadepan} ${listExplore[index].namabelakang}",
-                                                style: GoogleFonts.nunito(
-                                                    textStyle: const TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromARGB(
-                                                            255, 113, 9, 49))),
+                                              Container(
+                                                width: 20,
+                                                height: 20,
+                                                child: (listShowUserLikeExplore[index] == true?Image.asset(
+                                                    "assets/images/icon_like_red.png"):Image.asset(
+                                                    "assets/images/icon_like_black.png"))
+                                              
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
                                               ),
                                               Text(
-                                                listExplore[index]
-                                                    .tanggalposting,
+                                                listExplore[index].suka,
                                                 style: GoogleFonts.nunito(
                                                     textStyle: const TextStyle(
                                                         fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                         color: Color.fromARGB(
-                                                            255,
-                                                            125,
-                                                            125,
-                                                            125))),
-                                              ),
+                                                            255, 125, 125, 125))),
+                                              )
                                             ],
                                           ),
-                                        ],
+                                        ),
                                       ),
                                       const SizedBox(
-                                        height: 5,
+                                        width: 20,
                                       ),
-                                      Text(
-                                        listExplore[index].judul,
-                                        style: GoogleFonts.nunito(
-                                            textStyle: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(int.parse(
-                                                    globals.defaultcolor)))),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text(
-                                        listExplore[index].isirenungan,
-                                        style: GoogleFonts.nunito(
-                                            textStyle: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black)),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(32, 0, 32, 0),
-                                  height: 1,
-                                  color:
-                                      const Color.fromARGB(255, 125, 125, 125),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                       // like=!like;
-                                        if(listShowUserLikeExplore[index] == true){
-                                          setState(() async {
-                                            await deleteLikeDatabase(listExplore[index].idexplore,"explore",globals.idUser);
-                                            getListExplore();
-                                            listShowUserLikeExplore[index] = false;
-                                            log("hapus likenihhh");
-                                          });
-                                          
-                                        }else{
-                                          setState(() {
-                                            addLikeDatabase(
-                                            listExplore[index].idexplore);
-                                            getListExplore();
-                                            log("likenihhh");
-                                          });
-                                          
-                                        }
-                                        
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 10,
-                                                offset: const Offset(0, 1),
-                                              )
-                                            ]),
+                                      GestureDetector(
+                                        onTap: () {
+                                          print("komen klik");
+                                        },
                                         child: Row(
                                           children: [
-                                            Container(
-                                              width: 20,
-                                              height: 20,
-                                              child: (listShowUserLikeExplore[index] == true?Image.asset(
-                                                  "assets/images/icon_like_red.png"):Image.asset(
-                                                  "assets/images/icon_like_black.png"))
-                                            
+                                            const Icon(
+                                              Icons.chat_bubble_outline_outlined,
+                                              color: Color.fromARGB(
+                                                  255, 125, 125, 125),
+                                              size: 20,
                                             ),
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            Text(
-                                              listExplore[index].suka,
-                                              style: GoogleFonts.nunito(
-                                                  textStyle: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          255, 125, 125, 125))),
-                                            )
+                                            // Text(
+                                            //   listExplore[index].komentar,
+                                            //   style: GoogleFonts.nunito(
+                                            //       textStyle: const TextStyle(
+                                            //           fontSize: 14,
+                                            //           fontWeight: FontWeight.bold,
+                                            //           color: Color.fromARGB(
+                                            //               255, 125, 125, 125))),
+                                            // )
                                           ],
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        print("komen klik");
-                                      },
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.chat_bubble_outline_outlined,
-                                            color: Color.fromARGB(
-                                                255, 125, 125, 125),
-                                            size: 20,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          // Text(
-                                          //   listExplore[index].komentar,
-                                          //   style: GoogleFonts.nunito(
-                                          //       textStyle: const TextStyle(
-                                          //           fontSize: 14,
-                                          //           fontWeight: FontWeight.bold,
-                                          //           color: Color.fromARGB(
-                                          //               255, 125, 125, 125))),
-                                          // )
-                                        ],
+                                      const SizedBox(
+                                        width: 10,
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        sharerenungan(index);
-                                      },
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.ios_share_outlined,
-                                            color: Color.fromARGB(
-                                                255, 125, 125, 125),
-                                            size: 20,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          // Text(
-                                          //   "0",
-                                          //   style: GoogleFonts.nunito(
-                                          //       textStyle: const TextStyle(
-                                          //           fontSize: 14,
-                                          //           fontWeight: FontWeight.bold,
-                                          //           color: Color.fromARGB(
-                                          //               255, 125, 125, 125))),
-                                          // )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
+                                      GestureDetector(
+                                        onTap: () {
+                                          sharerenungan(index);
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.ios_share_outlined,
+                                              color: Color.fromARGB(
+                                                  255, 125, 125, 125),
+                                              size: 20,
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            // Text(
+                                            //   "0",
+                                            //   style: GoogleFonts.nunito(
+                                            //       textStyle: const TextStyle(
+                                            //           fontSize: 14,
+                                            //           fontWeight: FontWeight.bold,
+                                            //           color: Color.fromARGB(
+                                            //               255, 125, 125, 125))),
+                                            // )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  );
-                }),
-          ),
-        ],
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    );
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }

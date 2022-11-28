@@ -160,112 +160,117 @@ class _SearchAlkitabState extends State<SearchAlkitab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color(int.parse(globals.defaultcolor)),
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-        ),
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 4, 10),
-          child: TextField(
-            controller: searchKataController,
-            onChanged: (searchKitabController) async {
-                  if(searchKitabController.isEmpty){
-                    setState(() {
-                      listAyatHasilCari.clear();
-                    });
-                  }
-                },
-            
-            cursorColor: Colors.white,
-            style: GoogleFonts.nunito(
-              textStyle: const TextStyle(
-                fontSize: 18,
-                color: Colors.white
-              )
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              hintText: "Search ...",
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconButton(
-              onPressed: () {
-                if(searchKataController.text.isNotEmpty){
-                    setState(() async {
-                      await listenTextFieldSearch();
-                    });
-                  }else{
-                    setState(() {
-                      listAyatHasilCari.clear();
-                    });
-                    
-                  }
-              },
-              icon: const Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-      // ignore: avoid_unnecessary_containers
-      body: Container(
-        child: ListView.builder(
-          itemCount: listAyatHasilCari.length,
-          itemBuilder: (context, index) {
-            
-            return ListTile(
-              onTap:(){
-              log("ontap nih ${listAyatHasilCari[index].namaKitab.toString()} ${listAyatHasilCari[index].pasalKitab.toString()}:${listAyatHasilCari[index].ayatKitab.toString()}");
-              // Navigator.push(
-              //   context, 
-              //   MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: listAyatHasilCari[index].indexKitab!-1, pasalKitabdicari: listAyatHasilCari[index].pasalKitab!-1, ayatKitabdicari: listAyatHasilCari[index].ayatKitab!-1, daripagemana: "listayat",))
-              // );
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Color(int.parse(globals.defaultcolor)),
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
               Navigator.pop(context);
             },
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${listAyatHasilCari[index].namaKitab.toString()} ${listAyatHasilCari[index].pasalKitab.toString()}:${listAyatHasilCari[index].ayatKitab.toString()}",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                  Text(
-                    "${listAyatHasilCari[index].isiAyat.toString()}\n",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.w500
-                      ),
-                    ),
-                    textAlign: TextAlign.justify,
-                  ),
-                ],
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 4, 10),
+            child: TextField(
+              controller: searchKataController,
+              onChanged: (searchKitabController) async {
+                    if(searchKitabController.isEmpty){
+                      setState(() {
+                        listAyatHasilCari.clear();
+                      });
+                    }
+                  },
+              
+              cursorColor: Colors.white,
+              style: GoogleFonts.nunito(
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white
+                )
               ),
-            );
-          }
-        )
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                hintText: "Search ...",
+              ),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: IconButton(
+                onPressed: () {
+                  if(searchKataController.text.isNotEmpty){
+                      setState(() async {
+                        await listenTextFieldSearch();
+                      });
+                    }else{
+                      setState(() {
+                        listAyatHasilCari.clear();
+                      });
+                      
+                    }
+                },
+                icon: const Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        // ignore: avoid_unnecessary_containers
+        body: Container(
+          child: ListView.builder(
+            itemCount: listAyatHasilCari.length,
+            itemBuilder: (context, index) {
+              
+              return ListTile(
+                onTap:(){
+                log("ontap nih ${listAyatHasilCari[index].namaKitab.toString()} ${listAyatHasilCari[index].pasalKitab.toString()}:${listAyatHasilCari[index].ayatKitab.toString()}");
+                // Navigator.push(
+                //   context, 
+                //   MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: listAyatHasilCari[index].indexKitab!-1, pasalKitabdicari: listAyatHasilCari[index].pasalKitab!-1, ayatKitabdicari: listAyatHasilCari[index].ayatKitab!-1, daripagemana: "listayat",))
+                // );
+                Navigator.pop(context);
+              },
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${listAyatHasilCari[index].namaKitab.toString()} ${listAyatHasilCari[index].pasalKitab.toString()}:${listAyatHasilCari[index].ayatKitab.toString()}",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                    Text(
+                      "${listAyatHasilCari[index].isiAyat.toString()}\n",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.w500
+                        ),
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ],
+                ),
+              );
+            }
+          )
+        ),
       ),
     );
   }

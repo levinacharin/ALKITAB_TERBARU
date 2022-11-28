@@ -2193,6 +2193,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     await file.writeAsString(dataHighlight);
     await readFile();
     await addPages("selectayat");
+
+    uploadFileLokal();
   }
 
   Future<void> deleteHighlightData(
@@ -2359,6 +2361,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       await file.writeAsString("");
     } else {
       await file.writeAsString(dataUnderline);
+
+      uploadFileLokal();
     }
 
     // log("hasil baca - setelah write");
@@ -2634,6 +2638,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (globals.logininput == true) {
       readFileCatatan();
+      readFileStiker();
     }
 
     timerModel = LogoutTimerModel();
@@ -2847,7 +2852,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         });
 
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setStringList('listIdRencana', listIdRencana);
+        sharedPreferences.setStringList('listIdRencana', listIdRencana);
       }
     } 
   }
@@ -2983,6 +2988,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await file.writeAsString("");
       }else{
         await file.writeAsString(datajsonstiker);
+
+        uploadFileLokal();
       }
       
       readFileStiker();
@@ -2998,6 +3005,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     print("masuk read stiker sp");
 
     final file = await _localFileStiker;
+
+    listbacajsonstiker = [];
     List tempbacadrjson=[];
     // Read the file-
     final contents = await file.readAsString();
@@ -3007,7 +3016,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         listbacajsonstiker.add(tempbacadrjson[i]["Isi"]);
 
       }
-      print("stiker SP panjang - ${listbacajsonstiker.length}");
+    }
+
+    if (globals.logininput == true) {
+      getStickerSP("setelahlogin");
     }
   }
   //END OF FILE STICKERS
@@ -3375,17 +3387,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // UPLOAD FILE TO SERVER
   Future<void> uploadFileLokal() async {
-    String path1 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
-    var url1 = '${globals.urllocal}uploaddatalokal';
-    var request1  = http.MultipartRequest("POST", Uri.parse(url1));
-    request1.fields['id'] = globals.idUser;
-    request1.fields['folder'] = 'Catatanjson';
-    request1.files.add(
-      await http.MultipartFile.fromPath('filejson', path1)
-    );
-    // ignore: unused_local_variable
-    var res1 = await request1.send();
-
     String path2 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt';
     var url2 = '${globals.urllocal}uploaddatalokal';
     var request2  = http.MultipartRequest("POST", Uri.parse(url2));
@@ -3408,28 +3409,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // ignore: unused_local_variable
     var res3 = await request3.send();
 
-    String path4 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
-    var url4 = '${globals.urllocal}uploaddatalokal';
-    var request4  = http.MultipartRequest("POST", Uri.parse(url4));
-    request4.fields['id'] = globals.idUser;
-    request4.fields['folder'] = 'Rencanajson';
-    request4.files.add(
-      await http.MultipartFile.fromPath('filejson', path4)
-    );
-    // ignore: unused_local_variable
-    var res4 = await request4.send();
-
-    String path5 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
-    var url5 = '${globals.urllocal}uploaddatalokal';
-    var request5  = http.MultipartRequest("POST", Uri.parse(url5));
-    request5.fields['id'] = globals.idUser;
-    request5.fields['folder'] = 'Renunganjson';
-    request5.files.add(
-      await http.MultipartFile.fromPath('filejson', path5)
-    );
-    // ignore: unused_local_variable
-    var res5 = await request5.send();
-
     String path6 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt';
     var url6 = '${globals.urllocal}uploaddatalokal';
     var request6 = http.MultipartRequest("POST", Uri.parse(url6));
@@ -3451,9 +3430,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         setState(() {
           //backsound_mode = false;
           setLagu(false);
-          if (globals.idUser != "") {
-            uploadFileLokal();
-          }
         });
         break;
       case AppLifecycleState.resumed:
@@ -3467,9 +3443,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         setState(() {
           //backsound_mode = false;
           setLagu(false);
-          if (globals.idUser != "") {
-            uploadFileLokal();
-          }
         });
 
         break;
@@ -3477,9 +3450,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         setState(() {
           //backsound_mode = false;
           setLagu(false);
-          if (globals.idUser != "") {
-            uploadFileLokal();
-          }
         });
         break;
     }
@@ -4003,8 +3973,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 child: FabCircularMenu(
                                     fabElevation: 30,
                                     fabSize: 70,
-                                    fabColor:
-                                        Color(int.parse(globals.defaultcolor)),
+                                    ringColor: Colors.white,
+                                    fabColor: Color(int.parse(globals.defaultcolor)),
                                     //fabMargin: EdgeInsets.all(10),
                                     fabCloseIcon: Image.asset(fabopenicon),
                                     fabOpenIcon: Text("+\nSticker",
