@@ -746,7 +746,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
   void writeData(int idrencana, int index) async {
     var temp = '';
 
-    String path = '/storage/emulated/0/Download/Rencanajson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 

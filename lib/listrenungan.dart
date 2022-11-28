@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:alkitab/detailrenungank.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -79,7 +80,7 @@ class _ListRenunganState extends State<ListRenungan> {
   List<String> itemTagline = [];
 
   void readFile() async {
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -171,7 +172,7 @@ class _ListRenunganState extends State<ListRenungan> {
     dataRenungan = dataRenungan + "]";
     dataRenungan = dataRenungan.replaceAll("\n", "<br>");
     // write string to text file
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     File(path).writeAsString(dataRenungan);
   }
   // END OF SERVICE
@@ -266,6 +267,18 @@ class _ListRenunganState extends State<ListRenungan> {
     addToExplore();
   }
 
+  // ignore: unused_field
+  static var httpClient = HttpClient();
+  Future<File> getFileServer() async {
+    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=Renunganjson';
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -281,6 +294,18 @@ class _ListRenunganState extends State<ListRenungan> {
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)
           ),
+          // actions: [
+          //   IconButton(
+          //     onPressed: () {
+          //       // uploadFileLokal();
+          //       getFileServer();
+          //     }, 
+          //     icon: Icon(
+          //       Icons.ios_share,
+          //       color: const Color.fromARGB(255, 113, 9, 49),
+          //     )
+          //   )
+          // ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

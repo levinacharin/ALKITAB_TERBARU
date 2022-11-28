@@ -289,7 +289,7 @@ class _CatatanPageState extends State<CatatanPage> {
   void writeData() async {
     var temp = '';
     // READ FILE / PATH
-    String path = '/storage/emulated/0/Download/Catatanjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
     
@@ -418,7 +418,7 @@ class _CatatanPageState extends State<CatatanPage> {
 
   void updateData() async {
     // read data proses
-    String path = '/storage/emulated/0/Download/Catatanjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
     if (directoryExists || fileExists) {

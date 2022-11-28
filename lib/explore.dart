@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:alkitab/detailrefleksiuser.dart';
+import 'package:alkitab/homepage.dart';
 import 'package:alkitab/listrencanauser.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -403,11 +404,16 @@ class _ExploreState extends State<Explore> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back,
-                color: Color.fromARGB(255, 113, 9, 49))),
+          onPressed: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "explore"))
+            );
+          },
+          icon: const Icon(Icons.arrow_back,
+            color: Color.fromARGB(255, 113, 9, 49)
+          )
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 16, right: 16),

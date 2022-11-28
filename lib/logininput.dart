@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import './register.dart';
 import './homepage.dart';
 import './global.dart' as globals;
+import 'detailkomunitas.dart';
 
 class AkunUser {
   String iduser;
@@ -86,6 +89,7 @@ class _LoginInputState extends State<LoginInput> {
       setState(() {
         listAkunUser = value;
         if (listAkunUser.isNotEmpty) {
+          globals.idUser = listAkunUser[0].iduser;
           globals.emailUser = listAkunUser[0].email;
           globals.password = listAkunUser[0].password;
           globals.namaDepanUser = listAkunUser[0].namadepan;
@@ -118,6 +122,88 @@ class _LoginInputState extends State<LoginInput> {
   }
   // END OF SHARED PREFERENCES
 
+  // GET FILE SERVER, SAVE IT TO LOKAL
+  void cekFolderExist() async {
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+    bool directoryExists = await Directory(path).exists();
+    if (directoryExists == false) {
+      // ignore: unnecessary_new
+      await new Directory(path).create();
+
+      getFileCatatan();
+      getFileHighlight();
+      getFileStiker();
+      getFileRencana();
+      getFileRenungan();
+      getFileUnderline();
+    }
+  }
+
+
+  // ignore: unused_field
+  static var httpClient = HttpClient();
+  Future<File> getFileCatatan() async {
+    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=Catatanjson';
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+
+    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  Future<File> getFileHighlight() async {
+    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=listHighlightUser';
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  Future<File> getFileStiker() async {
+    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=listStiker';
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/listStiker.txt');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  Future<File> getFileRencana() async {
+    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=Rencanajson';
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  Future<File> getFileRenungan() async {
+    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=Renunganjson';
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  Future<File> getFileUnderline() async {
+    var url = '${globals.urllocal}getfileserver?id=${globals.idUser}&folder=Underline';
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+  // END OF GET FILE SERVER, SAVE IT TO LOKAL
+
   Future<void> _showDialogSuccess() async {
     await Future.delayed(Duration(milliseconds: 1000), () {});
     return showDialog(
@@ -142,6 +228,8 @@ class _LoginInputState extends State<LoginInput> {
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               onPressed: () {
+                cekFolderExist();
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -349,6 +437,9 @@ class _LoginInputState extends State<LoginInput> {
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                   onPressed: () {
+                    setState(() {
+                      globals.logininput = true;
+                    });
                     getAkunUser(); // harusnya post
                   },
                   style: ElevatedButton.styleFrom(

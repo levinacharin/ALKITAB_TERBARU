@@ -42,6 +42,7 @@ class _EditProfileState extends State<EditProfile> {
         uploadFoto = true;
 
         print("path photo: $pathPhoto");
+        globals.imagepath = pathPhoto;
       });
 
       var url = "${globals.urllocal}uploadimage";
@@ -103,7 +104,10 @@ class _EditProfileState extends State<EditProfile> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const ProfilePage())
+            );
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)

@@ -130,7 +130,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
   Future<void> writeData() async {
     var temp = '';
 
-    String path = '/storage/emulated/0/Download/Rencanajson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -152,6 +152,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
 
     dataRencana = '';
     dataRencana = "$dataRencana[";
+    print("length temp data: ${listTempData.length} - globals list user: ${globals.listDetailRUser.length}");
     if (listTempData.isNotEmpty) {
       for (int i = 0; i < listTempData.length; i++) {
         temp = listTempData[i]['Ayat Bacaan'].toString().replaceAll('"', '${String.fromCharCode(92)}"');
@@ -159,8 +160,10 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
           listTempData[i]['Status Ayat'] = globals.listDetailRUser[countidx]['Status Ayat'];
           listTempData[i]['Status Renungan'] = globals.listDetailRUser[countidx]['Status Renungan'];
           listTempData[i]['Status Selesai'] = globals.listDetailRUser[countidx]['Status Selesai'];
-
-          countidx++;
+          
+          if (countidx != globals.listDetailRUser.length-1) {
+            countidx++;
+          }
         }
 
         dataRencana = "$dataRencana{";
@@ -205,6 +208,7 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
     }
 
     await File(path).writeAsString(dataRencana);
+
   }
 
   @override
@@ -257,7 +261,8 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
             const SizedBox(height: 10,),
             // ignore: sized_box_for_whitespace
             Container(
-              height: 100,
+              height: 90,
+              margin: const EdgeInsets.only(top: 4, bottom: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

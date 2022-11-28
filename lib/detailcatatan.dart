@@ -35,7 +35,7 @@ class _DetailCatatanState extends State<DetailCatatan> {
   bool shouldPop = false;
   
   void readFile() async {
-    String path = '/storage/emulated/0/Download/Catatanjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 

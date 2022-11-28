@@ -100,6 +100,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
 
         for (int i = 0; i < listBacaLiturgi.length; i++) {
           if (listBacaLiturgi[i].kitab != "-") {
+            // ignore: prefer_interpolation_to_compose_strings
             _infobacaan = _infobacaan + "\n" + listBacaLiturgi[i].content + ": " + listBacaLiturgi[i].kitab;
           }
         }
@@ -110,7 +111,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
 
   // read file Rencanajson
   void readFile() async {
-    String path = '/storage/emulated/0/Download/Rencanajson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -141,6 +142,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     listIdRencana = sharedPreferences.getStringList('listIdRencana') ?? [];
 
     setState(() {
+      print("list id rencana: $listIdRencana");
       listIdRencana = listIdRencana.toSet().toList();
     });
   }
