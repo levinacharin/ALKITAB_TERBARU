@@ -648,12 +648,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (stickerselected.isNotEmpty &&
         stickermode == true &&
         stickerselected != "assets/delete.png") {
-      // //log("dihapus - haruse ga masuk sini");
-      // // creating instance of renderbox
-      // final RenderBox box = context.findRenderObject() as RenderBox;
-      // // find the coordinate
-      // final Offset localOffset = box.globalToLocal(details.globalPosition);
-
+      
       posx = localOffset.dx;
       posy = localOffset.dy + controllerscroll!.offset;
 

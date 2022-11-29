@@ -85,7 +85,7 @@ class ExploreLike {
 
   static Future<List<ExploreLike>> getExploreLike(
       String darimana, String id) async {
-    var url = "${globals.urllocal}getlike?idLike=${id}&darimana=$darimana";
+    var url = "${globals.urllocal}getlike?idLike=$id&darimana=$darimana";
     var apiResult = await http.get(Uri.parse(url), headers: {
       "Accept": "application/json",
       "Access-Control-Allow-Origin": "*"
@@ -98,6 +98,30 @@ class ExploreLike {
       return listData;
     } else {
       for (int i = 0; i < data.length; i++) {
+        listData.add(ExploreLike.createData(data[i]));
+      }
+      return listData;
+    }
+  }
+
+  static Future<List<ExploreLike>> getUserExploreLike(
+      String darimana, String id) async {
+    var url =
+        "${globals.urllocal}getstatuslikeuser?idUser=${id}&darimana=$darimana";
+    var apiResult = await http.get(Uri.parse(url), headers: {
+      "Accept": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    var jsonObject = json.decode(apiResult.body);
+    var data = (jsonObject as Map<String, dynamic>)['data'];
+    List<ExploreLike> listData = [];
+    if (data.toString() == "null") {
+      log("darifunction null");
+      return listData;
+    } else {
+      for (int i = 0; i < data.length; i++) {
+        log("darifunction ${data[i]}");
         listData.add(ExploreLike.createData(data[i]));
       }
       return listData;
@@ -197,7 +221,6 @@ class Explore extends StatefulWidget {
 //bool like=false;
 
 class _ExploreState extends State<Explore> {
-
   void addLikeDatabase(String idlike) async {
     var url = "${globals.urllocal}simpanlike";
     var response = await http.post(Uri.parse(url), body: {
@@ -205,21 +228,21 @@ class _ExploreState extends State<Explore> {
       "darimana": "explore",
       "idUser": globals.idUser,
     });
-  
   }
 
-  Future<http.Response> deleteLikeDatabase(String idLikeTemp, String darimana, String idUserTemp) async {
+  Future<http.Response> deleteLikeDatabase(
+      String idLikeTemp, String darimana, String idUserTemp) async {
     // print("idkomunitas: ${globals.idkomunitas} - iduser: ${globals.idUser}");
-    var url = "${globals.urllocal}deletelike?idLike=$idLikeTemp&darimana=$darimana&idUser=$idUserTemp";
-    var response = await http.delete(Uri.parse(url), 
-    headers: <String, String> {
-      'Content-Type' : 'application/json; charset=UTF-8',
+    var url =
+        "${globals.urllocal}deletelike?idLike=$idLikeTemp&darimana=$darimana&idUser=$idUserTemp";
+    var response = await http.delete(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
     });
-    
+
     // if (response.statusCode == 200) {
     //   // ignore: use_build_context_synchronously
     //   Navigator.push(
-    //     context, 
+    //     context,
     //     MaterialPageRoute(builder: (context) => const ListKomunitas())
     //   );
     // }
@@ -227,10 +250,10 @@ class _ExploreState extends State<Explore> {
     return response;
   }
 
-  
-
   List<ListExplore> listExplore = [];
-  List<bool> listShowUserLikeExplore=[];
+  List<bool> listShowUserLikeExplore = [];
+  List<ExploreLike> listExploreLike = [];
+  //List<bool> listUserExploreLike = [];
   Future<void> getListExplore() async {
     ListExplore.getAllData().then((value) async {
       setState(() async {
@@ -244,43 +267,57 @@ class _ExploreState extends State<Explore> {
 
         //listexplore = semua explore yg ada
         //listShowUserLikeExplore[listExplore.length];
-        int indexbuatlistygdilikeuser=0;
-    
+        int indexbuatlistygdilikeuser = 0;
+
+        listShowUserLikeExplore.clear();
         for (int i = 0; i < listExplore.length; i++) {
           listShowUserLikeExplore.add(false);
-          
 
           //log("atas likenih - ${listExplore[i].idexplore}");
 
-          List<ExploreLike> listExploreLike = [];
           await ExploreLike.getExploreLike("explore", listExplore[i].idexplore).then((value) async {
             setState(() {
               listExploreLike = [];
               listExploreLike = value; //isinya list per detail like dari explore yg dah difilter, apakah udah dari explore dan idexplore
+
+              for (int j = 0; j < listExploreLike.length; j++) {
+                log("benergasihhh cek all $j - ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
+                if (listUserExploreLike[j].idLike == listExplore[i].idexplore){
+                  log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
+                  listShowUserLikeExplore[indexbuatlistygdilikeuser]=true;
+                  break;
+                }else{
+                  log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
+                  listShowUserLikeExplore[indexbuatlistygdilikeuser]=false;
+                }
+                log("benergasihhh - ${listShowUserLikeExplore[indexbuatlistygdilikeuser]}");
+              }
+
+              log("list explore like: ${listExplore.length}");
             });
           });
           //log("benergasihhh ");
           //log("benergasihhh ${value}");
 
-          for(int j=0;j<listExploreLike.length;j++){
-            log("benergasihhh cekall $j - ${listExploreLike[j].idUser} ${globals.idUser}");
-            if(listExploreLike[j].idUser==globals.idUser){
-              listShowUserLikeExplore[indexbuatlistygdilikeuser]=true;
-              //break;
-            }else{
-              listShowUserLikeExplore[indexbuatlistygdilikeuser]=false;
-            }
-            log("benergasihhh - ${listShowUserLikeExplore[indexbuatlistygdilikeuser]}");
-            
-          }
-          
+          // print("length list explore: ${listUserExploreLike.length}");
+          // for (int j = 0; j < listExploreLike.length; j++) {
+          //   log("benergasihhh cekall $j - ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
+            // if (listUserExploreLike[j].idLike == listExplore[i].idexplore){
+            //   log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
+            //   listShowUserLikeExplore[indexbuatlistygdilikeuser]=true;
+            //   //break;
+            // }else{
+            //   log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
+            //   listShowUserLikeExplore[indexbuatlistygdilikeuser]=false;
+            // }
+            // log("benergasihhh - ${listShowUserLikeExplore[indexbuatlistygdilikeuser]}");
+
+          // }
+
           indexbuatlistygdilikeuser++;
-
-
 
           //log("atas likenih - ${listExplore[i].iduser}");
 
-          
           listExplore[i].suka = listExploreLike.length.toString();
           listExplore[i].ayatbacaan =
               listExplore[i].ayatbacaan.replaceAll("<br>", "\n");
@@ -355,13 +392,24 @@ class _ExploreState extends State<Explore> {
       });
     });
   }
+  
 
   TextEditingController controller = TextEditingController();
+  List<ExploreLike> listUserExploreLike = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    ExploreLike.getUserExploreLike("explore", globals.idUser)
+        .then((value) async {
+      setState(() {
+        listUserExploreLike = [];
+        listUserExploreLike = value;
+        log("list explore user like: ${listUserExploreLike.length}");
+      });
+    });
     getListExplore();
     // getExploreLikePageIni
     //getExploreLikePageIni();
@@ -395,8 +443,6 @@ class _ExploreState extends State<Explore> {
     );
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -408,16 +454,18 @@ class _ExploreState extends State<Explore> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "explore"))
-              );
-            },
-            icon: const Icon(Icons.arrow_back,
-              color: Color.fromARGB(255, 113, 9, 49)
-            )
-          ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomePage(
+                            indexKitabdicari: 0,
+                            pasalKitabdicari: 0,
+                            ayatKitabdicari: 0,
+                            daripagemana: "explore")));
+              },
+              icon: const Icon(Icons.arrow_back,
+                  color: Color.fromARGB(255, 113, 9, 49))),
           actions: [
             Padding(
               padding: const EdgeInsets.only(top: 16, right: 16),
@@ -478,7 +526,8 @@ class _ExploreState extends State<Explore> {
                           child: Card(
                             elevation: 3,
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              padding:
+                                  const EdgeInsets.fromLTRB(12, 16, 12, 16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -521,7 +570,7 @@ class _ExploreState extends State<Explore> {
                                             listExplore[index].komentar;
                                         globals.suka = listExplore[index].suka;
                                       });
-    
+
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -570,24 +619,32 @@ class _ExploreState extends State<Explore> {
                                                 Text(
                                                   "${listExplore[index].namadepan} ${listExplore[index].namabelakang}",
                                                   style: GoogleFonts.nunito(
-                                                      textStyle: const TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Color.fromARGB(
-                                                              255, 113, 9, 49))),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      113,
+                                                                      9,
+                                                                      49))),
                                                 ),
                                                 Text(
                                                   listExplore[index]
                                                       .tanggalposting,
                                                   style: GoogleFonts.nunito(
-                                                      textStyle: const TextStyle(
-                                                          fontSize: 14,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              125,
-                                                              125,
-                                                              125))),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 14,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      125,
+                                                                      125,
+                                                                      125))),
                                                 ),
                                               ],
                                             ),
@@ -625,8 +682,8 @@ class _ExploreState extends State<Explore> {
                                     padding:
                                         const EdgeInsets.fromLTRB(32, 0, 32, 0),
                                     height: 1,
-                                    color:
-                                        const Color.fromARGB(255, 125, 125, 125),
+                                    color: const Color.fromARGB(
+                                        255, 125, 125, 125),
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -635,25 +692,27 @@ class _ExploreState extends State<Explore> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                         // like=!like;
-                                          if(listShowUserLikeExplore[index] == true){
+                                          // like=!like;
+                                          if (listShowUserLikeExplore[index] ==
+                                              true) {
                                             setState(() async {
-                                              await deleteLikeDatabase(listExplore[index].idexplore,"explore",globals.idUser);
+                                              await deleteLikeDatabase(
+                                                  listExplore[index].idexplore,
+                                                  "explore",
+                                                  globals.idUser);
                                               getListExplore();
-                                              listShowUserLikeExplore[index] = false;
+                                              listShowUserLikeExplore[index] =
+                                                  false;
                                               log("hapus likenihhh");
                                             });
-                                            
-                                          }else{
+                                          } else {
                                             setState(() {
                                               addLikeDatabase(
-                                              listExplore[index].idexplore);
+                                                  listExplore[index].idexplore);
                                               getListExplore();
                                               log("likenihhh");
                                             });
-                                            
                                           }
-                                          
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(8.0),
@@ -673,13 +732,15 @@ class _ExploreState extends State<Explore> {
                                           child: Row(
                                             children: [
                                               Container(
-                                                width: 20,
-                                                height: 20,
-                                                child: (listShowUserLikeExplore[index] == true?Image.asset(
-                                                    "assets/images/icon_like_red.png"):Image.asset(
-                                                    "assets/images/icon_like_black.png"))
-                                              
-                                              ),
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: (listShowUserLikeExplore[
+                                                              index] ==
+                                                          true
+                                                      ? Image.asset(
+                                                          "assets/images/icon_like_red.png")
+                                                      : Image.asset(
+                                                          "assets/images/icon_like_black.png"))),
                                               const SizedBox(
                                                 width: 10,
                                               ),
@@ -691,7 +752,10 @@ class _ExploreState extends State<Explore> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Color.fromARGB(
-                                                            255, 125, 125, 125))),
+                                                            255,
+                                                            125,
+                                                            125,
+                                                            125))),
                                               )
                                             ],
                                           ),
@@ -707,7 +771,8 @@ class _ExploreState extends State<Explore> {
                                         child: Row(
                                           children: [
                                             const Icon(
-                                              Icons.chat_bubble_outline_outlined,
+                                              Icons
+                                                  .chat_bubble_outline_outlined,
                                               color: Color.fromARGB(
                                                   255, 125, 125, 125),
                                               size: 20,
