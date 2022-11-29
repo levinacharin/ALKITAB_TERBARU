@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './global.dart' as globals;
 //import './homepage.dart';
 import './profile.dart';
-import './settings.dart';
+import 'panduanapk.dart';
 
 class ProfilePageMenu extends StatefulWidget {
   const ProfilePageMenu({super.key});
@@ -116,7 +116,7 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
                 leading: Container(
                   height: 40,
                   width: 40,
-                  child: Image.asset('assets/images/person_icon.png')
+                  child: Image.asset('assets/images/icon_profile.png')
                 ),
                 title: Text(
                   "Data Pribadi",
@@ -144,18 +144,17 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
                 onTap: () {
                   Navigator.push(
                     context, 
-                    // ignore: prefer_const_constructors
-                    MaterialPageRoute(builder: (context) => SettingsPage())
+                    MaterialPageRoute(builder: (context) => const PanduanAplikasi())
                   );
                 },
                 // ignore: sized_box_for_whitespace
                 leading: Container(
                   height: 40,
                   width: 40,
-                  child: Image.asset('assets/images/person_icon.png')
+                  child: Image.asset('assets/images/userguide.png')
                 ),
                 title: Text(
-                  "Pengaturan",
+                  "Panduan Aplikasi",
                   style: GoogleFonts.nunito(
                     textStyle: TextStyle(
                       fontSize: 18, 
@@ -179,13 +178,17 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
               ListTile(
                 onTap: () {
                   saveStatusLogin();
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "progilepage"))
+                  );
+
                 },
                 // ignore: sized_box_for_whitespace
                 leading: Container(
                   height: 40,
                   width: 40,
-                  child: Image.asset('assets/images/person_icon.png')
+                  child: Image.asset('assets/images/icon_logout.png')
                 ),
                 title: Text(
                   "Keluar",

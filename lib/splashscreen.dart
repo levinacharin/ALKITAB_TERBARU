@@ -45,9 +45,9 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               // ignore: sized_box_for_whitespace
               Container(
-                width: 300,
-                height: 300,
-                child: Image.asset('assets/images/logo.png'),
+                width: 200,
+                height: 200,
+                child: Image.asset('assets/images/Alkitab-biru.gif'),
               ),
               const SizedBox(
                 height: 10,

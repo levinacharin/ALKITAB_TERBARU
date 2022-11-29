@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
+import 'package:alkitab/lupapassword.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import './register.dart';
 import './homepage.dart';
 import './global.dart' as globals;
-import 'detailkomunitas.dart';
 
 class AkunUser {
   String iduser;
@@ -415,7 +414,12 @@ class _LoginInputState extends State<LoginInput> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => const LupaPassword())
+                      );
+                    },
                     child: Text(
                       "Lupa kata sandi?",
                       style: GoogleFonts.nunito(

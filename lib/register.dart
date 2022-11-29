@@ -30,11 +30,6 @@ class _RegisterPageState extends State<RegisterPage> {
   // ignore: non_constant_identifier_names
   bool secure_konfpass = true;
 
-  // ignore: non_constant_identifier_names
-  String check_text = "*password minimal 8 karakter";
-  // ignore: non_constant_identifier_names
-  bool visible_text = false;
-
   void addData() async {
     var url = "${globals.urllocal}userakunadd";
     var response = await http.post(Uri.parse(url), body: {
@@ -305,18 +300,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
               ),
-              Visibility(
-                visible: visible_text,
-                child: Text(
-                  check_text,
-                  style: GoogleFonts.nunito(
-                    textStyle: const TextStyle(
-                      color: Colors.red,
-                      fontSize: 14
-                    )
-                  )
-                ),
-              ),
               const SizedBox(height: 30,),
               Text(
                 "Ulangi Kata Sandi", 
@@ -378,21 +361,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     addData();
-                    // if (_ctrPass.text.toString() != _ctrKonfpass.text.toString()) {
-                    //   final text = 'password tidak sama';
-                    //   final snackBar = SnackBar(content: Text(text));
-    
-                    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    // } else if (_ctrPass.text.toString().length < 8) {
-                    //   setState(() {
-                    //     visible_text = true;
-                    //   });
-                    // } else {
-                      
-                    // }
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(int.parse(globals.defaultcolor)),
+                    backgroundColor: Color(int.parse(globals.defaultcolor)),
                     elevation: 10,
                     padding: const EdgeInsets.all(5),
                   ),

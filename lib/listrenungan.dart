@@ -613,9 +613,10 @@ class _ListRenunganState extends State<ListRenungan> {
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  Icon(
-                                                                    Icons.account_circle,
-                                                                    size: 40,
+                                                                  Container(
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    child: Image.asset("assets/images/icon_komunitas.png"),
                                                                   ),
                                                                   const SizedBox(height: 5,),
                                                                   Container(
@@ -747,9 +748,10 @@ class _ListRenunganState extends State<ListRenungan> {
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  Icon(
-                                                                    Icons.public,
-                                                                    size: 40,
+                                                                  Container(
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    child: Image.asset("assets/images/icon_explore.png"),
                                                                   ),
                                                                   const SizedBox(height: 5,),
                                                                   Container (
@@ -776,11 +778,11 @@ class _ListRenunganState extends State<ListRenungan> {
                                                               child: Column(
                                                                 children: [
                                                                   Container(
-                          width: 40,
-                          height: 40,
-                          child: Image.asset("assets/images/Send.png"),
-                        ),
-                        Container (
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    child: Image.asset("assets/images/icon_share.png"),
+                                                                  ),
+                                                                  Container (
                                                                     width: 100,
                                                                     child: Text(
                                                                       "Kirim ke App Lain",
@@ -871,9 +873,10 @@ class _ListRenunganState extends State<ListRenungan> {
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  Icon(
-                                                                    Icons.public,
-                                                                    size: 40,
+                                                                  Container(
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    child: Image.asset("assets/images/icon_explore.png"),
                                                                   ),
                                                                   const SizedBox(height: 5,),
                                                                   Container (
@@ -900,11 +903,11 @@ class _ListRenunganState extends State<ListRenungan> {
                                                               child: Column(
                                                                 children: [
                                                                   Container(
-                          width: 40,
-                          height: 40,
-                          child: Image.asset("assets/images/Send.png"),
-                        ),
-                        Container (
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    child: Image.asset("assets/images/icon_share.png"),
+                                                                  ),
+                                                                  Container (
                                                                     width: 100,
                                                                     child: Text(
                                                                       "Kirim ke App Lain",

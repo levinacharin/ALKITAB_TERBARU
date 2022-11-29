@@ -75,27 +75,19 @@ flutter:
   assets:
     - assets/Alkitab.json
     - assets/
+    - assets/images/Alkitab-biru.gif
     - assets/images/logo.png
-    - assets/images/starlogo.png
     - assets/images/add_icon.png
     - assets/images/alkitab_icon.png
     - assets/images/catatan_icon.png
     - assets/images/person_icon.png
     - assets/images/search_icon.png
     - assets/images/komunitas_icon.png
+    - assets/images/userguide.png
     - assets/images/polygon_down.png
     - assets/images/polygon_up.png
     - assets/images/fromcamera.png
     - assets/images/fromgallery.png
-    - assets/images/dummy-image.jpg
-    - assets/images/ppdummy-image.jpg
-    - assets/images/rencana1.jpg
-    - assets/images/rencana2.jpg
-    - assets/images/rencana3.jpg
-    - assets/images/rencana4.jpg
-    - assets/images/pp1.jpg
-    - assets/images/pp2.jpg
-    - assets/images/pp3.jpg
     - assets/images/icon_rencanabacaan.png
     - assets/images/icon_add.png
     - assets/images/icon_like_black.png
@@ -110,6 +102,7 @@ flutter:
     - assets/images/icon_logout.png
     - assets/images/icon_profile.png
     - assets/images/icon_setting.png
+    - assets/images/icon_share.png
     - assets/images/Send.png
     - assets/flower.png
     - assets/rainbow.png

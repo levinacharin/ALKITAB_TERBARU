@@ -1,13 +1,9 @@
 // ignore_for_file: sort_child_properties_last
 import 'dart:io';
-import 'dart:math';
 
 import 'package:alkitab/buatkomunitas.dart';
-import 'package:alkitab/classrencanabacaan.dart';
 import 'package:alkitab/detailrencanabaca.dart';
 import 'package:alkitab/listrencanauser.dart';
-import 'package:alkitab/notifikasi.dart';
-import 'package:alkitab/renunganpage.dart';
 import 'package:alkitab/tambahrencana.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -888,19 +884,6 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
             globals.roleuser != ""
             ? Row(
               children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => const NotifikasiPage())
-                      
-                    );
-                  }, 
-                  icon: const Icon(
-                    Icons.notifications,
-                    color: Color.fromARGB(255, 113, 9, 49),
-                  )
-                ),
                 globals.roleuser == 'admin'
                 ? PopupMenuButton<Menu>(
                   icon: const Icon(
