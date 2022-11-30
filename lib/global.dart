@@ -89,6 +89,7 @@ String tanggalposting = "";
 String komentar = "";
 String suka = "";
 String lastIdRDatabase = "";
+bool listShowUserLikeExplore = false;
 // end of explore
 
 

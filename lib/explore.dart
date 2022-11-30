@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace, unused_local_variable, unrelated_type_equality_checks
+
 import 'dart:developer';
 
 import 'package:alkitab/detailrefleksiuser.dart';
@@ -212,7 +214,9 @@ class ListExplore {
 }
 
 class Explore extends StatefulWidget {
-  const Explore({super.key});
+  const Explore({
+    super.key,
+  });
 
   @override
   State<Explore> createState() => _ExploreState();
@@ -221,6 +225,7 @@ class Explore extends StatefulWidget {
 //bool like=false;
 
 class _ExploreState extends State<Explore> {
+  
   void addLikeDatabase(String idlike) async {
     var url = "${globals.urllocal}simpanlike";
     var response = await http.post(Uri.parse(url), body: {
@@ -230,119 +235,81 @@ class _ExploreState extends State<Explore> {
     });
   }
 
-  Future<http.Response> deleteLikeDatabase(
-      String idLikeTemp, String darimana, String idUserTemp) async {
-    // print("idkomunitas: ${globals.idkomunitas} - iduser: ${globals.idUser}");
-    var url =
-        "${globals.urllocal}deletelike?idLike=$idLikeTemp&darimana=$darimana&idUser=$idUserTemp";
+  Future<http.Response> deleteLikeDatabase(String idLikeTemp, String darimana, String idUserTemp) async {
+    var url = "${globals.urllocal}deletelike?idLike=$idLikeTemp&darimana=$darimana&idUser=$idUserTemp";
     var response = await http.delete(Uri.parse(url), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
-
-    // if (response.statusCode == 200) {
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => const ListKomunitas())
-    //   );
-    // }
-
     return response;
   }
 
   List<ListExplore> listExplore = [];
   List<bool> listShowUserLikeExplore = [];
   List<ExploreLike> listExploreLike = [];
-  //List<bool> listUserExploreLike = [];
+  List<ExploreLike> listExploreUserLike = []; // data user like mana postingan mana aja
+  List<bool> listUserExploreLike = []; 
+  bool statusLike = false;
+
   Future<void> getListExplore() async {
+    // get all data postingan
     ListExplore.getAllData().then((value) async {
-      setState(() async {
+      setState(() {
+        listExplore = [];
         listExplore = value;
 
-        String tanggaltemp = "";
-        String tanggal = "";
-        String bulan = "";
-        String tahun = "";
-        int count = 0;
-
-        //listexplore = semua explore yg ada
-        //listShowUserLikeExplore[listExplore.length];
-        int indexbuatlistygdilikeuser = 0;
-
-        listShowUserLikeExplore.clear();
+        listShowUserLikeExplore = [];
         for (int i = 0; i < listExplore.length; i++) {
           listShowUserLikeExplore.add(false);
+        }
 
-          //log("atas likenih - ${listExplore[i].idexplore}");
+        getListUserLikeExplore();
+      });
+    });
+  }
 
-          await ExploreLike.getExploreLike("explore", listExplore[i].idexplore).then((value) async {
-            setState(() {
-              listExploreLike = [];
-              listExploreLike = value; //isinya list per detail like dari explore yg dah difilter, apakah udah dari explore dan idexplore
+  Future<void> getListUserLikeExplore() async {
+    String tanggaltemp = "";
+    String tanggal = "";
+    String bulan = "";
+    String tahun = "";
+    int count = 0;
+    // check user status like per post
+    ExploreLike.getUserExploreLike("explore", globals.idUser).then((value) {
+      setState(() {
+        listExploreUserLike = value;
 
-              for (int j = 0; j < listExploreLike.length; j++) {
-                log("benergasihhh cek all $j - ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
-                if (listUserExploreLike[j].idLike == listExplore[i].idexplore){
-                  log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
-                  listShowUserLikeExplore[indexbuatlistygdilikeuser]=true;
-                  break;
-                }else{
-                  log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
-                  listShowUserLikeExplore[indexbuatlistygdilikeuser]=false;
-                }
-                log("benergasihhh - ${listShowUserLikeExplore[indexbuatlistygdilikeuser]}");
-              }
+        for (int i = 0; i < listExplore.length; i++) {
+          statusLike = false;
+          for (int j = 0; j < value.length; j++) {
+            if (listExplore[i].idexplore == value[j].idLike && globals.idUser != "") {
+              statusLike = true;
+            }
+          }
 
-              log("list explore like: ${listExplore.length}");
-            });
-          });
-          //log("benergasihhh ");
-          //log("benergasihhh ${value}");
+          listShowUserLikeExplore[i] = statusLike;
+          
 
-          // print("length list explore: ${listUserExploreLike.length}");
-          // for (int j = 0; j < listExploreLike.length; j++) {
-          //   log("benergasihhh cekall $j - ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
-            // if (listUserExploreLike[j].idLike == listExplore[i].idexplore){
-            //   log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
-            //   listShowUserLikeExplore[indexbuatlistygdilikeuser]=true;
-            //   //break;
-            // }else{
-            //   log("ceks masuk true ${listUserExploreLike[j].idLike} ${listExplore[i].idexplore}");
-            //   listShowUserLikeExplore[indexbuatlistygdilikeuser]=false;
-            // }
-            // log("benergasihhh - ${listShowUserLikeExplore[indexbuatlistygdilikeuser]}");
+          // change format ayat
+          listExplore[i].ayatbacaan = listExplore[i].ayatbacaan.replaceAll("<br>", "\n");
+          listExplore[i].ayatberkesan = listExplore[i].ayatberkesan.replaceAll("<br>", "\n");
 
-          // }
-
-          indexbuatlistygdilikeuser++;
-
-          //log("atas likenih - ${listExplore[i].iduser}");
-
-          listExplore[i].suka = listExploreLike.length.toString();
-          listExplore[i].ayatbacaan =
-              listExplore[i].ayatbacaan.replaceAll("<br>", "\n");
-          listExplore[i].ayatberkesan =
-              listExplore[i].ayatberkesan.replaceAll("<br>", "\n");
+          // change format date
           tanggaltemp = listExplore[i].tanggalposting;
           for (int j = 0; j < tanggaltemp.length; j++) {
             if (tanggaltemp[j] == '/' && bulan == "") {
-              if (tanggaltemp[j + 2] != '/') {
-                bulan = bulan + tanggaltemp[j + 1] + tanggaltemp[j + 2];
+              if (tanggaltemp[j+2] != '/') {
+                bulan = bulan + tanggaltemp[j+1] + tanggaltemp[j+2];
                 count = 2;
               } else {
-                bulan = bulan + tanggaltemp[j + 1];
+                bulan = bulan + tanggaltemp[j+1];
                 count = 1;
               }
-            } else if (tanggaltemp[j] == '/' && count == 0) {
-              tahun = tahun +
-                  tanggaltemp[j + 1] +
-                  tanggaltemp[j + 2] +
-                  tanggaltemp[j + 3] +
-                  tanggaltemp[j + 4];
+            } else  if (tanggaltemp[j] == '/' && count == 0) {
+              tahun = tahun + tanggaltemp[j+1] + tanggaltemp[j+2] + tanggaltemp[j+3] + tanggaltemp[j+4];
               break;
             } else if (tanggal == "") {
-              if (tanggaltemp[j + 1] != '/') {
-                tanggal = tanggal + tanggaltemp[j] + tanggaltemp[j + 1];
+              if (tanggaltemp[j+1] != '/') {
+                tanggal = tanggal + tanggaltemp[j] + tanggaltemp[j+1];
               } else {
                 tanggal = tanggal + tanggaltemp[j];
               }
@@ -350,6 +317,7 @@ class _ExploreState extends State<Explore> {
               count--;
             }
           }
+        
 
           if (bulan == "1") {
             bulan = "Januari";
@@ -375,7 +343,7 @@ class _ExploreState extends State<Explore> {
             bulan = "November";
           } else if (bulan == "12") {
             bulan = "Desember";
-          }
+          } 
 
           listExplore[i].tanggalposting = "$tanggal $bulan $tahun";
 
@@ -385,34 +353,27 @@ class _ExploreState extends State<Explore> {
           tahun = "";
           count = 0;
         }
-
-        // for(int i=0;i<listExplore.length;i++){
-
-        // }
       });
     });
   }
-  
+
+  void updateLikeKomen(String idexplore, String suka, String komen) async {
+    var url = "${globals.urllocal}updatelikekomen";
+    var response = await http.put(Uri.parse(url), body: {
+      "idexplore" : idexplore,
+      "suka" : suka,
+      "komen" : komen
+    });
+  }
 
   TextEditingController controller = TextEditingController();
-  List<ExploreLike> listUserExploreLike = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    ExploreLike.getUserExploreLike("explore", globals.idUser)
-        .then((value) async {
-      setState(() {
-        listUserExploreLike = [];
-        listUserExploreLike = value;
-        log("list explore user like: ${listUserExploreLike.length}");
-      });
-    });
     getListExplore();
-    // getExploreLikePageIni
-    //getExploreLikePageIni();
   }
 
   void sharerenungan(int index) async {
@@ -443,6 +404,69 @@ class _ExploreState extends State<Explore> {
     );
   }
 
+  Future<void> _showDialogAlert() async {
+    return showDialog(
+      context: context, 
+      builder: (BuildContext context) => AlertDialog(
+        title: Center(
+          child: Text(
+            "Silahkan login terlebih dahulu agar bisa like postingan ini",
+            style: GoogleFonts.nunito(
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Color.fromARGB(255, 113, 9, 49)
+              )
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        actions: [
+          // ignore: sized_box_for_whitespace
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              }, 
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(int.parse(globals.defaultcolor)),
+                elevation: 5,
+                padding: const EdgeInsets.all(5)
+              ),
+              child: Text(
+                "Kembali",
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                  )
+                ),
+              )
+            ),
+          )
+        ],
+      )
+    );
+  }
+
+  // update all database
+  void updateDatabase() {
+    if (globals.idUser != "") {
+      setState(() {
+        for (int i = 0; i < listExplore.length; i++) {
+          updateLikeKomen(listExplore[i].idexplore, listExplore[i].suka, listExplore[i].komentar);
+        }
+      });
+    }
+    
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "explore"))
+    );
+
+}
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -455,14 +479,7 @@ class _ExploreState extends State<Explore> {
           elevation: 0,
           leading: IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const HomePage(
-                            indexKitabdicari: 0,
-                            pasalKitabdicari: 0,
-                            ayatKitabdicari: 0,
-                            daripagemana: "explore")));
+                updateDatabase();
               },
               icon: const Icon(Icons.arrow_back,
                   color: Color.fromARGB(255, 113, 9, 49))),
@@ -485,33 +502,33 @@ class _ExploreState extends State<Explore> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              height: 40,
-              child: TextField(
-                controller: controller,
-                cursorColor: const Color.fromARGB(255, 95, 95, 95),
-                decoration: InputDecoration(
-                    fillColor: const Color.fromARGB(255, 253, 255, 252),
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 3,
-                          color: Color(int.parse(globals.defaultcolor))),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 1,
-                          color: Color(int.parse(globals.defaultcolor))),
-                    ),
-                    hintText: 'Cari Renungan',
-                    hintStyle: TextStyle(color: Colors.grey[400]),
-                    contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)),
-                style: GoogleFonts.nunito(
-                    textStyle:
-                        const TextStyle(fontSize: 16, color: Colors.black)),
-              ),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.only(left: 16, right: 16),
+            //   height: 40,
+            //   child: TextField(
+            //     controller: controller,
+            //     cursorColor: const Color.fromARGB(255, 95, 95, 95),
+            //     decoration: InputDecoration(
+            //         fillColor: const Color.fromARGB(255, 253, 255, 252),
+            //         filled: true,
+            //         border: OutlineInputBorder(
+            //           borderSide: BorderSide(
+            //               width: 3,
+            //               color: Color(int.parse(globals.defaultcolor))),
+            //         ),
+            //         focusedBorder: OutlineInputBorder(
+            //           borderSide: BorderSide(
+            //               width: 1,
+            //               color: Color(int.parse(globals.defaultcolor))),
+            //         ),
+            //         hintText: 'Cari Renungan',
+            //         hintStyle: TextStyle(color: Colors.grey[400]),
+            //         contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)),
+            //     style: GoogleFonts.nunito(
+            //         textStyle:
+            //             const TextStyle(fontSize: 16, color: Colors.black)),
+            //   ),
+            // ),
             const SizedBox(
               height: 10,
             ),
@@ -532,52 +549,37 @@ class _ExploreState extends State<Explore> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
                                       setState(() {
-                                        globals.idexplore =
-                                            listExplore[index].idexplore;
-                                        globals.iduserrefleksi =
-                                            listExplore[index].iduser;
-                                        globals.idrefleksi =
-                                            listExplore[index].idrefleksi;
-                                        globals.idrenungankomunitas =
-                                            listExplore[index].idrenungan;
-                                        globals.tanggalposting =
-                                            listExplore[index].tanggalposting;
-                                        globals.namaduserrefleksi =
-                                            listExplore[index].namadepan;
-                                        globals.namabuserrefleksi =
-                                            listExplore[index].namabelakang;
-                                        globals.imagepathrefleksi =
-                                            listExplore[index].imagepath;
-                                        globals.judulrenungan =
-                                            listExplore[index].judul;
-                                        globals.kitabbacaan =
-                                            listExplore[index].kitabbacaan;
-                                        globals.ayatbacaan =
-                                            listExplore[index].ayatbacaan;
-                                        globals.isirenungan =
-                                            listExplore[index].isirenungan;
-                                        globals.linkrenungan =
-                                            listExplore[index].linkrenungan;
-                                        globals.tagline =
-                                            listExplore[index].tagline;
-                                        globals.ayatberkesan =
-                                            listExplore[index].ayatberkesan;
-                                        globals.tindakansaya =
-                                            listExplore[index].tindakansaya;
-                                        globals.komentar =
-                                            listExplore[index].komentar;
+                                        globals.idexplore = listExplore[index].idexplore;
+                                        globals.iduserrefleksi = listExplore[index].iduser;
+                                        globals.idrefleksi = listExplore[index].idrefleksi;
+                                        globals.idrenungankomunitas =  listExplore[index].idrenungan;
+                                        globals.tanggalposting =  listExplore[index].tanggalposting;
+                                        globals.namaduserrefleksi =  listExplore[index].namadepan;
+                                        globals.namabuserrefleksi =  listExplore[index].namabelakang;
+                                        globals.imagepathrefleksi =  listExplore[index].imagepath;
+                                        globals.judulrenungan = listExplore[index].judul;
+                                        globals.kitabbacaan = listExplore[index].kitabbacaan;
+                                        globals.ayatbacaan = listExplore[index].ayatbacaan;
+                                        globals.isirenungan = listExplore[index].isirenungan;
+                                        globals.linkrenungan = listExplore[index].linkrenungan;
+                                        globals.tagline = listExplore[index].tagline;
+                                        globals.ayatberkesan = listExplore[index].ayatberkesan;
+                                        globals.tindakansaya = listExplore[index].tindakansaya;
+                                        globals.komentar = listExplore[index].komentar;
                                         globals.suka = listExplore[index].suka;
+                                        globals.listShowUserLikeExplore = listShowUserLikeExplore[index];
                                       });
 
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DetailRefleksiUser(
-                                                    pagefrom: 'explore',
-                                                  )));
+                                      final data = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const DetailRefleksiUser(pagefrom: 'explore',))
+                                      );
+
+                                      if (data == "refresh") {
+                                        getListExplore();
+                                      }
                                     },
                                     child: Column(
                                       crossAxisAlignment:
@@ -692,30 +694,27 @@ class _ExploreState extends State<Explore> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          // like=!like;
-                                          if (listShowUserLikeExplore[index] ==
-                                              true) {
-                                            setState(() async {
-                                              await deleteLikeDatabase(
-                                                  listExplore[index].idexplore,
-                                                  "explore",
-                                                  globals.idUser);
-                                              getListExplore();
-                                              listShowUserLikeExplore[index] =
-                                                  false;
-                                              log("hapus likenihhh");
+                                          if (globals.idUser != "") {
+                                            setState(() {
+                                              listShowUserLikeExplore[index] = !listShowUserLikeExplore[index];
+
+                                              int count = int.parse(listExplore[index].suka);
+                                              if (listShowUserLikeExplore[index] == false) {
+                                                count--;
+                                                deleteLikeDatabase(listExplore[index].idexplore, "explore", globals.idUser);
+                                              } else if (listShowUserLikeExplore[index] == true) {
+                                                count++;
+                                                addLikeDatabase(listExplore[index].idexplore);
+                                              }
+
+                                              listExplore[index].suka = count.toString();
                                             });
                                           } else {
-                                            setState(() {
-                                              addLikeDatabase(
-                                                  listExplore[index].idexplore);
-                                              getListExplore();
-                                              log("likenihhh");
-                                            });
+                                            _showDialogAlert();
                                           }
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(8.0),
+                                          padding: const EdgeInsets.all(8.0),
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(20),
@@ -734,13 +733,10 @@ class _ExploreState extends State<Explore> {
                                               Container(
                                                   width: 20,
                                                   height: 20,
-                                                  child: (listShowUserLikeExplore[
-                                                              index] ==
-                                                          true
-                                                      ? Image.asset(
-                                                          "assets/images/icon_like_red.png")
-                                                      : Image.asset(
-                                                          "assets/images/icon_like_black.png"))),
+                                                  child: listShowUserLikeExplore[index] == true
+                                                    ? Image.asset("assets/images/icon_like_red.png")
+                                                    : Image.asset("assets/images/icon_like_black.png")
+                                              ),
                                               const SizedBox(
                                                 width: 10,
                                               ),
@@ -780,15 +776,15 @@ class _ExploreState extends State<Explore> {
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            // Text(
-                                            //   listExplore[index].komentar,
-                                            //   style: GoogleFonts.nunito(
-                                            //       textStyle: const TextStyle(
-                                            //           fontSize: 14,
-                                            //           fontWeight: FontWeight.bold,
-                                            //           color: Color.fromARGB(
-                                            //               255, 125, 125, 125))),
-                                            // )
+                                            Text(
+                                              listExplore[index].komentar,
+                                              style: GoogleFonts.nunito(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Color.fromARGB(
+                                                          255, 125, 125, 125))),
+                                            )
                                           ],
                                         ),
                                       ),

@@ -301,9 +301,9 @@ class _LoginInputState extends State<LoginInput> {
                 children: [
                   // ignore: sized_box_for_whitespace
                   Container(
-                    width: 200,
-                    height: 200,
-                    child: Image.asset('assets/images/starlogo.png'),
+                    width: 250,
+                    height: 250,
+                    child: Image.asset('assets/images/logo.png'),
                   ),
                 ],
               ),
@@ -417,7 +417,7 @@ class _LoginInputState extends State<LoginInput> {
                     onPressed: () {
                       Navigator.push(
                         context, 
-                        MaterialPageRoute(builder: (context) => const LupaPassword())
+                        MaterialPageRoute(builder: (context) => LupaPassword(email: _ctrEmail.text,))
                       );
                     },
                     child: Text(

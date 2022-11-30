@@ -25,6 +25,23 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
   List<ExploreKomen> listExploreKomen = [];
   String idx="";
 
+  void addLikeDatabase(String idlike) async {
+    var url = "${globals.urllocal}simpanlike";
+    var response = await http.post(Uri.parse(url), body: {
+      "idLike": idlike,
+      "darimana": widget.pagefrom,
+      "idUser": globals.idUser,
+    });
+  }
+
+  Future<http.Response> deleteLikeDatabase(String idLikeTemp, String darimana, String idUserTemp) async {
+    var url = "${globals.urllocal}deletelike?idLike=$idLikeTemp&darimana=$darimana&idUser=$idUserTemp";
+    var response = await http.delete(Uri.parse(url), headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    return response;
+  }
+
   Future<void> getExploreKomen() async {
     if(widget.pagefrom=="explore"){
       idx=globals.idexplore;
@@ -35,6 +52,8 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
       setState(() {
         listExploreKomen = [];
         listExploreKomen = value;
+
+        globals.komentar = listExploreKomen.length.toString();
         log("isi list explore komen ${listExploreKomen[listExploreKomen.length-1].namadepan}");
 
         String tanggaltemp = "";
@@ -131,8 +150,14 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
     }
   }
 
-
-  
+  void updateLikeKomen(String idexplore, String suka, String komen) async {
+    var url = "${globals.urllocal}updatelikekomen";
+    var response = await http.put(Uri.parse(url), body: {
+      "idexplore" : idexplore,
+      "suka" : suka,
+      "komen" : komen
+    });
+  }
 
   @override
   void initState() {
@@ -141,6 +166,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
     print("iduser: ${globals.idUser}");
     print("idkomunitas: ${globals.idkomunitas}");
     print("image path: ${globals.imagepathrefleksi}");
+    print("jumlah komen: ${globals.komentar}");
     getExploreKomen();
   }
 
@@ -158,6 +184,8 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
             onPressed: () {
 
               if (widget.pagefrom == "explore") {
+                updateLikeKomen(globals.idexplore, globals.suka, globals.komentar);
+
                 Navigator.push(
                   context, 
                   MaterialPageRoute(builder: (context) => const Explore())
@@ -403,6 +431,114 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                     ),
                   ),
                   const SizedBox(height: 20,),
+                  GestureDetector(
+                    onTap: () {
+                      if (globals.idUser != "") {
+                        setState(() {
+                          globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
+                          int count = int.parse(globals.suka);
+                          if (globals.listShowUserLikeExplore == false) {
+                            count--;
+                            deleteLikeDatabase(globals.idexplore, widget.pagefrom, globals.idUser);
+                          } else if (globals.listShowUserLikeExplore == true) {
+                            count++;
+                            addLikeDatabase(globals.idexplore);
+                          }
+
+                          globals.suka = count.toString();
+                        });
+                      } else {
+                        showDialog(
+                          context: context, 
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Center(
+                              child: Text(
+                                "Silahkan login terlebih dahulu agar bisa like postingan ini",
+                                style: GoogleFonts.nunito(
+                                  textStyle: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color.fromARGB(255, 113, 9, 49)
+                                  )
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            actions: [
+                              // ignore: sized_box_for_whitespace
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }, 
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(int.parse(globals.defaultcolor)),
+                                    elevation: 5,
+                                    padding: const EdgeInsets.all(5)
+                                  ),
+                                  child: Text(
+                                    "Kembali",
+                                    style: GoogleFonts.nunito(
+                                      textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold
+                                      )
+                                    ),
+                                  )
+                                ),
+                              )
+                            ],
+                          )
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: 70,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(20),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey
+                                  .withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                              offset: const Offset(0, 1),
+                            )
+                          ]),
+                      child: Row(
+                        children: [
+                          Container(
+                              width: 20,
+                              height: 20,
+                              child: globals.listShowUserLikeExplore == true
+                                ? Image.asset("assets/images/icon_like_red.png")
+                                : Image.asset("assets/images/icon_like_black.png")
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            globals.suka,
+                            style: GoogleFonts.nunito(
+                                textStyle: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight:
+                                        FontWeight.bold,
+                                    color: Color.fromARGB(
+                                        255,
+                                        125,
+                                        125,
+                                        125))),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
                   Container(
                     height: 1,
                     color: Color(int.parse(globals.defaultcolor)),
@@ -446,9 +582,6 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                               const Icon(
                                 Icons.person, size: 40,
                               ),
-                                // ClipOval(
-                                //   child: 
-                                // )
                               ),
                             ],
                           ),
@@ -522,94 +655,82 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                 ),
                 
               ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          widget.pagefrom == "explore"
-                          ? globals.imagepath != "-" 
+              Visibility(
+                visible: globals.idUser != "" && widget.pagefrom == "explore" ? true : globals.roleuser != "" && widget.pagefrom == "refleksi" ? true : false,
+                child: Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            globals.idUser != ""
                             ? ClipOval(
-                                child: Image.network(
-                                  '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
-                                  width: 40,
-                                  height: 40,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Icon(
-                                Icons.account_circle_outlined,
-                                color: Color(int.parse(globals.defaultcolor)),
-                                size: 40,
-                              )
-                          : globals.imagepathkomunitas != "-"
-                            ? ClipOval(
-                                child: Image.network(
-                                  '${globals.urllocal}getimage?id=${globals.idkomunitas}&folder=komunitas',
-                                  width: 40,
-                                  height: 40,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Icon(
-                                Icons.account_circle_outlined,
-                                color: Color(int.parse(globals.defaultcolor)),
-                                size: 40,
-                              )
-                        ],
-                      ),
-                      const SizedBox(width: 5,),
-                      Expanded(
-                        child: Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Color(int.parse(globals.defaultcolor))
-                            ),
-                            borderRadius: const BorderRadius.all(Radius.circular(50)),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: ctr_komen,
-                                  cursorColor: Color(int.parse(globals.defaultcolor)),
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    filled: true,
-                                    border: InputBorder.none,
-                                    hintText: 'berikan pendapat anda ..',
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey[400]
-                                    ),
-                                    contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10)
-                                  ),
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black
-                                    )
-                                  ),
-                                ),
+                              child: Image.network(
+                                '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
+                                width: 40,
+                                height: 40,
+                                fit: BoxFit.cover,
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  addKomenDatabase();
-                                }, 
-                                icon: const Icon(Icons.send)
+                            )
+                            : Icon(
+                                Icons.account_circle_outlined,
+                                color: Color(int.parse(globals.defaultcolor)),
+                                    size: 40,
                               )
-                            ],
+                          ],
+                        ),
+                        const SizedBox(width: 5,),
+                        Expanded(
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(int.parse(globals.defaultcolor))
+                              ),
+                              borderRadius: const BorderRadius.all(Radius.circular(50)),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: ctr_komen,
+                                    cursorColor: Color(int.parse(globals.defaultcolor)),
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.transparent,
+                                      filled: true,
+                                      border: InputBorder.none,
+                                      hintText: 'berikan pendapat anda ..',
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey[400]
+                                      ),
+                                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10)
+                                    ),
+                                    style: GoogleFonts.nunito(
+                                      textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black
+                                      )
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    addKomenDatabase();
+                                  }, 
+                                  icon: const Icon(Icons.send)
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               )

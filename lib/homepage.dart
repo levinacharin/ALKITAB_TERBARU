@@ -3522,7 +3522,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     MaterialPageRoute(builder: (context) => ListAlkitab()));
               },
               child: loading
-                  ? CircularProgressIndicator()
+                  ? CircularProgressIndicator(color: Colors.white,
+                strokeWidth: 6,)
                   : Text(
                       "${namakitabdicari} ${(int.parse(pasalkitab)).toString()}",
                       // child: Text("${namakitabdicari} ${(widget.pasalKitabdicari!+1).toString()} : ${(widget.ayatKitabdicari!+1).toString()}",
@@ -3914,7 +3915,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onTapDown: (TapDownDetails details) =>
                   onTapDown(context, details),
               child: loading
-                  ? Center(child: CircularProgressIndicator())
+                  ? Center(child: CircularProgressIndicator(color: Color(int.parse(globals.defaultcolor)),
+                strokeWidth: 6,))
                   : Column(
                       children: [
                         Expanded(

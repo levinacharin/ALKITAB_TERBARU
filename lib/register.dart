@@ -1,4 +1,6 @@
 //import 'dart:convert';
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -360,7 +362,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                   onPressed: () {
-                    addData();
+                    if (_ctrPass.text.toString() != _ctrKonfpass.text.toString()) {
+                      const text = 'password tidak sama';
+                      final snackBar = SnackBar(content: Text(text));
+    
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else if (_ctrPass.text.toString().length > 20) {
+                      const text = 'password maksimal 20 karakter';
+                      final snackBar = SnackBar(content: Text(text));
+    
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else {
+                      addData();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(int.parse(globals.defaultcolor)),

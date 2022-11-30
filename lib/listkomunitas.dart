@@ -405,6 +405,14 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                         padding: const EdgeInsets.only(left: 16, right: 16),
                         height: 40,
                         child: TextField(
+                          onChanged: (searchText) {
+                            searchText = searchText.toLowerCase();
+                            if (globals.idUser != "") {
+                              setState(() {
+                                
+                              });
+                            }
+                          },
                           controller: controller,
                           cursorColor: const Color.fromARGB(255, 95, 95, 95),
                           decoration:  InputDecoration(
