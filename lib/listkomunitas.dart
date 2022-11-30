@@ -68,12 +68,19 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
   List<AkunKomunitas> listKomunitasku = []; // simpan semua data di komunitasku
   List<AkunKomunitas> listKomunitasShow = []; // tampilin data komunitas di page
   List<DetailCountMembers> listCountMembersAll = [];  // mendapatkan jumlah anggota semua akun, connect database
+  // temp for search
+  List<AkunKomunitas> listKomunitasAllTemp = [];  // simpan semua data di list komunitas dari database
+  List<AkunKomunitas> listKomunitaskuTemp = []; // simpan semua data di komunitasku
+  List<AkunKomunitas> listKomunitasShowTemp = []; // tampilin data komunitas di page
 
   Future<void>getAllAkunKomunitas() async {
     AkunKomunitas.getAllData().then((value) async {
       setState(() {
         listKomunitasAll = [];
         listKomunitasAll = value;
+
+        listKomunitasAllTemp = [];
+        listKomunitasAllTemp = listKomunitasAll;
 
         getCountMember();  // get jumlah anggota semua list
       });
@@ -85,6 +92,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
       setState(() {
         listCountMembersAll = [];
         listCountMembersAll = value;
+
         for (int i = 0; i < listCountMembersAll.length; i++) {
           listKomunitasAll[i].jumlahanggota = listCountMembersAll[i].jumlahanggota;
         }
@@ -100,6 +108,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
     DetailKomunitasUser.getData(int.parse(globals.idUser)).then((value) async {
       setState(() {
         listKomunitasku = [];
+        listKomunitaskuTemp = [];
         int index = 0;
         for (int i = 0; i < value.length; i++) {
           for (int j = 0 ; j < listKomunitasAll.length; j++) {
@@ -109,6 +118,8 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
           }
           listKomunitasku.add(listKomunitasAll[index]);
         }
+
+        listKomunitaskuTemp = listKomunitasku;
         checkKomunitasUser(); // untuk dapat data listkomunitasshow dimana isinya list komunitas user belum join
       });
     });
@@ -286,6 +297,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
 
   void checkKomunitasUser() {
     listKomunitasShow = [];
+    listKomunitasShowTemp = [];
     bool hasJoin = false;
     for (int i = 0; i < listKomunitasAll.length; i++) {
       hasJoin = false;
@@ -299,6 +311,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
       if (hasJoin == false) {
         listKomunitasShow.add(listKomunitasAll[i]);
       }
+      listKomunitasShowTemp = listKomunitasShow;
     }
   }
 
@@ -406,12 +419,34 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                         height: 40,
                         child: TextField(
                           onChanged: (searchText) {
-                            searchText = searchText.toLowerCase();
-                            if (globals.idUser != "") {
-                              setState(() {
-                                
-                              });
-                            }
+                            setState(() {
+                              List<AkunKomunitas> listfordisplay = [];
+                              searchText = searchText.toLowerCase();
+
+                              if (globals.idUser != "") {
+                                for (int i = 0; i < listKomunitasShowTemp.length; i++) {
+                                  String tempsearch = listKomunitasShowTemp[i].namakomunitas;
+                                  tempsearch = tempsearch.toLowerCase();
+                                  if (tempsearch.contains(searchText)) {
+                                    listfordisplay.add(listKomunitasShowTemp[i]);
+                                  }
+                                }
+
+                                listKomunitasShow = [];
+                                listKomunitasShow = listfordisplay;
+                              } else {
+                                for (int i = 0; i < listKomunitasAllTemp.length; i++) {
+                                  String tempsearch = listKomunitasAllTemp[i].namakomunitas;
+                                  tempsearch = tempsearch.toLowerCase();
+                                  if (tempsearch.contains(searchText)) {
+                                    listfordisplay.add(listKomunitasAllTemp[i]);
+                                  }
+                                }
+
+                                listKomunitasAll = [];
+                                listKomunitasAll = listfordisplay;
+                              }
+                            });
                           },
                           controller: controller,
                           cursorColor: const Color.fromARGB(255, 95, 95, 95),
@@ -726,6 +761,25 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                         padding: const EdgeInsets.only(left: 16, right: 16),
                         height: 40,
                         child: TextField(
+                          onChanged: (searchText) {
+                            setState(() {
+                              List<AkunKomunitas> listfordisplay = [];
+                              searchText = searchText.toLowerCase();
+
+                              
+                              for (int i = 0; i < listKomunitaskuTemp.length; i++) {
+                                String tempsearch = listKomunitaskuTemp[i].namakomunitas;
+                                tempsearch = tempsearch.toLowerCase();
+                                if (tempsearch.contains(searchText)) {
+                                  listfordisplay.add(listKomunitaskuTemp[i]);
+                                }
+                              }
+
+                              listKomunitasku = [];
+                              listKomunitasku = listfordisplay;
+                              
+                            });
+                          },
                           controller: controller,
                           cursorColor: const Color.fromARGB(255, 95, 95, 95),
                           decoration: InputDecoration(

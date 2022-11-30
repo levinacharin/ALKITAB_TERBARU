@@ -320,40 +320,40 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
                 ),
               ),
               const SizedBox(height: 10,),
-              Container(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                height: 40,
-                child: TextField(
-                  cursorColor: Color(int.parse(globals.defaultcolor)),
-                  decoration: InputDecoration(
-                    fillColor: const Color.fromARGB(255, 253, 255, 252),
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1, 
-                        color: Color(int.parse(globals.defaultcolor))
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1, 
-                        color: Color(int.parse(globals.defaultcolor))
-                      ),
-                    ),
-                    hintText: 'Cari',
-                    hintStyle: TextStyle(
-                      color: Colors.grey[400]
-                    ),
-                    contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)
-                  ),
-                  style: GoogleFonts.nunito(
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black
-                    )
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              //   height: 40,
+              //   child: TextField(
+              //     cursorColor: Color(int.parse(globals.defaultcolor)),
+              //     decoration: InputDecoration(
+              //       fillColor: const Color.fromARGB(255, 253, 255, 252),
+              //       filled: true,
+              //       enabledBorder: OutlineInputBorder(
+              //         borderSide: BorderSide(
+              //           width: 1, 
+              //           color: Color(int.parse(globals.defaultcolor))
+              //         ),
+              //       ),
+              //       focusedBorder: OutlineInputBorder(
+              //         borderSide: BorderSide(
+              //           width: 1, 
+              //           color: Color(int.parse(globals.defaultcolor))
+              //         ),
+              //       ),
+              //       hintText: 'Cari',
+              //       hintStyle: TextStyle(
+              //         color: Colors.grey[400]
+              //       ),
+              //       contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5)
+              //     ),
+              //     style: GoogleFonts.nunito(
+              //       textStyle: const TextStyle(
+              //         fontSize: 16,
+              //         color: Colors.black
+              //       )
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 20,),
               GestureDetector(
                 onTap: () {

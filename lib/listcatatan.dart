@@ -186,7 +186,6 @@ class _ListCatatanState extends State<ListCatatan> {
                       itemCatatan.add(listDataCat[i]['Isi Catatan'].toString());
                       itemTagline.add(listDataCat[i]['Tagline'].toString());
                     }
-                    listDataCat = listfordisplay;
                   });
                 },
                 cursorColor: Color(int.parse(globals.defaultcolor)),
