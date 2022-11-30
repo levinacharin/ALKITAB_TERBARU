@@ -405,13 +405,13 @@ class _CatatanPageState extends State<CatatanPage> {
       // ignore: use_build_context_synchronously
       Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => DetailCatatan(index: widget.index, shouldpop: "true", darimana: widget.darimana,))
+        MaterialPageRoute(builder: (context) => DetailCatatan(index: widget.index, shouldpop: "false", darimana: widget.darimana,))
       );
     } else if (widget.darimana == "homepage") {
       // ignore: use_build_context_synchronously
       Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => DetailCatatan(index: globals.lastIdCatatan, shouldpop: "true", darimana: widget.darimana,))
+        MaterialPageRoute(builder: (context) => DetailCatatan(index: globals.lastIdCatatan, shouldpop: "false", darimana: widget.darimana,))
       );
     }
   }

@@ -22,10 +22,11 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const ProfilePageMenu())
-            );
+            Navigator.pop(context);
+            // Navigator.push(
+            //   context, 
+            //   MaterialPageRoute(builder: (context) => const ProfilePageMenu())
+            // );
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)

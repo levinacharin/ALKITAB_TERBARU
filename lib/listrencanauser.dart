@@ -285,16 +285,21 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
           leading: IconButton(
             onPressed: () {
               if (widget.pagefrom == "komunitas") {
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-                );
+                Navigator.pop(context, "refresh");
               } else {
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
-                );
+                Navigator.pop(context);
               }
+              // if (widget.pagefrom == "komunitas") {
+              //   Navigator.push(
+              //     context, 
+              //     MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+              //   );
+              // } else {
+              //   Navigator.push(
+              //     context, 
+              //     MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrencanauser"))
+              //   );
+              // }
             },
             icon: const Icon(
               Icons.arrow_back_rounded,
@@ -481,10 +486,20 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
                               globals.idrencana = listIdRencana[index];
           
                               // ignore: use_build_context_synchronously
-                              Navigator.push(
+                              final data = await Navigator.push(
                                 context, 
                                 MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: "user",))
                               );
+
+                              if (data == "refresh") {
+                                setState(() {
+                                  getIdRencanaSP();
+                                  readFile();
+                                  _currentdate = "${currentDate.year}-${currentDate.month}-${currentDate.day}";
+                                  getLiturgi(_currentdate );
+                                  formatDatetoString();
+                                });
+                              }
                             },
                           ),
                           const SizedBox(height: 10,)

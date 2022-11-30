@@ -42,13 +42,8 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
     return response;
   }
 
-  Future<void> getExploreKomen() async {
-    if(widget.pagefrom=="explore"){
-      idx=globals.idexplore;
-    }else{
-      idx=globals.idrefleksi;
-    }
-    ExploreKomen.getExploreKomen(widget.pagefrom,idx).then((value) async {
+  Future<void> getExploreKomen(String darimana, String idx) async {
+    ExploreKomen.getExploreKomen(darimana, idx).then((value) async {
       setState(() {
         listExploreKomen = [];
         listExploreKomen = value;
@@ -143,10 +138,14 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
     if (response.statusCode == 200) {
 
       // ignore: use_build_context_synchronously
-      Navigator.push(
-        context, 
-        MaterialPageRoute(builder: (context) => DetailRefleksiUser(pagefrom:widget.pagefrom))
-      );
+      setState(() {
+        getExploreKomen(widget.pagefrom, idx);
+        ctr_komen.text = "";
+      });
+      // Navigator.push(
+      //   context, 
+      //   MaterialPageRoute(builder: (context) => DetailRefleksiUser(pagefrom:widget.pagefrom))
+      // );
     }
   }
 
@@ -167,7 +166,12 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
     print("idkomunitas: ${globals.idkomunitas}");
     print("image path: ${globals.imagepathrefleksi}");
     print("jumlah komen: ${globals.komentar}");
-    getExploreKomen();
+    if(widget.pagefrom=="explore"){
+      idx=globals.idexplore;
+    }else if (widget.pagefrom == "refleksi"){
+      idx=globals.idrefleksi;
+    }
+    getExploreKomen(widget.pagefrom, idx);
   }
 
   List kosong = [1,2,3];
@@ -186,15 +190,13 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
               if (widget.pagefrom == "explore") {
                 updateLikeKomen(globals.idexplore, globals.suka, globals.komentar);
 
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => const Explore())
-                );
+                Navigator.pop(context, "refresh");
+                // Navigator.push(
+                //   context, 
+                //   MaterialPageRoute(builder: (context) => const Explore())
+                // );
               } else if (widget.pagefrom == "refleksi") {
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (context) => const DetailRenunganKomunitas())
-                );
+                Navigator.pop(context, "refresh");
               }
             }, 
             icon: const Icon(
@@ -434,19 +436,35 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                   GestureDetector(
                     onTap: () {
                       if (globals.idUser != "") {
-                        setState(() {
-                          globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
-                          int count = int.parse(globals.suka);
-                          if (globals.listShowUserLikeExplore == false) {
-                            count--;
-                            deleteLikeDatabase(globals.idexplore, widget.pagefrom, globals.idUser);
-                          } else if (globals.listShowUserLikeExplore == true) {
-                            count++;
-                            addLikeDatabase(globals.idexplore);
-                          }
+                        if (widget.pagefrom == "explore") {
+                          setState(() {
+                            globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
+                            int count = int.parse(globals.suka);
+                            if (globals.listShowUserLikeExplore == false) {
+                              count--;
+                              deleteLikeDatabase(globals.idexplore, widget.pagefrom, globals.idUser);
+                            } else if (globals.listShowUserLikeExplore == true) {
+                              count++;
+                              addLikeDatabase(globals.idexplore);
+                            }
 
-                          globals.suka = count.toString();
-                        });
+                            globals.suka = count.toString();
+                          });
+                        } else {
+                          setState(() {
+                            globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
+                            int count = int.parse(globals.suka);
+                            if (globals.listShowUserLikeExplore == false) {
+                              count--;
+                              deleteLikeDatabase(globals.idrefleksi, widget.pagefrom, globals.idUser);
+                            } else if (globals.listShowUserLikeExplore == true) {
+                              count++;
+                              addLikeDatabase(globals.idrefleksi);
+                            }
+
+                            globals.suka = count.toString();
+                          });
+                        }
                       } else {
                         showDialog(
                           context: context, 
@@ -547,7 +565,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                   Column(children: [
                     // Container(child: 
                     ListView.builder(
-                      //physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                     //itemCount: kosong.length,
                               itemCount: listExploreKomen.length,

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -32,7 +34,7 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
   final TextEditingController _ctrdeskripsikomunitas = TextEditingController();
   final TextEditingController _ctrpasswordkomunitas = TextEditingController();
   bool status = false;
-  String statuskomunitas = "";
+  String statuskomunitas = "publik";
 
   String idkomunitas = "";
   void addKomunitas() async {
@@ -80,14 +82,18 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
   }
 
   void updateImage(String idkomunitas) async {
-    var url = "${globals.urllocal}uploadimage";
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields['id'] = idkomunitas;
-    request.fields['folder'] = 'komunitas';
-    request.files.add(
-      await http.MultipartFile.fromPath('photo', pathPhoto)
-    );
-    var res = await request.send();
+    if (pathPhoto != "") {
+      var url = "${globals.urllocal}uploadimage";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.fields['id'] = idkomunitas;
+      request.fields['folder'] = 'komunitas';
+      request.files.add(
+        await http.MultipartFile.fromPath('photo', pathPhoto)
+      );
+      var res = await request.send();
+
+      globals.imagepathkomunitas = "uploads/komunitas/komunitas-$idkomunitas.png";
+    }
 
     globals.idkomunitas = idkomunitas;
     globals.namakomunitas = _ctrnamakomunitas.text;
@@ -98,7 +104,8 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
     } else if (statuskomunitas == "publik") {
       globals.passwordkomunitas = "-";
     }
-    globals.imagepathkomunitas = "uploads/komunitas/komunitas-$idkomunitas.png";
+
+    // Navigator.pop(context, "refresh");
     // ignore: use_build_context_synchronously
     Navigator.push(
       context, 
@@ -107,15 +114,9 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
   }
 
   void editKomunitas() async {
-    setState(() {
-      globals.namakomunitas = _ctrnamakomunitas.text;
-      globals.deskripsikomunitas = _ctrdeskripsikomunitas.text;
-      globals.passwordkomunitas = _ctrpasswordkomunitas.text;
-      globals.statuskomunitas = statuskomunitas;
-      print("statuskomunitas: $statuskomunitas");
-    });
-
+    // print("${globals.idkomunitas} - ${_ctrnamakomunitas.text} - $statuskomunitas - ${_ctrdeskripsikomunitas.text} - ${_ctrpasswordkomunitas.text}");
     var url = "${globals.urllocal}komunitasakunedit";
+    // ignore: unused_local_variable
     var response = await http.put(Uri.parse(url), body: {
       "idkomunitas" : globals.idkomunitas,
       "namakomunitas" : _ctrnamakomunitas.text,
@@ -123,13 +124,31 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
       "deskripsikomunitas" : _ctrdeskripsikomunitas.text,
       "passwordkomunitas" : _ctrpasswordkomunitas.text
     });
-    if (response.statusCode == 200) {
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-      );
-    }
+
+    setState(() {
+      globals.namakomunitas = _ctrnamakomunitas.text;
+      globals.deskripsikomunitas = _ctrdeskripsikomunitas.text;
+      globals.passwordkomunitas = _ctrpasswordkomunitas.text;
+      globals.statuskomunitas = statuskomunitas;
+      print("statuskomunitas: $statuskomunitas");
+
+      Navigator.pop(context, "refresh");
+    });
+    // if (response.statusCode == 200) {
+    //   globals.namakomunitas = _ctrnamakomunitas.text;
+    //   globals.deskripsikomunitas = _ctrdeskripsikomunitas.text;
+    //   globals.passwordkomunitas = _ctrpasswordkomunitas.text;
+    //   globals.statuskomunitas = statuskomunitas;
+    //   print("statuskomunitas: $statuskomunitas");
+
+    //   Navigator.pop(context, "refresh");
+    //   // Navigator.push(
+    //   //   context,
+    //   //   MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+    //   // );
+    // } else {
+    //   print("error");
+    // }
   }
 
   bool uploadFoto = false;
@@ -160,6 +179,15 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
         var res = await request.send();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _ctrnamakomunitas.dispose();
+    _ctrdeskripsikomunitas.dispose();
+    _ctrpasswordkomunitas.dispose();
   }
 
   @override
@@ -196,15 +224,17 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
         leading: IconButton(
           onPressed: () {
             if (widget.pagefrom == "detailkomunitas") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-              );
+              Navigator.pop(context, "refresh");
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+              // );
             } else if (widget.pagefrom == "listkomunitas") {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const ListKomunitas())
-              );
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => const ListKomunitas())
+              // );
             }
           },
           icon: const Icon(Icons.arrow_back,
@@ -483,6 +513,8 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
                       } else {
                         statuskomunitas = "publik";
                       }
+
+                      print("statuskomunitas: $statuskomunitas");
                     });
                   }
                 ),
@@ -549,9 +581,23 @@ class _BuatKomunitasState extends State<BuatKomunitas> {
               child: ElevatedButton(
                 onPressed: () {
                   if (widget.status == 'editkomunitas') {
-                    editKomunitas();
+                    if (_ctrpasswordkomunitas.text.length > 10) {
+                      const text = 'password maksimal 10 karakter';
+                      final snackBar = SnackBar(content: Text(text));
+    
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else {
+                      editKomunitas();
+                    }
                   } else {
-                    addKomunitas();
+                    if (_ctrpasswordkomunitas.text.length > 10) {
+                      const text = 'password maksimal 10 karakter';
+                      final snackBar = SnackBar(content: Text(text));
+    
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else {
+                      addKomunitas();
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(

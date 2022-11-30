@@ -251,7 +251,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
   
   void checkPassword(int index) {
     if (ctr_passkomunitas.text == listKomunitasShow[index].passwordkomunitas) {
-      addDetailKomunitas(int.parse(listKomunitasShow[index].idkomunitas));
+      addDetailKomunitas(int.parse(listKomunitasShow[index].idkomunitas), "privat");
     } else {
       // ignore: prefer_const_declarations
       final text = 'password salah';
@@ -261,7 +261,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
     }
   }
 
-  void addDetailKomunitas(int idkomunitas) async {
+  void addDetailKomunitas(int idkomunitas, String status) async {
     var url = "${globals.urllocal}detailkomunitasadd";
     var response = await http.post(Uri.parse(url), body: {
       "idkomunitas" : idkomunitas.toString(),
@@ -284,11 +284,51 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
         }
       }
 
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context, 
-        MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'false', pagefrom: 'joinkomunitas',))
-      );
+      if (status == "privat") {
+        // ignore: use_build_context_synchronously
+        final data = await Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'false', pagefrom: 'joinkomunitas',))
+        );
+
+        if (data == "refresh") {
+          setState(() {
+            getAllAkunKomunitas();  // untuk list komunitasku
+
+            globals.idkomunitas = "";
+            globals.namakomunitas = "";
+            globals.statuskomunitas = "";
+            globals.deskripsikomunitas = "";
+            globals.passwordkomunitas = "";
+            globals.tanggalpembuatan = "";
+            globals.jumlahanggota = "";
+            globals.imagepathkomunitas = "";
+            globals.roleuser = "";
+          });
+        }
+      } else  {
+        // ignore: use_build_context_synchronously
+        final data = await Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'false', pagefrom: 'listkomunitas',))
+        );
+
+        if (data == "refresh") {
+          setState(() {
+            getAllAkunKomunitas();  // untuk list komunitasku
+
+            globals.idkomunitas = "";
+            globals.namakomunitas = "";
+            globals.statuskomunitas = "";
+            globals.deskripsikomunitas = "";
+            globals.passwordkomunitas = "";
+            globals.tanggalpembuatan = "";
+            globals.jumlahanggota = "";
+            globals.imagepathkomunitas = "";
+            globals.roleuser = "";
+          });
+        }
+      }
     }
     else{
       log("buat akun gagal");
@@ -330,8 +370,6 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
     globals.imagepathkomunitas = "";
     globals.roleuser = "";
 
-
-
     _tabController = TabController(length: 2, vsync: this);
   }
   
@@ -343,10 +381,11 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listkomunitas"))
-            );
+            Navigator.pop(context);
+            // Navigator.push(
+            //   context, 
+            //   MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listkomunitas"))
+            // );
           },
           icon: const Icon(Icons.arrow_back,
             color: Color.fromARGB(255, 113, 9, 49)
@@ -667,7 +706,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                                           if (listKomunitasShow[index].statuskomunitas == 'privat') {
                                                             _showDialogPassword(index);
                                                           } else {
-                                                            addDetailKomunitas(int.parse(listKomunitasShow[index].idkomunitas));
+                                                            addDetailKomunitas(int.parse(listKomunitasShow[index].idkomunitas), "publik");
                                                           }
                                                         } else {
                                                           _showDialogAlert();
@@ -720,7 +759,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                   const SizedBox(height: 10,),
                                 ],
                               ),
-                              onTap: () {
+                              onTap: () async {
                                 if (globals.idUser != "") {
                                   globals.idkomunitas = listKomunitasShow[index].idkomunitas;
                                   globals.namakomunitas = listKomunitasShow[index].namakomunitas;
@@ -740,10 +779,29 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                   globals.tanggalpembuatan = listKomunitasAll[index].tanggalpembuatan;
                                   globals.imagepathkomunitas = listKomunitasAll[index].imagepath;
                                 }
-                                Navigator.push(
+                                
+                                final data = await Navigator.push(
                                   context, 
                                   MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'true',))
                                 );
+
+                                if (data == "refresh") {
+                                  setState(() {
+                                    getAllAkunKomunitas();  // untuk list komunitasku
+
+                                    globals.idkomunitas = "";
+                                    globals.namakomunitas = "";
+                                    globals.statuskomunitas = "";
+                                    globals.deskripsikomunitas = "";
+                                    globals.passwordkomunitas = "";
+                                    globals.tanggalpembuatan = "";
+                                    globals.jumlahanggota = "";
+                                    globals.imagepathkomunitas = "";
+                                    globals.roleuser = "";
+
+                                    _tabController = TabController(length: 2, vsync: this);
+                                  });
+                                }
                               },
                             );
                           }
@@ -943,7 +1001,7 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                   const SizedBox(height: 10,),
                                 ],
                               ),
-                              onTap: () {
+                              onTap: () async {
                                 globals.idkomunitas = listKomunitasku[index].idkomunitas;
                                 globals.namakomunitas = listKomunitasku[index].namakomunitas;
                                 globals.statuskomunitas = listKomunitasku[index].statuskomunitas;
@@ -952,10 +1010,27 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
                                 globals.passwordkomunitas = listKomunitasku[index].passwordkomunitas;
                                 globals.tanggalpembuatan = listKomunitasku[index].passwordkomunitas;
                                 globals.imagepathkomunitas = listKomunitasku[index].imagepath;
-                                Navigator.push(
+                                
+                                final data = await Navigator.push(
                                   context, 
                                   MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: 'true', pagefrom: 'komunitasku',))
                                 );
+
+                                if (data == "refresh") {
+                                  setState(() {
+                                    getAllAkunKomunitas();  // untuk list komunitasku
+
+                                    globals.idkomunitas = "";
+                                    globals.namakomunitas = "";
+                                    globals.statuskomunitas = "";
+                                    globals.deskripsikomunitas = "";
+                                    globals.passwordkomunitas = "";
+                                    globals.tanggalpembuatan = "";
+                                    globals.jumlahanggota = "";
+                                    globals.imagepathkomunitas = "";
+                                    globals.roleuser = "";
+                                  });
+                                }
                               },
                             );
                           }
@@ -985,10 +1060,14 @@ class _ListKomunitasState extends State<ListKomunitas> with SingleTickerProvider
       floatingActionButton: Visibility(
         visible: globals.idUser != "" ? true : false,
         child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            final data = await Navigator.push(
               context, MaterialPageRoute(builder: (context) => BuatKomunitas(pagefrom: "listkomunitas",))
             );
+
+            if (data == "refresh") {
+              getAllAkunKomunitas();
+            }
           },
           child: const Icon(
             Icons.add,

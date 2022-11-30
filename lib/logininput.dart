@@ -96,6 +96,7 @@ class _LoginInputState extends State<LoginInput> {
           globals.deskripsiUser = listAkunUser[0].deskripsi;
           globals.imagepath = listAkunUser[0].imagepath;
           globals.statusLogin = true;
+          globals.logininput = true;
           saveAkuntoLokal();
           _showDialogSuccess();
 
@@ -136,6 +137,13 @@ class _LoginInputState extends State<LoginInput> {
       getFileRenungan();
       getFileUnderline();
     }
+
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "logininput",))
+    );
   }
 
 
@@ -226,14 +234,8 @@ class _LoginInputState extends State<LoginInput> {
           Container(
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 cekFolderExist();
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "logininput",))
-                );
               }, 
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(int.parse(globals.defaultcolor)),
@@ -441,9 +443,6 @@ class _LoginInputState extends State<LoginInput> {
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      globals.logininput = true;
-                    });
                     getAkunUser(); // harusnya post
                   },
                   style: ElevatedButton.styleFrom(

@@ -591,7 +591,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
     String tanggal = "${date.day}/${date.month}/${date.year}";
 
     // read data proses
-    String path = '/storage/emulated/0/Download/Renunganjson.txt';
+    String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
     bool directoryExists = await Directory(path).exists();
     bool fileExists = await File(path).exists();
 
@@ -875,7 +875,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
                   )
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 113, 9, 49),
+                  backgroundColor: Color(int.parse(globals.defaultcolor)),
                   elevation: 5,
                   padding: const EdgeInsets.all(5),
                 ),
@@ -900,7 +900,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
                   )
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(int.parse(globals.defaultcolor)),
+                  backgroundColor: const Color.fromARGB(255, 113, 9, 49),
                   elevation: 5,
                   padding: const EdgeInsets.all(5),
                 ),
@@ -920,7 +920,7 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, "refresh");
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)

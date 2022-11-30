@@ -57,6 +57,8 @@ class _ListCatatanState extends State<ListCatatan> {
         });
       }
     }
+    
+    uploadFileLokal();
   }
 
   int huruf = 92;
@@ -133,10 +135,11 @@ class _ListCatatanState extends State<ListCatatan> {
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listcatatan"))
-              );
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listcatatan"))
+              // );
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)
@@ -281,12 +284,16 @@ class _ListCatatanState extends State<ListCatatan> {
                                             value: 2,
                                           ),
                                         ],
-                                        onSelected: (value) {
+                                        onSelected: (value) async {
                                           if (value == 1) {
-                                            Navigator.push(
+                                            final data = await Navigator.push(
                                               context, 
                                               MaterialPageRoute(builder: (context) => CatatanPage(status: 'edit', index: index, darimana: "listcatatan",))
                                             );
+
+                                            if (data == "refresh") {
+                                              readFile();
+                                            }
     
                                           } else if (value == 2) {
                                             deleteData(index);
@@ -323,11 +330,15 @@ class _ListCatatanState extends State<ListCatatan> {
                         const SizedBox(height: 10,),
                       ],
                     ),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      final data = await Navigator.push(
                         context, 
                         MaterialPageRoute(builder: (context) => DetailCatatan(index: index, shouldpop: 'true',))
                       );
+
+                      if (data == "refresh") {
+                        readFile();
+                      }
                     },
                   );
                 },

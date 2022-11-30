@@ -32,7 +32,7 @@ class RefleksiLike {
 
   static Future<List<RefleksiLike>> getRefleksiLike(
       String darimana, String id) async {
-    var url = "${globals.urllocal}getlike?idLike=${id}&darimana=$darimana";
+    var url = "${globals.urllocal}getlike?idLike=$id&darimana=$darimana";
     var apiResult = await http.get(Uri.parse(url), headers: {
       "Accept": "application/json",
       "Access-Control-Allow-Origin": "*"
@@ -45,6 +45,27 @@ class RefleksiLike {
       return listData;
     } else {
       for (int i = 0; i < data.length; i++) {
+        listData.add(RefleksiLike.createData(data[i]));
+      }
+      return listData;
+    }
+  }
+
+  static Future<List<RefleksiLike>> getUserRefleksiLike(String darimana, String id) async {
+    var url = "${globals.urllocal}getstatuslikeuser?idUser=${id}&darimana=$darimana";
+    var apiResult = await http.get(Uri.parse(url), headers: {
+      "Accept": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    var jsonObject = json.decode(apiResult.body);
+    var data = (jsonObject as Map<String, dynamic>)['data'];
+    List<RefleksiLike> listData = [];
+    if (data.toString() == "null") {
+      return listData;
+    } else {
+      for (int i = 0; i < data.length; i++) {
+        log("darifunction ${data[i]}");
         listData.add(RefleksiLike.createData(data[i]));
       }
       return listData;
@@ -120,6 +141,7 @@ class RefleksiUser {
   String ayatberkesan;
   String tindakansaya;
   String? suka;
+  String? komen;
 
   RefleksiUser({
     required this.idrefleksi,
@@ -131,7 +153,8 @@ class RefleksiUser {
     required this.imagepath,
     required this.ayatberkesan,
     required this.tindakansaya,
-    this.suka
+    this.suka,
+    this.komen
   });
 
   factory RefleksiUser.createData(Map<String, dynamic> object) {
@@ -200,7 +223,7 @@ class DetailRenunganKomunitas extends StatefulWidget {
 
 class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
 
-   void addLikeDatabase(String idlike) async {
+  void addLikeDatabase(String idlike) async {
     var url = "${globals.urllocal}simpanlike";
     var response = await http.post(Uri.parse(url), body: {
       "idLike": idlike,
@@ -263,57 +286,163 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
   List<RefleksiUser> listRefleksi = [];
   bool hasRefleksi = false;
   List<bool> listShowUserLikeRefleksi=[];
+  List<RefleksiLike> listRefleksiUserLike = [];
+  bool statusLike = false;
 
   Future<void> getListRefleksi() async {
     RefleksiUser.getData(globals.idrenungankomunitas).then((value) async {
-      setState(() async {
+      setState(() {
+        listRefleksi = [];
         listRefleksi = value;
 
-        String tanggaltemp = "";
-        String tanggal = "";
-        String bulan = "";
-        String tahun = "";
-        int count = 0;
-
-        int indexbuatlistygdilikeuser=0;
-        hasRefleksi = false;
-
+        listShowUserLikeRefleksi = [];
         for (int i = 0; i < listRefleksi.length; i++) {
-           listShowUserLikeRefleksi.add(false);
-          
+          listShowUserLikeRefleksi.add(false);
 
-          //log("atas likenih - ${listRefleksi[i].idexplore}");
-
-          List<RefleksiLike> listRefleksiLike = [];
-          await RefleksiLike.getRefleksiLike("refleksi", listRefleksi[i].idrefleksi).then((value) async {
+          RefleksiLike.getRefleksiLike("refleksi", listRefleksi[i].idrefleksi).then((value) async {
             setState(() {
-              listRefleksiLike = [];
-              listRefleksiLike = value; //isinya list per detail like dari explore yg dah difilter, apakah udah dari explore dan idexplore
+              listRefleksi[i].suka = value.length.toString();
+              print("suka: ${listRefleksi[i].suka}");
             });
           });
-          //log("benergasihhh ");
-          //log("benergasihhh ${value}");
 
-          for(int j=0;j<listRefleksiLike.length;j++){
-            log("benergasihhh cekall $j - ${listRefleksiLike[j].idUser} ${globals.idUser}");
-            if(listRefleksiLike[j].idUser==globals.idUser){
-              listShowUserLikeRefleksi[indexbuatlistygdilikeuser]=true;
-              //break;
-            }else{
-              listShowUserLikeRefleksi[indexbuatlistygdilikeuser]=false;
-            }
-            log("benergasihhh - ${listShowUserLikeRefleksi[indexbuatlistygdilikeuser]}");
+          ExploreKomen.getExploreKomen("refleksi", listRefleksi[i].idrefleksi).then((value) async {
+            setState(() {
+              listRefleksi[i].komen = value.length.toString();
+            });
+          });
+        }
+
+        getListUserLikeRefleksi();
+
+        // String tanggaltemp = "";
+        // String tanggal = "";
+        // String bulan = "";
+        // String tahun = "";
+        // int count = 0;
+
+        // int indexbuatlistygdilikeuser=0;
+        // hasRefleksi = false;
+
+        // for (int i = 0; i < listRefleksi.length; i++) {
+        //   listShowUserLikeRefleksi.add(false);
+
+        //   List<RefleksiLike> listRefleksiLike = [];
+        //   await RefleksiLike.getRefleksiLike("refleksi", listRefleksi[i].idrefleksi).then((value) async {
+        //     setState(() {
+        //       listRefleksiLike = [];
+        //       listRefleksiLike = value; //isinya list per detail like dari explore yg dah difilter, apakah udah dari explore dan idexplore
+        //     });
+        //   });
+
+        //   for(int j=0;j<listRefleksiLike.length;j++){
+        //     log("benergasihhh cekall $j - ${listRefleksiLike[j].idUser} ${globals.idUser}");
+        //     if(listRefleksiLike[j].idUser==globals.idUser){
+        //       listShowUserLikeRefleksi[indexbuatlistygdilikeuser]=true;
+        //       //break;
+        //     }else{
+        //       listShowUserLikeRefleksi[indexbuatlistygdilikeuser]=false;
+        //     }
+        //     log("benergasihhh - ${listShowUserLikeRefleksi[indexbuatlistygdilikeuser]}");
             
+        //   }
+          
+        //   indexbuatlistygdilikeuser++;
+
+
+
+        //   //log("atas likenih - ${listExplore[i].iduser}");
+
+          
+        //   listRefleksi[i].suka = listRefleksiLike.length.toString();
+        //   if(listRefleksi[i].iduser == globals.idUser) {
+        //     hasRefleksi = true;
+        //   }
+
+        //   tanggaltemp = listRefleksi[i].tanggalposting;
+        //   for (int j = 0; j < tanggaltemp.length; j++) {
+        //     if (tanggaltemp[j] == '/' && bulan == "") {
+        //       if (tanggaltemp[j+2] != '/') {
+        //         bulan = bulan + tanggaltemp[j+1] + tanggaltemp[j+2];
+        //         count = 2;
+        //       } else {
+        //         bulan = bulan + tanggaltemp[j+1];
+        //         count = 1;
+        //       }
+        //     } else  if (tanggaltemp[j] == '/' && count == 0) {
+        //       tahun = tahun + tanggaltemp[j+1] + tanggaltemp[j+2] + tanggaltemp[j+3] + tanggaltemp[j+4];
+        //       break;
+        //     } else if (tanggal == "") {
+        //       if (tanggaltemp[j+1] != '/') {
+        //         tanggal = tanggal + tanggaltemp[j] + tanggaltemp[j+1];
+        //       } else {
+        //         tanggal = tanggal + tanggaltemp[j];
+        //       }
+        //     } else {
+        //       count--;
+        //     }
+        //   }
+        
+
+        //   if (bulan == "1") {
+        //     bulan = "Januari";
+        //   } else if (bulan == "2") {
+        //     bulan = "Februari";
+        //   } else if (bulan == "3") {
+        //     bulan = "Maret";
+        //   } else if (bulan == "4") {
+        //     bulan = "April";
+        //   } else if (bulan == "5") {
+        //     bulan = "Mei";
+        //   } else if (bulan == "6") {
+        //     bulan = "Juni";
+        //   } else if (bulan == "7") {
+        //     bulan = "Juli";
+        //   } else if (bulan == "8") {
+        //     bulan = "Agustus";
+        //   } else if (bulan == "9") {
+        //     bulan = "September";
+        //   } else if (bulan == "10") {
+        //     bulan = "Oktober";
+        //   } else if (bulan == "11") {
+        //     bulan = "November";
+        //   } else if (bulan == "12") {
+        //     bulan = "Desember";
+        //   } 
+
+        //   listRefleksi[i].tanggalposting = "$tanggal $bulan $tahun";
+
+        //   tanggaltemp = "";
+        //   tanggal = "";
+        //   bulan = "";
+        //   tahun = "";
+        //   count = 0;
+        // }
+      });
+    });
+  }
+
+  Future<void>getListUserLikeRefleksi() async {
+    String tanggaltemp = "";
+    String tanggal = "";
+    String bulan = "";
+    String tahun = "";
+    int count = 0;
+
+    RefleksiLike.getUserRefleksiLike("refleksi", globals.idUser).then((value) async {
+      setState(() {
+        listRefleksiUserLike = value;
+
+        for (int i = 0; i < listRefleksi.length; i++) {
+          statusLike = false;
+          for (int j = 0 ; j < value.length; j++) {
+            if (listRefleksi[i].idrefleksi == value[j].idLike && globals.idUser != "") {
+              statusLike = true;
+            }
           }
-          
-          indexbuatlistygdilikeuser++;
 
+          listShowUserLikeRefleksi[i] = statusLike;
 
-
-          //log("atas likenih - ${listExplore[i].iduser}");
-
-          
-          listRefleksi[i].suka = listRefleksiLike.length.toString();
           if(listRefleksi[i].iduser == globals.idUser) {
             hasRefleksi = true;
           }
@@ -381,11 +510,67 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
     });
   }
 
+  List<ExploreKomen> listExploreKomen = [];
+  Future<void> getExploreKomen(String darimana, String idx) async {
+    ExploreKomen.getExploreKomen(darimana,idx).then((value) async {
+      setState(() {
+        listExploreKomen = [];
+        listExploreKomen = value;
+      });
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getListRefleksi();
+  }
+
+  Future<void> _showDialogAlert() async {
+    return showDialog(
+      context: context, 
+      builder: (BuildContext context) => AlertDialog(
+        title: Center(
+          child: Text(
+            "Silahkan login terlebih dahulu agar bisa like postingan ini",
+            style: GoogleFonts.nunito(
+              textStyle: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Color.fromARGB(255, 113, 9, 49)
+              )
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        actions: [
+          // ignore: sized_box_for_whitespace
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              }, 
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(int.parse(globals.defaultcolor)),
+                elevation: 5,
+                padding: const EdgeInsets.all(5)
+              ),
+              child: Text(
+                "Kembali",
+                style: GoogleFonts.nunito(
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                  )
+                ),
+              )
+            ),
+          )
+        ],
+      )
+    );
   }
 
   @override
@@ -396,10 +581,16 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-            );
+            if (widget.darimana == "tambahrenungank") {
+              Navigator.pop(context);
+              Navigator.pop(context, "refresh");
+            } else {
+              Navigator.pop(context, "refresh");
+            }
+            // Navigator.push(
+            //   context, 
+            //   MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+            // );
           }, 
           icon: const Icon(
             Icons.arrow_back,
@@ -466,11 +657,15 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                   child: Column(
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
+                        onPressed: () async {
+                          final data = await Navigator.push(
                             context, 
                             MaterialPageRoute(builder: (context) => TambahRenunganK())
                           );
+
+                          if (data == "refresh") {
+                            getListRefleksi();
+                          }
                         }, 
                         child: Text(
                           "Buat Refleksi",
@@ -622,7 +817,6 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
               shrinkWrap: true,
               itemCount: listRefleksi.length,
               itemBuilder: (context, index) {
-                String? jumlahlike = listRefleksi[index].suka;
                 return Column(
                   children: [
                     Card(
@@ -634,19 +828,31 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                  globals.idrefleksi = listRefleksi[index].idrefleksi;
-                  globals.iduserrefleksi = listRefleksi[index].iduser;
-                  globals.namaduserrefleksi = listRefleksi[index].namadepan;
-                  globals.namabuserrefleksi = listRefleksi[index].namabelakang;
-                  globals.imagepathrefleksi = listRefleksi[index].imagepath;
-                  listRefleksi[index].ayatberkesan = listRefleksi[index].ayatberkesan.replaceAll("<br>", "\n"); 
-                  globals.ayatberkesan = listRefleksi[index].ayatberkesan;
-                  globals.tindakansaya = listRefleksi[index].tindakansaya;
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => DetailRefleksiUser(pagefrom: 'refleksi',))
-                  );
+                              onTap: () async {
+                              globals.idrefleksi = listRefleksi[index].idrefleksi;
+                              globals.iduserrefleksi = listRefleksi[index].iduser;
+                              globals.namaduserrefleksi = listRefleksi[index].namadepan;
+                              globals.namabuserrefleksi = listRefleksi[index].namabelakang;
+                              globals.imagepathrefleksi = listRefleksi[index].imagepath;
+                              listRefleksi[index].ayatberkesan = listRefleksi[index].ayatberkesan.replaceAll("<br>", "\n"); 
+                              globals.ayatberkesan = listRefleksi[index].ayatberkesan;
+                              globals.tindakansaya = listRefleksi[index].tindakansaya;
+                              globals.suka = listRefleksi[index].suka.toString();
+                              globals.komentar = listRefleksi[index].komen.toString();
+                              globals.listShowUserLikeExplore = listShowUserLikeRefleksi[index];
+                              final data = await Navigator.push(
+                                context, 
+                                MaterialPageRoute(builder: (context) => DetailRefleksiUser(pagefrom: 'refleksi',))
+                              );
+
+                              if (data == "refresh") {
+                                getListRefleksi();
+                                setState(() {
+                                  listRefleksi[index].suka = globals.suka;
+                                  listRefleksi[index].komen = globals.komentar;
+                                  listShowUserLikeRefleksi[index] = globals.listShowUserLikeExplore;
+                                });
+                              }
                   
                 },
                 child: Column(
@@ -738,23 +944,24 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    if(listShowUserLikeRefleksi[index] == true){
-                                          setState(() async {
-                                            await deleteLikeDatabase(listRefleksi[index].idrefleksi,"refleksi",globals.idUser);
-                                            getListRefleksi();
-                                            listShowUserLikeRefleksi[index] = false;
-                                            log("hapus likenihhh");
-                                          });
-                                          
-                                        }else{
-                                          setState(() {
-                                            addLikeDatabase(
-                                            listRefleksi[index].idrefleksi);
-                                            getListRefleksi();
-                                            log("likenihhh");
-                                          });
-                                          
+                                    if (globals.idUser != "") {
+                                      setState(() {
+                                        listShowUserLikeRefleksi[index] = !listShowUserLikeRefleksi[index];
+
+                                        int count = int.parse(listRefleksi[index].suka.toString());
+                                        if (listShowUserLikeRefleksi[index] == false) {
+                                          count--;
+                                          deleteLikeDatabase(listRefleksi[index].idrefleksi, "refleksi", globals.idUser);
+                                        } else if (listShowUserLikeRefleksi[index] == true) {
+                                          count++;
+                                          addLikeDatabase(listRefleksi[index].idrefleksi);
                                         }
+
+                                        listRefleksi[index].suka = count.toString();
+                                      });
+                                    } else {
+                                      _showDialogAlert();
+                                    }
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(8),
@@ -775,18 +982,13 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                                         Container(
                                             width: 20,
                                             height: 20,
-                                            // // child: (like?Image.asset(
-                                            // //     "assets/images/icon_like_red.png"):Image.asset(
-                                            // //     "assets/images/icon_like_black.png"))
-                                            // // ,
-                                            // child: Image.asset("assets/images/komunitas_icon.png"),
                                             child: (listShowUserLikeRefleksi[index] == true?Image.asset(
                                                   "assets/images/icon_like_red.png"):Image.asset(
                                                   "assets/images/icon_like_black.png"))
                                           ),
                                         const SizedBox(width: 10,),
                                         Text(
-                                          jumlahlike!,
+                                          listRefleksi[index].suka.toString(),
                                           style: GoogleFonts.nunito(
                                             textStyle: const TextStyle(
                                               fontSize: 14,
@@ -809,7 +1011,7 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                                     ),
                                     const SizedBox(width: 5,),
                                     Text(
-                                      "01",
+                                      listRefleksi[index].komen.toString(),
                                       style: GoogleFonts.nunito(
                                         textStyle: const TextStyle(
                                           fontSize: 14,
@@ -834,7 +1036,7 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                                       ),
                                       const SizedBox(width: 10,),
                                       Text(
-                                        "0",
+                                        "  ",
                                         style: GoogleFonts.nunito(
                                           textStyle: const TextStyle (
                                             fontSize: 14,
@@ -846,26 +1048,6 @@ class _DetailRenunganKomunitasState extends State<DetailRenunganKomunitas> {
                                     ],
                                   ),
                                 )
-                                // Row(
-                                //   children: [
-                                //     const Icon(
-                                //       Icons.ios_share_outlined,
-                                //       color: Color.fromARGB(255, 125, 125, 125),
-                                //       size: 20,
-                                //     ),
-                                //     const SizedBox(width: 5,),
-                                //     Text(
-                                //       "01",
-                                //       style: GoogleFonts.nunito(
-                                //         textStyle: const TextStyle(
-                                //           fontSize: 14,
-                                //           fontWeight: FontWeight.bold,
-                                //           color: Color.fromARGB(255, 125, 125, 125)
-                                //         )
-                                //       ),
-                                //     ),
-                                //   ],
-                                // )
                               ],
                             )
                           ],

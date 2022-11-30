@@ -245,7 +245,7 @@ class _ExploreState extends State<Explore> {
 
   List<ListExplore> listExplore = [];
   List<bool> listShowUserLikeExplore = [];
-  List<ExploreLike> listExploreLike = [];
+  // List<ExploreLike> listExploreLike = [];
   List<ExploreLike> listExploreUserLike = []; // data user like mana postingan mana aja
   List<bool> listUserExploreLike = []; 
   bool statusLike = false;
@@ -459,11 +459,13 @@ class _ExploreState extends State<Explore> {
         }
       });
     }
+
+    Navigator.pop(context);
     
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "explore"))
-    );
+    // Navigator.push(
+    //   context, 
+    //   MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "explore"))
+    // );
 
 }
 
@@ -578,7 +580,13 @@ class _ExploreState extends State<Explore> {
                                       );
 
                                       if (data == "refresh") {
-                                        getListExplore();
+                                        // getListExplore();
+
+                                        setState(() {
+                                          listExplore[index].suka = globals.suka;
+                                          listExplore[index].komentar = globals.komentar;
+                                          listShowUserLikeExplore[index] = globals.listShowUserLikeExplore;
+                                        });
                                       }
                                     },
                                     child: Column(
@@ -806,15 +814,15 @@ class _ExploreState extends State<Explore> {
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            // Text(
-                                            //   "0",
-                                            //   style: GoogleFonts.nunito(
-                                            //       textStyle: const TextStyle(
-                                            //           fontSize: 14,
-                                            //           fontWeight: FontWeight.bold,
-                                            //           color: Color.fromARGB(
-                                            //               255, 125, 125, 125))),
-                                            // )
+                                            Text(
+                                              "  ",
+                                              style: GoogleFonts.nunito(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Color.fromARGB(
+                                                          255, 125, 125, 125))),
+                                            )
                                           ],
                                         ),
                                       )

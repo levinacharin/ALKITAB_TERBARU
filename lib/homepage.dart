@@ -2631,6 +2631,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     getAkunfromLokal(); // Shared Preferences, auto login
 
+    print("globals.logininput: ${globals.logininput}");
     if (globals.logininput == true) {
       readFileCatatan();
       readFileStiker();
@@ -2844,10 +2845,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           }
 
           listIdRencana = listIdRencana.toSet().toList();
+          print("id rencana: ${listIdRencana}");
         });
 
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
         sharedPreferences.setStringList('listIdRencana', listIdRencana);
+
       }
     } 
   }

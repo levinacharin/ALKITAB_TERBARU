@@ -562,6 +562,7 @@ class _TambahRencanaState extends State<TambahRencana> {
 
   // API SERVICES
   String idrencana = "";
+  // ignore: non_constant_identifier_names
   void SimpanInformasiRencana() async {
     var url = "${globals.urllocal}simpanrencanabacaan";
     var response = await http.post(Uri.parse(url), body: {
@@ -580,11 +581,13 @@ class _TambahRencanaState extends State<TambahRencana> {
     }
   }
 
+  // ignore: non_constant_identifier_names
   void SimpanRencanaBacaan(String idrencana) async {
     var url = "${globals.urllocal}simpandetailrencana";
     for (int i = 0; i < ctr_ayatbacaan.length; i++) {
       getPecahAyat(ctr_ayatbacaan[i].text);
 
+      // ignore: unused_local_variable
       var response = await http.post(Uri.parse(url), body: {
       "idrencana" : idrencana,
       "hari" : (i+1).toString(),
@@ -600,24 +603,24 @@ class _TambahRencanaState extends State<TambahRencana> {
   }
 
   void updateImage(String idrencana) async {
-    var url = "${globals.urllocal}uploadimage";
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields['id'] = idrencana;
-    request.fields['folder'] = 'rencana';
-    request.files.add(
-      await http.MultipartFile.fromPath('photo', pathPhoto)
-    );
-    var res = await request.send();
+    if (pathPhoto != "") {
+      var url = "${globals.urllocal}uploadimage";
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.fields['id'] = idrencana;
+      request.fields['folder'] = 'rencana';
+      request.files.add(
+        await http.MultipartFile.fromPath('photo', pathPhoto)
+      );
+      var res = await request.send();
+    }
 
     // ignore: use_build_context_synchronously
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-    );
+    Navigator.pop(context, "refresh");
   }
   // END OF API SERVICES
 
   bool uploadFoto = false;
+  // ignore: prefer_typing_uninitialized_variables
   var imageFile;
   String pathPhoto = "";
   final ImagePicker _picker = ImagePicker();

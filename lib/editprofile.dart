@@ -61,6 +61,7 @@ class _EditProfileState extends State<EditProfile> {
       globals.namaDepanUser = ctr_namadepan.text;
       globals.namaBelakangUser = ctr_namabelakang.text;
       globals.deskripsiUser = ctr_deskripsi.text;
+      globals.imagepath = pathPhoto;
     });
 
     var url = "${globals.urllocal}userakunedit";
@@ -73,10 +74,7 @@ class _EditProfileState extends State<EditProfile> {
     });
 
     // ignore: use_build_context_synchronously
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => const ProfilePage())
-    );
+    Navigator.pop(context, "refresh");
   }
   
   @override
@@ -104,10 +102,11 @@ class _EditProfileState extends State<EditProfile> {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const ProfilePage())
-            );
+            Navigator.pop(context);
+            // Navigator.push(
+            //   context, 
+            //   MaterialPageRoute(builder: (context) => const ProfilePage())
+            // );
           },
           icon: const Icon(Icons.arrow_back_rounded),
           color: const Color.fromARGB(255, 113, 9, 49)

@@ -233,20 +233,26 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
         elevation: 0,
         leading: IconButton(
           onPressed: () async {
-            if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
+            if (widget.pagefrom == "user") {
               await writeData();
-
-              // ignore: use_build_context_synchronously
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'detailrencanabaca',))
-              );
+              Navigator.pop(context, "refresh");
             } else {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-              );
+              Navigator.pop(context);
             }
+            // if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
+            //   await writeData();
+
+            //   // ignore: use_build_context_synchronously
+            //   Navigator.push(
+            //     context, 
+            //     MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'detailrencanabaca',))
+            //   );
+            // } else {
+            //   Navigator.push(
+            //     context, 
+            //     MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
+            //   );
+            // }
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -456,12 +462,28 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                         ),
                       ),
                     ),
-                    onTap: () {
-                      if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
-                        Navigator.push(
+                    onTap: () async {
+                      if (widget.pagefrom == "user") {
+                        final data = await Navigator.push(
                           context, 
                           MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "ayat", idx: indexSelect,))
                         );
+
+                        if (data == "refresh") {
+                          setState(() {
+                            getDate();
+
+                            // if (widget.pagefrom == "isirencanabaca") {
+                              for (int i = 0; i < globals.listDetailRUser.length; i++) {
+                                if (globals.listDetailRUser[i]['Status Ayat'] == "true" && globals.listDetailRUser[i]['Status Renungan'] == "true") {
+                                  setState(() {
+                                    globals.listDetailRUser[i]['Status Selesai'] = "true";
+                                  });
+                                }
+                              }
+                            // }
+                          });
+                        }
                       }
                     },
                   ),
@@ -518,12 +540,28 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                           ),
                         ),
                       ),
-                      onTap: () {
-                        if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
-                          Navigator.push(
+                      onTap: () async {
+                        if (widget.pagefrom == "user") {
+                          final data = await Navigator.push(
                             context, 
                             MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "renungan", idx: indexSelect,))
                           );
+
+                          if (data == "refresh") {
+                            setState(() {
+                              getDate();
+
+                              // if (widget.pagefrom == "isirencanabaca") {
+                                for (int i = 0; i < globals.listDetailRUser.length; i++) {
+                                  if (globals.listDetailRUser[i]['Status Ayat'] == "true" && globals.listDetailRUser[i]['Status Renungan'] == "true") {
+                                    setState(() {
+                                      globals.listDetailRUser[i]['Status Selesai'] = "true";
+                                    });
+                                  }
+                                }
+                              // }
+                            });
+                          }
                         }
                       },
                     ),

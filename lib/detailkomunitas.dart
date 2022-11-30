@@ -404,13 +404,12 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
       getListRenungan();
       getMembersName();
       getDataRencana();
-      _tabController = TabController(length: 3, vsync: this);
 
-      if (widget.shouldpop == 'true'){
-        shouldPop = true;
-      } else {
-        shouldPop = false;
-      }
+      // if (widget.shouldpop == 'true'){
+      //   shouldPop = true;
+      // } else {
+      //   shouldPop = false;
+      // }
     });
   }
 
@@ -434,10 +433,8 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     });
     if (response.statusCode == 200) {
       // ignore: use_build_context_synchronously
-      Navigator.push(
-        context, 
-        MaterialPageRoute(builder: (context) => const ListKomunitas())
-      );
+      Navigator.pop(context);
+      Navigator.pop(context, "refresh");
     }
 
     return response;
@@ -476,7 +473,7 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     } else if (menu == "itemRencana") {
       final data = await Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => TambahRencana())
+        MaterialPageRoute(builder: (context) => const TambahRencana())
       );
 
       if (data == "refresh") {
@@ -669,32 +666,12 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
     listIdRencana.add(idrencana);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setStringList('listIdRencana', listIdRencana);
-
-    // ignore: use_build_context_synchronously
-    final data = await Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'komunitas',))
-    );
-
-    if (data == "refresh") {
-      setState(() {
-        getListRenungan();
-          getMembersName();
-          getDataRencana();
-          _tabController = TabController(length: 3, vsync: this);
-
-          if (widget.shouldpop == 'true'){
-            shouldPop = true;
-          } else {
-            shouldPop = false;
-          }
-      });
-    }
   }
 
   List<bool> punyaRencana = [];
   getIdRencanaSP() async {
     listIdRencana = [];
+    punyaRencana = [];
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     listIdRencana = sharedPreferences.getStringList('listIdRencana') ?? [];
     
@@ -845,6 +822,27 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
 
     uploadFileLokal();
     addIdRencanaSP(idrencana.toString());
+
+    // ignore: use_build_context_synchronously
+    final data = await Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'komunitas',))
+    );
+
+    if (data == "refresh") {
+      setState(() {
+        getIdRencanaSP();
+        getListRenungan();
+        getMembersName();
+        getDataRencana();
+
+        // if (widget.shouldpop == 'true'){
+        //   shouldPop = true;
+        // } else {
+        //   shouldPop = false;
+        // }
+      });
+    }
   }
 
   Future<void> uploadFileLokal() async {
@@ -870,10 +868,19 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
           leading: IconButton(
             onPressed: () {
               globals.listDetailRencana = [];
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const ListKomunitas())
-              );
+              if (widget.pagefrom == "joinkomunitas") {
+                Navigator.pop(context, "refresh");
+                Navigator.pop(context);
+              } else if (widget.pagefrom == "buatkomunitas") {
+                Navigator.pop(context);
+                Navigator.pop(context, "refresh");
+              } else {
+                Navigator.pop(context, "refresh");
+              }
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => const ListKomunitas())
+              // );
             }, 
             icon: const Icon(
               Icons.arrow_back,

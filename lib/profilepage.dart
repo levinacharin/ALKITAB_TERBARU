@@ -43,10 +43,11 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
           backgroundColor: Colors.transparent,
           leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "profile"))
-              );
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => const HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "profile"))
+              // );
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)

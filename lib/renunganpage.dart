@@ -1211,7 +1211,7 @@ class _RenunganPageState extends State<RenunganPage> {
           ctr_tagline.text +
           '"}';
     } else if (widget.status == 'edit') {
-      if (widget.darimana == 'listrenungan' || widget.darimana == 'detailrenungan') {
+      if (widget.darimana == 'listrenungan') {
         text_highlight = '';
         ayatdipilih = '';
         isi_ayatdipilih = '';
@@ -1231,17 +1231,48 @@ class _RenunganPageState extends State<RenunganPage> {
         // ignore: prefer_interpolation_to_compose_strings
         text_highlight = text_highlight + ayatdipilih + "\n" + isi_ayatdipilih;
         print("data th: $ayatdipilih");
+
+        listTempData[widget.index]['Tanggal'] = tanggaldipilih;
+        listTempData[widget.index]['Judul'] = ctr_judul.text.toString();
+        listTempData[widget.index]['Kitab'] = ctr_abacaan.text.toString();
+        listTempData[widget.index]['Ayat Bacaan'] = text_highlight;
+        listTempData[widget.index]['Ayat Berkesan'] = ctr_aberkesan.text.toString();
+        listTempData[widget.index]['Isi Renungan'] = ctr_renungan.text.toString();
+        listTempData[widget.index]['Tindakan Saya'] = ctr_tindakan.text.toString();
+        listTempData[widget.index]['Link Renungan'] = ctr_linkrenungan.text.toString();
+        listTempData[widget.index]['Tagline'] = ctr_tagline.text.toString();
+      } else if (widget.darimana == 'detailrenungan') {
+        text_highlight = '';
+        ayatdipilih = '';
+        isi_ayatdipilih = '';
+        bool getkitab = false;
+
+        for (int i = 0; i < ctr_abacaan.text.length; i++) {
+          if (ctr_abacaan.text[i] == "\n") {
+            getkitab = true;
+          }
+
+          if (getkitab == false) {
+            ayatdipilih= ayatdipilih + ctr_abacaan.text[i];
+          } else if (getkitab == true) {
+            isi_ayatdipilih = isi_ayatdipilih + ctr_abacaan.text[i];
+          }
+        }
+        // ignore: prefer_interpolation_to_compose_strings
+        text_highlight = text_highlight + ayatdipilih + "\n" + isi_ayatdipilih;
+        print("data th: $ayatdipilih");
+
+        listTempData[index]['Tanggal'] = tanggaldipilih;
+        listTempData[index]['Judul'] = ctr_judul.text.toString();
+        listTempData[index]['Kitab'] = ctr_abacaan.text.toString();
+        listTempData[index]['Ayat Bacaan'] = text_highlight;
+        listTempData[index]['Ayat Berkesan'] = ctr_aberkesan.text.toString();
+        listTempData[index]['Isi Renungan'] = ctr_renungan.text.toString();
+        listTempData[index]['Tindakan Saya'] = ctr_tindakan.text.toString();
+        listTempData[index]['Link Renungan'] = ctr_linkrenungan.text.toString();
+        listTempData[index]['Tagline'] = ctr_tagline.text.toString();
       }
 
-      listTempData[widget.index]['Tanggal'] = tanggaldipilih;
-      listTempData[widget.index]['Judul'] = ctr_judul.text.toString();
-      listTempData[widget.index]['Kitab'] = ctr_abacaan.text.toString();
-      listTempData[widget.index]['Ayat Bacaan'] = text_highlight;
-      listTempData[widget.index]['Ayat Berkesan'] = ctr_aberkesan.text.toString();
-      listTempData[widget.index]['Isi Renungan'] = ctr_renungan.text.toString();
-      listTempData[widget.index]['Tindakan Saya'] = ctr_tindakan.text.toString();
-      listTempData[widget.index]['Link Renungan'] = ctr_linkrenungan.text.toString();
-      listTempData[widget.index]['Tagline'] = ctr_tagline.text.toString();
       for (int i = 0; i < listTempData.length; i++) {
         listTempData[i]['Ayat Bacaan'] = listTempData[i]['Ayat Bacaan']
             .toString()
@@ -1292,13 +1323,31 @@ class _RenunganPageState extends State<RenunganPage> {
     // write string of json to local file
     File(path).writeAsString(dataRenungan);
 
+    if (widget.darimana == "detailrenungan") {
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context, "refresh");
+    } else if (widget.darimana == "listrenungan") {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => DetailRenungan(id: int.parse(listTempData[widget.index]['Id Renungan User']), shoulpop: "false", darimana: widget.darimana,))
+      );
+    } else if (widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan") {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (context) => DetailRenungan(id: globals.lastIdRenunganUser, shoulpop: "false", darimana: widget.darimana,))
+      );
+    }
+
     // ignore: use_build_context_synchronously
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) =>  DetailRenungan(id: globals.lastIdRenunganUser, shoulpop: "false"))
-    );
+    // Navigator.push(
+    //   context, 
+    //   MaterialPageRoute(builder: (context) =>  DetailRenungan(id: globals.lastIdRenunganUser, shoulpop: "false"))
+    // );
   }
 
+  int index = 0; // buat bisa write data kalo dari detail renungan
   void updateData() async {
     // read data proses
     String path = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
@@ -1335,6 +1384,7 @@ class _RenunganPageState extends State<RenunganPage> {
     } else if (widget.darimana == "detailrenungan") {
       for (int i = 0; i < listTempData.length; i++) {
         if (listTempData[i]['Id Renungan User'] == widget.index.toString()) {
+          index = i;
           tanggaldipilih = listTempData[i]['Tanggal'].toString();
           ctr_judul.text = listTempData[i]['Judul'].toString();
           ctr_abacaan.text = listTempData[i]['Kitab'].toString();

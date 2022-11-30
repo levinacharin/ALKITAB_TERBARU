@@ -89,20 +89,21 @@ class _DetailRenunganState extends State<DetailRenungan> {
           backgroundColor: Colors.transparent,
           leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const ListRenungan())
-              );
-              // if (widget.darimana == "listrenungan" || widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan") {
-              //   Navigator.pop(context);
-              //   Navigator.pop(context);
-              // } else if (widget.darimana == "tambahrenungank") {
-              //   Navigator.pop(context);
-              //   Navigator.pop(context);
-              //   Navigator.pop(context);
-              // } else {
-              //   Navigator.pop(context);
-              // }
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => const ListRenungan())
+              // );
+              if (widget.darimana == "listrenungan" || widget.darimana == "homepage" || widget.darimana == "addfromlistrenungan" ) {
+                Navigator.pop(context);
+                Navigator.pop(context, "refresh");
+              } else if (widget.darimana == "tambahrenungank") {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context, "refresh");
+              }
+              else {
+                Navigator.pop(context, "refresh");
+              }
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49),
@@ -128,11 +129,15 @@ class _DetailRenunganState extends State<DetailRenungan> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final data = await Navigator.push(
                         context, 
                         MaterialPageRoute(builder: (context) => RenunganPage(status: 'edit', index: widget.id, darimana: 'detailrenungan'))
                       );
+
+                      if (data == "refresh") {
+                        readFile();
+                      }
                     }, 
                     icon: const Icon(
                       Icons.edit,

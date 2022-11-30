@@ -56,10 +56,7 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
               globals.listDetailRUser[widget.idx]['Status Renungan'] = "true";
             }
 
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
-            );
+            Navigator.pop(context, "refresh");
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -207,10 +204,17 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
             onPressed: () {
               globals.listDetailRUser[widget.idx]['Status Renungan'] = "true";
               
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
-              );
+              if (widget.pagefrom == "ayat") {
+                Navigator.pop(context);
+                Navigator.pop(context,"refresh");
+              } else {
+                Navigator.pop(context, "refresh");
+              }
+              
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
+              // );
             },  
             backgroundColor: Color(int.parse(globals.defaultcolor)),
             child: const Icon(
@@ -224,10 +228,12 @@ class _IsiRencanaBacaState extends State<IsiRencanaBaca> {
         ? FloatingActionButton(
             onPressed: () {
               globals.listDetailRUser[widget.idx]['Status Ayat'] = 'true';
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
-              );
+              
+              Navigator.pop(context, "refresh");
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => const DetailRencanaBaca(pagefrom: 'isirencanabaca'))
+              // );
             },
             backgroundColor: Color(int.parse(globals.defaultcolor)),
             child: const Icon(

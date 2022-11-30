@@ -82,9 +82,9 @@ class _DetailCatatanState extends State<DetailCatatan> {
             onPressed: () {
               if (widget.darimana == "listcatatan" || widget.darimana == "homepage") {
                 Navigator.pop(context);
-                Navigator.pop(context);
+                Navigator.pop(context, "refresh");
               } else {
-                Navigator.pop(context);
+                Navigator.pop(context, "refresh");
               }
             },
             icon: const Icon(Icons.arrow_back_rounded),

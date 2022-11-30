@@ -101,6 +101,8 @@ class _ListRenunganState extends State<ListRenungan> {
         });
       }
     }
+
+    uploadFileLokal();
   }
 
   int huruf = 92;
@@ -289,10 +291,11 @@ class _ListRenunganState extends State<ListRenungan> {
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrenungan"))
-              );
+              Navigator.pop(context);
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(builder: (context) => HomePage(indexKitabdicari: 0, pasalKitabdicari: 0, ayatKitabdicari: 0, daripagemana: "listrenungan"))
+              // );
             },
             icon: const Icon(Icons.arrow_back_rounded),
             color: const Color.fromARGB(255, 113, 9, 49)
@@ -495,12 +498,16 @@ class _ListRenunganState extends State<ListRenungan> {
                                             value: 3,
                                           )
                                         ],
-                                        onSelected: (value) {
+                                        onSelected: (value) async {
                                           if (value == 1) {
-                                            Navigator.push(
+                                            final data = await Navigator.push(
                                               context, 
                                               MaterialPageRoute(builder: (context) => RenunganPage(status: 'edit', index: index, darimana: 'listrenungan',))
                                             );
+                                            if (data == "refresh") {
+                                              readFile();
+                                              getRefleksi();
+                                            }
                                           } else if (value == 2) {
                                             deleteData(index);
                                           } else if (value == 3) {
@@ -519,7 +526,7 @@ class _ListRenunganState extends State<ListRenungan> {
                                                           children: [
                                                             GestureDetector(
                                                               onTap: () async {
-                                                                if (globals.idUser == "") {
+                                                                if (globals.idUser != "") {
                                                                   addAsRefleksiUser(index);
                                                                   await showDialog(
                                                                     context: context, 
@@ -542,7 +549,12 @@ class _ListRenunganState extends State<ListRenungan> {
                                                                             width: MediaQuery.of(context).size.width,
                                                                             child: ElevatedButton(
                                                                               onPressed: () {
+                                                                                setState(() {
+                                                                                  readFile();
+                                                                                  getRefleksi();
+                                                                                });
                                                                                 Navigator.pop(context);
+                                                                                
                                                                               },
                                                                               style: ElevatedButton.styleFrom(
                                                                                 backgroundColor: Color(int.parse(globals.defaultcolor)),
@@ -988,11 +1000,16 @@ class _ListRenunganState extends State<ListRenungan> {
                         const SizedBox(height: 10,)
                       ],
                     ),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      final data = await Navigator.push(
                         context, 
                         MaterialPageRoute(builder: (context) => DetailRenungan(id: int.parse(listDataRenungan[index]['Id Renungan User']), shoulpop: 'true',))
                       );
+
+                      if (data == "refresh") {
+                        readFile();
+                        getRefleksi();
+                      }
                     },
                   );    
                 },
@@ -1002,12 +1019,18 @@ class _ListRenunganState extends State<ListRenungan> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async  {
             
-            Navigator.push(
+            final data = await Navigator.push(
               context, 
               MaterialPageRoute(builder: (context) => RenunganPage(status: 'tambah', index: 0, darimana: 'addfromlistrenungan',))
             );
+
+            if (data == "refresh") {
+              readFile();
+              getRefleksi();
+              
+            }
           },
           backgroundColor: Color(int.parse(globals.defaultcolor)),
           child: Icon(Icons.add, color: Colors.white,),

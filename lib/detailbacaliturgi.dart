@@ -32,10 +32,11 @@ class _DetailBLiturgiState extends State<DetailBLiturgi> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'detailbacaliturgi',))
-            );
+            Navigator.pop(context);
+            // Navigator.push(
+            //   context, 
+            //   MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'detailbacaliturgi',))
+            // );
           },
           icon: const Icon(
             Icons.arrow_back_rounded,
