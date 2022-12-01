@@ -698,6 +698,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   bool loading = true;
   Future<void> getAllDataFromJson() async {
+    print("globals.call: ${globals.call}");
     if (globals.call == true) {
       alkitab.clear();
       alkitab = jsonDecode(await rootBundle.loadString('assets/Alkitab.json'));

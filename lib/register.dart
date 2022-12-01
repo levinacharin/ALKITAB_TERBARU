@@ -1,6 +1,9 @@
 //import 'dart:convert';
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -42,12 +45,101 @@ class _RegisterPageState extends State<RegisterPage> {
       "deskripsi" : "Available"
     });
     if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      var lastId = data['data']['getIdLast'];
+      await uploadFileLokal(lastId.toString());
 
       // ignore: use_build_context_synchronously
       Navigator.push(
         context, 
         MaterialPageRoute(builder: (context) => const LoginInput())
       );
+    }
+  }
+
+  Future<void> uploadFileLokal(String iduser) async {
+    String path1 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
+    bool fileExists1 = await File(path1).exists();
+    if (fileExists1) {
+      var url1 = '${globals.urllocal}uploaddatalokal';
+      var request1  = http.MultipartRequest("POST", Uri.parse(url1));
+      request1.fields['id'] = iduser;
+      request1.fields['folder'] = 'Renunganjson';
+      request1.files.add(
+        await http.MultipartFile.fromPath('filejson', path1)
+      );
+      // ignore: unused_local_variable
+      var res1 = await request1.send();
+    }
+
+    String path2 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
+    bool fileExists2 = await File(path2).exists();
+    if (fileExists2) {
+      var url2 = '${globals.urllocal}uploaddatalokal';
+      var request2  = http.MultipartRequest("POST", Uri.parse(url2));
+      request2.fields['id'] = iduser;
+      request2.fields['folder'] = 'Catatanjson';
+      request2.files.add(
+        await http.MultipartFile.fromPath('filejson', path2)
+      );
+      // ignore: unused_local_variable
+      var res2 = await request2.send();
+    }
+
+    String path3 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt';
+    bool fileExists3 = await File(path3).exists();
+    if (fileExists3) {
+      var url3 = '${globals.urllocal}uploaddatalokal';
+      var request3  = http.MultipartRequest("POST", Uri.parse(url3));
+      request3.fields['id'] = iduser;
+      request3.fields['folder'] = 'listHighlightUser';
+      request3.files.add(
+        await http.MultipartFile.fromPath('filejson', path3)
+      );
+      // ignore: unused_local_variable
+      var res3 = await request3.send();
+    }
+
+    String path4 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/listStiker.txt';
+    bool fileExists4 = await File(path4).exists();
+    if (fileExists4) {
+      var url4 = '${globals.urllocal}uploaddatalokal';
+      var request4 = http.MultipartRequest("POST", Uri.parse(url4));
+      request4.fields['id'] = iduser;
+      request4.fields['folder'] = 'listStiker';
+      request4.files.add(
+        await http.MultipartFile.fromPath('filejson', path4)
+      );
+      // ignore: unused_local_variable
+      var res4 = await request4.send();
+    }
+
+    String path5 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt';
+    bool fileExists5 = await File(path5).exists();
+    if (fileExists5) {
+      var url5 = '${globals.urllocal}uploaddatalokal';
+      var request5  = http.MultipartRequest("POST", Uri.parse(url5));
+      request5.fields['id'] = iduser;
+      request5.fields['folder'] = 'Underline';
+      request5.files.add(
+        await http.MultipartFile.fromPath('filejson', path5)
+      );
+      // ignore: unused_local_variable
+      var res5 = await request5.send();
+    }
+
+    String path6 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
+    bool fileExists6 = await File(path6).exists();
+    if (fileExists1) {
+      var url6 = '${globals.urllocal}uploaddatalokal';
+      var request6  = http.MultipartRequest("POST", Uri.parse(url6));
+      request6.fields['id'] = iduser;
+      request6.fields['folder'] = 'Rencanajson';
+      request6.files.add(
+        await http.MultipartFile.fromPath('filejson', path6)
+      );
+      // ignore: unused_local_variable
+      var res6 = await request6.send();
     }
   }
   

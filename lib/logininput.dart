@@ -154,8 +154,14 @@ class _LoginInputState extends State<LoginInput> {
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
 
+    String bar = utf8.decode(bytes);
     File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt');
-    await file.writeAsBytes(bytes);
+
+    if (bar.contains('{"message":"Not Found"}')) {
+      await file.writeAsString("");
+    } else {
+      await file.writeAsBytes(bytes);
+    }
     return file;
   }
 
@@ -164,8 +170,14 @@ class _LoginInputState extends State<LoginInput> {
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
+
+    String bar = utf8.decode(bytes);
     File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt');
-    await file.writeAsBytes(bytes);
+    if (bar.contains('{"message":"Not Found"}')) {
+      await file.writeAsString("");
+    } else {
+      await file.writeAsBytes(bytes);
+    }
     return file;
   }
 
@@ -174,8 +186,14 @@ class _LoginInputState extends State<LoginInput> {
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
+
+    String bar = utf8.decode(bytes);
     File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/listStiker.txt');
-    await file.writeAsBytes(bytes);
+    if (bar.contains('{"message":"Not Found"}')) {
+      await file.writeAsString("");
+    } else {
+      await file.writeAsBytes(bytes);
+    }
     return file;
   }
 
@@ -184,8 +202,14 @@ class _LoginInputState extends State<LoginInput> {
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
+
+    String bar = utf8.decode(bytes);
     File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt');
-    await file.writeAsBytes(bytes);
+    if (bar.contains('{"message":"Not Found"}')) {
+      await file.writeAsString("");
+    } else {
+      await file.writeAsBytes(bytes);
+    }
     return file;
   }
 
@@ -194,8 +218,14 @@ class _LoginInputState extends State<LoginInput> {
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
+
+    String bar = utf8.decode(bytes);
     File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt');
-    await file.writeAsBytes(bytes);
+    if (bar.contains('{"message":"Not Found"}')) {
+      await file.writeAsString("");
+    } else {
+      await file.writeAsBytes(bytes);
+    }
     return file;
   }
 
@@ -204,8 +234,14 @@ class _LoginInputState extends State<LoginInput> {
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
+
+    String bar = utf8.decode(bytes);
     File file = File('/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt');
-    await file.writeAsBytes(bytes);
+    if (bar.contains('{"message":"Not Found"}')) {
+      await file.writeAsString("");
+    } else {
+      await file.writeAsBytes(bytes);
+    }
     return file;
   }
   // END OF GET FILE SERVER, SAVE IT TO LOKAL

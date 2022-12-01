@@ -304,6 +304,7 @@ class _CatatanPageState extends State<CatatanPage> {
             for (int i = 0; i < listTempData.length; i++) {
               listTempData[i]['Bacaan'] = listTempData[i]['Bacaan'].toString().replaceAll("<br>", "\n");
             }
+            print('listtempdata: $listTempData');
           }
         });
       } else if (directoryExists == false) {
