@@ -234,7 +234,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            globals.imagepathrefleksi != "" 
+                            globals.imagepathrefleksi != "-" 
                             ? ClipOval(
                               child: Image.network(
                                 '${globals.urllocal}getimage?id=${globals.iduserrefleksi}&folder=user',
@@ -602,7 +602,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                               children: [
                                 Container(
                                   
-                                  child:listExploreKomen[index].imagePath != "" 
+                                  child:listExploreKomen[index].imagePath != "-" 
                                 ? ClipOval(
                                   child: 
                                   Image.network(
@@ -703,7 +703,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              globals.imagepath != ""
+                              globals.imagepath != "-"
                               ? ClipOval(
                                 child: Image.network(
                                   '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',

@@ -42,7 +42,8 @@ class _RegisterPageState extends State<RegisterPage> {
       "namadepan" : _ctrNamadepan.text,
       "namabelakang" : _ctrNamabelakang.text,
       "password" : _ctrKonfpass.text,
-      "deskripsi" : "Available"
+      "deskripsi" : "Available",
+      "imagepath" : "-"
     });
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

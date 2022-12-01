@@ -62,7 +62,7 @@ class _ProfilePageMenuState extends State<ProfilePageMenu> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                globals.imagepath != "-" || globals.imagepath != ""
+                globals.imagepath != "-"
                   ? ClipOval(
                     child: Image.network(
                       '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
