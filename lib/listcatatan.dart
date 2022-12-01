@@ -110,16 +110,18 @@ class _ListCatatanState extends State<ListCatatan> {
   // END OF SERVICES
 
   Future<void> uploadFileLokal() async {
-    String path1 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
-    var url1 = '${globals.urllocal}uploaddatalokal';
-    var request1  = http.MultipartRequest("POST", Uri.parse(url1));
-    request1.fields['id'] = globals.idUser;
-    request1.fields['folder'] = 'Catatanjson';
-    request1.files.add(
-      await http.MultipartFile.fromPath('filejson', path1)
-    );
-    // ignore: unused_local_variable
-    var res1 = await request1.send();
+    if (globals.idUser != "") {
+      String path1 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Catatanjson.txt';
+      var url1 = '${globals.urllocal}uploaddatalokal';
+      var request1  = http.MultipartRequest("POST", Uri.parse(url1));
+      request1.fields['id'] = globals.idUser;
+      request1.fields['folder'] = 'Catatanjson';
+      request1.files.add(
+        await http.MultipartFile.fromPath('filejson', path1)
+      );
+      // ignore: unused_local_variable
+      var res1 = await request1.send();
+    }
   }
 
 

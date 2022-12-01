@@ -612,7 +612,11 @@ class _TambahRenunganKState extends State<TambahRenunganK> {
           }
         }
       });
-    }
+    } else if (directoryExists == false) {
+        String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+        // ignore: unnecessary_new
+        await new Directory(newdir).create();
+      }
     // end of read data proses
 
     // make json and add to string

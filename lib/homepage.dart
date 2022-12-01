@@ -2085,6 +2085,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // write data
   Future<void> writeData(String dipanggildari) async {
     final file = await _localFile;
+    bool directoryExists = await Directory('/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt').exists();
+
+    if (directoryExists == false) {
+      String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+      // ignore: unnecessary_new
+      await new Directory(newdir).create();
+    }
+
+    // if null buat directory 
 
     dataHighlight = '';
 
@@ -2273,6 +2282,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       readFileUnderlined("write");
     }
     final file = await _localFileUnderlined;
+    bool directoryExists = await Directory('/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt').exists();
+
+    if (directoryExists == false) {
+      String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+      // ignore: unnecessary_new
+      await new Directory(newdir).create();
+    }
+
     late String katagantipetik;
     log("panjang disini masuk write sini ${listUnderlinedKalimat.length}");
 
@@ -2368,6 +2385,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // read data
   Future<void> readFileUnderlined(String darimana) async {
     final file = await _localFileUnderlined;
+    bool directoryExists = await Directory('/storage/emulated/0/Download/Alkitab Renungan Mobile/Underline.txt').exists();
+
+    if (directoryExists == false) {
+      String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+      // ignore: unnecessary_new
+      await new Directory(newdir).create();
+    }
 
     listUnderlinedKalimatdarireadjson.clear();
 
@@ -2959,6 +2983,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<void> writeDataStiker() async {
   
     final file = await _localFileStiker;
+    bool directoryExists = await Directory('/storage/emulated/0/Download/Alkitab Renungan Mobile/listStiker.txt').exists();
+
+    if (directoryExists == false) {
+      String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+      // ignore: unnecessary_new
+      await new Directory(newdir).create();
+    }
     List tempStiker = listpositionSP;
     
     print("write file stiker SP ${tempStiker.length}");
@@ -3385,6 +3416,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   // UPLOAD FILE TO SERVER
   Future<void> uploadFileLokal() async {
+
+    if (globals.idUser != "") {
     String path2 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/listHighlightUser.txt';
     var url2 = '${globals.urllocal}uploaddatalokal';
     var request2  = http.MultipartRequest("POST", Uri.parse(url2));
@@ -3417,6 +3450,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
     // ignore: unused_local_variable
     var res6 = await request6.send();
+    }
   }
   // END OF UPLOAD FILE TO SERVER
 

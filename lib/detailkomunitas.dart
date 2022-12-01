@@ -735,6 +735,10 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
           }
         }
       });
+    } else if (directoryExists == false) {
+      String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+      // ignore: unnecessary_new
+      await new Directory(newdir).create();
     }
 
 
@@ -846,16 +850,18 @@ class _DetailKomunitasState extends State<DetailKomunitas> with SingleTickerProv
   }
 
   Future<void> uploadFileLokal() async {
-    String path4 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
-    var url4 = '${globals.urllocal}uploaddatalokal';
-    var request4  = http.MultipartRequest("POST", Uri.parse(url4));
-    request4.fields['id'] = globals.idUser;
-    request4.fields['folder'] = 'Rencanajson';
-    request4.files.add(
-      await http.MultipartFile.fromPath('filejson', path4)
-    );
-    // ignore: unused_local_variable
-    var res4 = await request4.send();
+    if (globals.idUser != "") {
+      String path4 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
+      var url4 = '${globals.urllocal}uploaddatalokal';
+      var request4  = http.MultipartRequest("POST", Uri.parse(url4));
+      request4.fields['id'] = globals.idUser;
+      request4.fields['folder'] = 'Rencanajson';
+      request4.files.add(
+        await http.MultipartFile.fromPath('filejson', path4)
+      );
+      // ignore: unused_local_variable
+      var res4 = await request4.send();
+    }
   }
 
   @override
