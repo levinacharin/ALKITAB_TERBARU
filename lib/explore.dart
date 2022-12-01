@@ -373,6 +373,8 @@ class _ExploreState extends State<Explore> {
     // TODO: implement initState
     super.initState();
 
+    print("globals.image: ${globals.imagepath}");
+
     getListExplore();
   }
 

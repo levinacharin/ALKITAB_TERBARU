@@ -164,7 +164,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
     super.initState();
     print("iduser: ${globals.idUser}");
     print("idkomunitas: ${globals.idkomunitas}");
-    print("image path: ${globals.imagepathrefleksi}");
+    print("image path: ${globals.imagepath}");
     print("jumlah komen: ${globals.komentar}");
     if(widget.pagefrom=="explore"){
       idx=globals.idexplore;
@@ -178,582 +178,599 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.pagefrom == "explore") {
+          updateLikeKomen(globals.idexplore, globals.suka, globals.komentar);
 
-              if (widget.pagefrom == "explore") {
-                updateLikeKomen(globals.idexplore, globals.suka, globals.komentar);
+          Navigator.pop(context, "refresh");
+          // Navigator.push(
+          //   context, 
+          //   MaterialPageRoute(builder: (context) => const Explore())
+          // );
+        } else if (widget.pagefrom == "refleksi") {
+          Navigator.pop(context, "refresh");
+        }
 
-                Navigator.pop(context, "refresh");
-                // Navigator.push(
-                //   context, 
-                //   MaterialPageRoute(builder: (context) => const Explore())
-                // );
-              } else if (widget.pagefrom == "refleksi") {
-                Navigator.pop(context, "refresh");
-              }
-            }, 
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color.fromARGB(255, 113, 9, 49)
-            )
+        return true;
+      },
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              onPressed: () {
+    
+                if (widget.pagefrom == "explore") {
+                  updateLikeKomen(globals.idexplore, globals.suka, globals.komentar);
+    
+                  Navigator.pop(context, "refresh");
+                  // Navigator.push(
+                  //   context, 
+                  //   MaterialPageRoute(builder: (context) => const Explore())
+                  // );
+                } else if (widget.pagefrom == "refleksi") {
+                  Navigator.pop(context, "refresh");
+                }
+              }, 
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color.fromARGB(255, 113, 9, 49)
+              )
+            ),
           ),
-        ),
-        body: Stack(
-            children: <Widget>[
-              SingleChildScrollView(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          body: Stack(
+              children: <Widget>[
+                SingleChildScrollView(
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          globals.imagepathrefleksi != "-"
-                          ? ClipOval(
-                            child: Image.network(
-                              '${globals.urllocal}getimage?id=${globals.iduserrefleksi}&folder=user',
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                          : Icon(
-                            Icons.account_circle_outlined,
-                            color: Color(int.parse(globals.defaultcolor)),
-                            size: 80,
-                          ) 
-                        ],
-                      ),
-                      const SizedBox(width: 5,),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                              "${globals.namaduserrefleksi} ${globals.namabuserrefleksi}",
-                              style: GoogleFonts.nunito(
-                                textStyle: const TextStyle(
-                                  fontSize: 18, 
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 113, 9, 49)
-                                )
+                            globals.imagepathrefleksi != "" 
+                            ? ClipOval(
+                              child: Image.network(
+                                '${globals.urllocal}getimage?id=${globals.iduserrefleksi}&folder=user',
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
                               ),
+                            )
+                            : Icon(
+                              Icons.account_circle_outlined,
+                              color: Color(int.parse(globals.defaultcolor)),
+                              size: 80,
+                            ) 
+                          ],
+                        ),
+                        const SizedBox(width: 5,),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${globals.namaduserrefleksi} ${globals.namabuserrefleksi}",
+                                style: GoogleFonts.nunito(
+                                  textStyle: const TextStyle(
+                                    fontSize: 18, 
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 113, 9, 49)
+                                  )
+                                ),
+                              ),
+                              Text(
+                                globals.tagline,
+                                style: GoogleFonts.nunito(
+                                  textStyle: const TextStyle(
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 125, 125, 125)
+                                  )
+                                ),
+                              ),
+                              Text(
+                                globals.tanggalrefleksi,
+                                style: GoogleFonts.nunito(
+                                  textStyle: const TextStyle(
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 125, 125, 125)
+                                  )
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30,),
+                    Text(
+                      "Judul",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 113, 9, 49)
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    Text(
+                      globals.judulrenungan,
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 25,),
+                    Text(
+                      "Topik Bacaan",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 113, 9, 49)
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    Text(
+                      globals.kitabbacaan,
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 25,),
+                    Text(
+                      "Ayat Bacaan",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 113, 9, 49)
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    Text(
+                      globals.ayatbacaan,
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 25,),
+                    Text(
+                      "Renungan",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 113, 9, 49)
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    Text(
+                      globals.isirenungan,
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 25,),
+                    Text(
+                      "Link",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 113, 9, 49)
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    InkWell(
+                      onTap: () async {
+                        // ignore: deprecated_member_use
+                        await launch(globals.linkrenungan);
+                      },
+                      child: Text(
+                        globals.linkrenungan,
+                        style: GoogleFonts.nunito(
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline
+                          )
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 25,),
+                    Text(
+                      "Ayat Berkesan",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 113, 9, 49)
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    Text(
+                      globals.ayatberkesan,
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 25,),
+                    Text(
+                      "Tindakan Saya",
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 113, 9, 49)
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    Text(
+                      globals.tindakansaya,
+                      style: GoogleFonts.nunito(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black
+                        )
+                      ),
+                    ),
+                    const SizedBox(height: 20,),
+                    GestureDetector(
+                      onTap: () {
+                        if (globals.idUser != "") {
+                          if (widget.pagefrom == "explore") {
+                            setState(() {
+                              globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
+                              int count = int.parse(globals.suka);
+                              if (globals.listShowUserLikeExplore == false) {
+                                count--;
+                                deleteLikeDatabase(globals.idexplore, widget.pagefrom, globals.idUser);
+                              } else if (globals.listShowUserLikeExplore == true) {
+                                count++;
+                                addLikeDatabase(globals.idexplore);
+                              }
+    
+                              globals.suka = count.toString();
+                            });
+                          } else {
+                            setState(() {
+                              globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
+                              int count = int.parse(globals.suka);
+                              if (globals.listShowUserLikeExplore == false) {
+                                count--;
+                                deleteLikeDatabase(globals.idrefleksi, widget.pagefrom, globals.idUser);
+                              } else if (globals.listShowUserLikeExplore == true) {
+                                count++;
+                                addLikeDatabase(globals.idrefleksi);
+                              }
+    
+                              globals.suka = count.toString();
+                            });
+                          }
+                        } else {
+                          showDialog(
+                            context: context, 
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Center(
+                                child: Text(
+                                  "Silahkan login terlebih dahulu agar bisa like postingan ini",
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromARGB(255, 113, 9, 49)
+                                    )
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              actions: [
+                                // ignore: sized_box_for_whitespace
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(int.parse(globals.defaultcolor)),
+                                      elevation: 5,
+                                      padding: const EdgeInsets.all(5)
+                                    ),
+                                    child: Text(
+                                      "Kembali",
+                                      style: GoogleFonts.nunito(
+                                        textStyle: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
+                                        )
+                                      ),
+                                    )
+                                  ),
+                                )
+                              ],
+                            )
+                          );
+                        }
+                      },
+                      child: Container(
+                        width: 70,
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(20),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey
+                                    .withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                offset: const Offset(0, 1),
+                              )
+                            ]),
+                        child: Row(
+                          children: [
+                            Container(
+                                width: 20,
+                                height: 20,
+                                child: globals.listShowUserLikeExplore == true
+                                  ? Image.asset("assets/images/icon_like_red.png")
+                                  : Image.asset("assets/images/icon_like_black.png")
+                            ),
+                            const SizedBox(
+                              width: 10,
                             ),
                             Text(
-                              globals.tagline,
+                              globals.suka,
                               style: GoogleFonts.nunito(
-                                textStyle: const TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromARGB(255, 125, 125, 125)
+                                  textStyle: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight:
+                                          FontWeight.bold,
+                                      color: Color.fromARGB(
+                                          255,
+                                          125,
+                                          125,
+                                          125))),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    Container(
+                      height: 1,
+                      color: Color(int.parse(globals.defaultcolor)),
+                    ),
+                    const SizedBox(height: 10,),
+                    Column(children: [
+                      // Container(child: 
+                      ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                      //itemCount: kosong.length,
+                                itemCount: listExploreKomen.length,
+                                itemBuilder: (context, index) {
+                                  // log("lbuilder - ${listExploreKomen[index].idKomen.toString()}");
+                                  // log("lbuilder - ${listExploreKomen[index].darimana.toString()}");
+                                  // log("lbuilder - ${listExploreKomen[index].isiKomen.toString()}");
+                                  // log("lbuilder - ${listExploreKomen[index].tanggalKomen.toString()}");
+                                  // log("lbuilder - ${listExploreKomen[index].imagePath.toString()}");
+                                  return 
+                                  Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // ignore: avoid_unnecessary_containers
+                            Column(
+                              children: [
+                                Container(
+                                  
+                                  child:listExploreKomen[index].imagePath != "" 
+                                ? ClipOval(
+                                  child: 
+                                  Image.network(
+                                    '${globals.urllocal}getimage?id=${listExploreKomen[index].idUser}&folder=user',
+                                    width: 40,
+                                    height: 40,
+                                    fit: BoxFit.cover,
+                                  ),
                                 )
-                              ),
+                                : 
+                                const Icon(
+                                  Icons.person, size: 40,
+                                ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              globals.tanggalrefleksi,
-                              style: GoogleFonts.nunito(
-                                textStyle: const TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromARGB(255, 125, 125, 125)
-                                )
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    listExploreKomen[index].namadepan+" "+listExploreKomen[index].namaBelakang,
+                                    style: GoogleFonts.nunito(
+                                      textStyle: const TextStyle(
+                                        fontSize: 18, 
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromARGB(255, 113, 9, 49)
+                                      )
+                                    ),
+                                  ),
+                                  Text(
+                                    listExploreKomen[index].tanggalKomen,
+                                    style: GoogleFonts.nunito(
+                                      textStyle: const TextStyle(
+                                        fontSize: 14,
+                                        color: Color.fromARGB(255, 125, 125, 125)
+                                      )
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30,),
-                  Text(
-                    "Judul",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 113, 9, 49)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  Text(
-                    globals.judulrenungan,
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 25,),
-                  Text(
-                    "Topik Bacaan",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 113, 9, 49)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  Text(
-                    globals.kitabbacaan,
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 25,),
-                  Text(
-                    "Ayat Bacaan",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 113, 9, 49)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  Text(
-                    globals.ayatbacaan,
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 25,),
-                  Text(
-                    "Renungan",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 113, 9, 49)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  Text(
-                    globals.isirenungan,
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 25,),
-                  Text(
-                    "Link",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 113, 9, 49)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  InkWell(
-                    onTap: () async {
-                      // ignore: deprecated_member_use
-                      await launch(globals.linkrenungan);
-                    },
-                    child: Text(
-                      globals.linkrenungan,
-                      style: GoogleFonts.nunito(
-                        textStyle: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline
-                        )
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 25,),
-                  Text(
-                    "Ayat Berkesan",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 113, 9, 49)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  Text(
-                    globals.ayatberkesan,
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 25,),
-                  Text(
-                    "Tindakan Saya",
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 113, 9, 49)
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 5,),
-                  Text(
-                    globals.tindakansaya,
-                    style: GoogleFonts.nunito(
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black
-                      )
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-                  GestureDetector(
-                    onTap: () {
-                      if (globals.idUser != "") {
-                        if (widget.pagefrom == "explore") {
-                          setState(() {
-                            globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
-                            int count = int.parse(globals.suka);
-                            if (globals.listShowUserLikeExplore == false) {
-                              count--;
-                              deleteLikeDatabase(globals.idexplore, widget.pagefrom, globals.idUser);
-                            } else if (globals.listShowUserLikeExplore == true) {
-                              count++;
-                              addLikeDatabase(globals.idexplore);
-                            }
-
-                            globals.suka = count.toString();
-                          });
-                        } else {
-                          setState(() {
-                            globals.listShowUserLikeExplore = !globals.listShowUserLikeExplore;
-                            int count = int.parse(globals.suka);
-                            if (globals.listShowUserLikeExplore == false) {
-                              count--;
-                              deleteLikeDatabase(globals.idrefleksi, widget.pagefrom, globals.idUser);
-                            } else if (globals.listShowUserLikeExplore == true) {
-                              count++;
-                              addLikeDatabase(globals.idrefleksi);
-                            }
-
-                            globals.suka = count.toString();
-                          });
-                        }
-                      } else {
-                        showDialog(
-                          context: context, 
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Center(
-                              child: Text(
-                                "Silahkan login terlebih dahulu agar bisa like postingan ini",
-                                style: GoogleFonts.nunito(
-                                  textStyle: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color.fromARGB(255, 113, 9, 49)
-                                  )
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            actions: [
-                              // ignore: sized_box_for_whitespace
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  }, 
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(int.parse(globals.defaultcolor)),
-                                    elevation: 5,
-                                    padding: const EdgeInsets.all(5)
-                                  ),
-                                  child: Text(
-                                    "Kembali",
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(width: 55,),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10,),
+                                  Text(
+                                    listExploreKomen[index].isiKomen,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black
                                       )
                                     ),
-                                  )
-                                ),
-                              )
-                            ],
-                          )
-                        );
-                      }
-                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20,)
+                      ],
+                    );
+                        }
+                              ),
+                      
+                      // )
+                    ],),
+                    
+                    
+                    SizedBox(
+                      height: (MediaQuery.of(context).size.height)/20
+                    ),
+                    ],
+                  ),
+                  
+                ),
+                Visibility(
+                  visible: globals.idUser != "" ? true : false,
+                  child: Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
                     child: Container(
-                      width: 70,
+                      color: Colors.white,
                       padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(20),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey
-                                  .withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 1),
-                            )
-                          ]),
                       child: Row(
                         children: [
-                          Container(
-                              width: 20,
-                              height: 20,
-                              child: globals.listShowUserLikeExplore == true
-                                ? Image.asset("assets/images/icon_like_red.png")
-                                : Image.asset("assets/images/icon_like_black.png")
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            globals.suka,
-                            style: GoogleFonts.nunito(
-                                textStyle: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight:
-                                        FontWeight.bold,
-                                    color: Color.fromARGB(
-                                        255,
-                                        125,
-                                        125,
-                                        125))),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Container(
-                    height: 1,
-                    color: Color(int.parse(globals.defaultcolor)),
-                  ),
-                  const SizedBox(height: 10,),
-                  Column(children: [
-                    // Container(child: 
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                    //itemCount: kosong.length,
-                              itemCount: listExploreKomen.length,
-                              itemBuilder: (context, index) {
-                                // log("lbuilder - ${listExploreKomen[index].idKomen.toString()}");
-                                // log("lbuilder - ${listExploreKomen[index].darimana.toString()}");
-                                // log("lbuilder - ${listExploreKomen[index].isiKomen.toString()}");
-                                // log("lbuilder - ${listExploreKomen[index].tanggalKomen.toString()}");
-                                // log("lbuilder - ${listExploreKomen[index].imagePath.toString()}");
-                                return 
-                                Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // ignore: avoid_unnecessary_containers
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Container(
-                                
-                                child:listExploreKomen[index].imagePath != "-" 
+                              globals.imagepath != ""
                               ? ClipOval(
-                                child: 
-                                Image.network(
-                                  '${globals.urllocal}getimage?id=${listExploreKomen[index].idUser}&folder=user',
+                                child: Image.network(
+                                  '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
                                   width: 40,
                                   height: 40,
                                   fit: BoxFit.cover,
                                 ),
                               )
-                              : 
-                              const Icon(
-                                Icons.person, size: 40,
-                              ),
-                              ),
+                              : Icon(
+                                  Icons.account_circle_outlined,
+                                  color: Color(int.parse(globals.defaultcolor)),
+                                      size: 40,
+                                )
                             ],
                           ),
-                          const SizedBox(width: 10,),
+                          const SizedBox(width: 5,),
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  listExploreKomen[index].namadepan+" "+listExploreKomen[index].namaBelakang,
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 18, 
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 113, 9, 49)
-                                    )
-                                  ),
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Color(int.parse(globals.defaultcolor))
                                 ),
-                                Text(
-                                  listExploreKomen[index].tanggalKomen,
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 14,
-                                      color: Color.fromARGB(255, 125, 125, 125)
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SizedBox(width: 55,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10,),
-                                Text(
-                                  listExploreKomen[index].isiKomen,
-                                  style: GoogleFonts.nunito(
-                                    textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20,)
-                    ],
-                  );
-                      }
-                            ),
-                    
-                    // )
-                  ],),
-                  
-                  
-                  SizedBox(
-                    height: (MediaQuery.of(context).size.height)/20
-                  ),
-                  ],
-                ),
-                
-              ),
-              Visibility(
-                visible: globals.idUser != "" && widget.pagefrom == "explore" ? true : globals.roleuser != "" && widget.pagefrom == "refleksi" ? true : false,
-                child: Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            globals.idUser != ""
-                            ? ClipOval(
-                              child: Image.network(
-                                '${globals.urllocal}getimage?id=${globals.idUser}&folder=user',
-                                width: 40,
-                                height: 40,
-                                fit: BoxFit.cover,
+                                borderRadius: const BorderRadius.all(Radius.circular(50)),
                               ),
-                            )
-                            : Icon(
-                                Icons.account_circle_outlined,
-                                color: Color(int.parse(globals.defaultcolor)),
-                                    size: 40,
-                              )
-                          ],
-                        ),
-                        const SizedBox(width: 5,),
-                        Expanded(
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Color(int.parse(globals.defaultcolor))
-                              ),
-                              borderRadius: const BorderRadius.all(Radius.circular(50)),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: ctr_komen,
-                                    cursorColor: Color(int.parse(globals.defaultcolor)),
-                                    decoration: InputDecoration(
-                                      fillColor: Colors.transparent,
-                                      filled: true,
-                                      border: InputBorder.none,
-                                      hintText: 'berikan pendapat anda ..',
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey[400]
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: ctr_komen,
+                                      cursorColor: Color(int.parse(globals.defaultcolor)),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.transparent,
+                                        filled: true,
+                                        border: InputBorder.none,
+                                        hintText: 'berikan pendapat anda ..',
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey[400]
+                                        ),
+                                        contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10)
                                       ),
-                                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10)
-                                    ),
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black
-                                      )
+                                      style: GoogleFonts.nunito(
+                                        textStyle: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black
+                                        )
+                                      ),
                                     ),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    addKomenDatabase();
-                                  }, 
-                                  icon: const Icon(Icons.send)
-                                )
-                              ],
+                                  IconButton(
+                                    onPressed: () {
+                                      addKomenDatabase();
+                                    }, 
+                                    icon: const Icon(Icons.send)
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
-          ),
+                )
+              ],
+            ),
+        ),
       ),
     );
   }

@@ -227,272 +227,189 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () async {
-            if (widget.pagefrom == "user") {
-              await writeData();
-              Navigator.pop(context, "refresh");
-            } else {
-              Navigator.pop(context);
-            }
-            // if (widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca") {
-            //   await writeData();
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.pagefrom == "user") {
+          await writeData();
+          Navigator.pop(context, "refresh");
+        } else {
+          Navigator.pop(context);
+        }
 
-            //   // ignore: use_build_context_synchronously
-            //   Navigator.push(
-            //     context, 
-            //     MaterialPageRoute(builder: (context) => const ListRencanaUser(pagefrom: 'detailrencanabaca',))
-            //   );
-            // } else {
-            //   Navigator.push(
-            //     context, 
-            //     MaterialPageRoute(builder: (context) => DetailKomunitas(shouldpop: "false"))
-            //   );
-            // }
-          },
-          icon: const Icon(
-            Icons.arrow_back_rounded,
-            color: Color.fromARGB(255, 113, 9, 49),
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () async {
+              if (widget.pagefrom == "user") {
+                await writeData();
+                Navigator.pop(context, "refresh");
+              } else {
+                Navigator.pop(context);
+              }
+            },
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: Color.fromARGB(255, 113, 9, 49),
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            // ignore: sized_box_for_whitespace
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 200,
-              child: globals.imagepathrencana != "-"
-              ? Image.network(
-                '${globals.urllocal}getimage?id=${globals.idrencana}&folder=rencana',
-                fit: BoxFit.cover,
-              )
-              : Image.network(
-                '${globals.urllocal}getimage?id=0&folder=rencana',
-                fit: BoxFit.cover,
-              )
-            ),
-            const SizedBox(height: 10,),
-            // ignore: sized_box_for_whitespace
-            Container(
-              height: 90,
-              margin: const EdgeInsets.only(top: 4, bottom: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: widget.pagefrom == "komunitas" ? globals.listDetailRencana.length : globals.listDetailRUser.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              indexSelect = index;
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
-                              ? globals.listDetailRUser[index]['Status Selesai'] == "false"
-                                ? Container(
-                                  width: 90,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: index == indexSelect ? Colors.black : Colors.grey
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              // ignore: sized_box_for_whitespace
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                child: globals.imagepathrencana != "-"
+                ? Image.network(
+                  '${globals.urllocal}getimage?id=${globals.idrencana}&folder=rencana',
+                  fit: BoxFit.cover,
+                )
+                : Image.network(
+                  '${globals.urllocal}getimage?id=0&folder=rencana',
+                  fit: BoxFit.cover,
+                )
+              ),
+              const SizedBox(height: 10,),
+              // ignore: sized_box_for_whitespace
+              Container(
+                height: 90,
+                margin: const EdgeInsets.only(top: 4, bottom: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: widget.pagefrom == "komunitas" ? globals.listDetailRencana.length : globals.listDetailRUser.length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                indexSelect = index;
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
+                                ? globals.listDetailRUser[index]['Status Selesai'] == "false"
+                                  ? Container(
+                                    width: 90,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: index == indexSelect ? Colors.black : Colors.grey
+                                      ),
+                                      borderRadius: BorderRadius.circular(15)
                                     ),
-                                    borderRadius: BorderRadius.circular(15)
-                                  ),
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                      children: [
-                                        Text(
-                                          "Hari ${index+1}",
-                                          style: GoogleFonts.nunito(
-                                            textStyle: const TextStyle(
-                                              fontSize: 15,
-                                              color: Color.fromARGB(255, 113, 9, 49)
-                                            )
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                        children: [
+                                          Text(
+                                            "Hari ${index+1}",
+                                            style: GoogleFonts.nunito(
+                                              textStyle: const TextStyle(
+                                                fontSize: 15,
+                                                color: Color.fromARGB(255, 113, 9, 49)
+                                              )
+                                            ),
                                           ),
+                                          const SizedBox(height: 10,),
+                                          Text(
+                                            estDate[index],
+                                            style: GoogleFonts.nunito(
+                                              textStyle: const TextStyle(
+                                                fontSize: 15,
+                                                color: Color.fromARGB(255, 113, 9, 49)
+                                              )
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                  )
+                                  : Container(
+                                      width: 90,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: index == indexSelect ? Colors.black : Colors.green
                                         ),
-                                        const SizedBox(height: 10,),
-                                        Text(
-                                          estDate[index],
-                                          style: GoogleFonts.nunito(
-                                            textStyle: const TextStyle(
-                                              fontSize: 15,
-                                              color: Color.fromARGB(255, 113, 9, 49)
-                                            )
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 2,
+                                            blurRadius: 3,
+                                            offset: const Offset(1, 3), // changes position of shadow
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                )
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(16),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.check,
+                                          color: Colors.green,
+                                          size: 40,
+                                        ),
+                                      )
+                                    )
                                 : Container(
                                     width: 90,
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
                                       border: Border.all(
-                                        color: index == indexSelect ? Colors.black : Colors.green
+                                        color: index == indexSelect ? Colors.black : Colors.grey
                                       ),
-                                      borderRadius: BorderRadius.circular(15),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 2,
-                                          blurRadius: 3,
-                                          offset: const Offset(1, 3), // changes position of shadow
-                                        ),
-                                      ],
+                                      borderRadius: BorderRadius.circular(15)
                                     ),
                                     padding: const EdgeInsets.all(16),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.green,
-                                        size: 40,
-                                      ),
-                                    )
-                                  )
-                              : Container(
-                                  width: 90,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: index == indexSelect ? Colors.black : Colors.grey
-                                    ),
-                                    borderRadius: BorderRadius.circular(15)
-                                  ),
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                      children: [
-                                        Text(
-                                          "Hari ${index+1}",
-                                          style: GoogleFonts.nunito(
-                                            textStyle: const TextStyle(
-                                              fontSize: 15,
-                                              color: Color.fromARGB(255, 113, 9, 49)
-                                            )
+                                    child: Column(
+                                        children: [
+                                          Text(
+                                            "Hari ${index+1}",
+                                            style: GoogleFonts.nunito(
+                                              textStyle: const TextStyle(
+                                                fontSize: 15,
+                                                color: Color.fromARGB(255, 113, 9, 49)
+                                              )
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 10,),
-                                        Text(
-                                          estDate[index],
-                                          style: GoogleFonts.nunito(
-                                            textStyle: const TextStyle(
-                                              fontSize: 15,
-                                              color: Color.fromARGB(255, 113, 9, 49)
-                                            )
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                ),
-                              const SizedBox(width: 10,)
-                            ],
-                          ),
-                        );
-                      }
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10,),
-            // ignore: sized_box_for_whitespace
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // AYAT BACAAN RENCANA BACA
-                  GestureDetector(
-                    // ignore: sized_box_for_whitespace
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Card(
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      widget.pagefrom == "komunitas" ? globals.listDetailRencana[indexSelect].kitabbacaan : globals.listDetailRUser[indexSelect]['Kitab Bacaan'],
-                                      style: GoogleFonts.nunito(
-                                        textStyle: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(int.parse(globals.defaultcolor))
-                                        )
+                                          const SizedBox(height: 10,),
+                                          Text(
+                                            estDate[index],
+                                            style: GoogleFonts.nunito(
+                                              textStyle: const TextStyle(
+                                                fontSize: 15,
+                                                color: Color.fromARGB(255, 113, 9, 49)
+                                              )
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    ),
                                   ),
-                                  widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
-                                  ? globals.listDetailRUser[indexSelect]['Status Ayat'] == "true"
-                                    ? Container(
-                                        width: 25,
-                                        height: 25,
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.green,
-                                        ),
-                                        child: const Icon(
-                                          Icons.check,
-                                          size: 20,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Container()
-                                  : Container()
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                                const SizedBox(width: 10,)
+                              ],
+                            ),
+                          );
+                        }
                       ),
                     ),
-                    onTap: () async {
-                      if (widget.pagefrom == "user") {
-                        final data = await Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "ayat", idx: indexSelect,))
-                        );
-
-                        if (data == "refresh") {
-                          setState(() {
-                            getDate();
-
-                            // if (widget.pagefrom == "isirencanabaca") {
-                              for (int i = 0; i < globals.listDetailRUser.length; i++) {
-                                if (globals.listDetailRUser[i]['Status Ayat'] == "true" && globals.listDetailRUser[i]['Status Renungan'] == "true") {
-                                  setState(() {
-                                    globals.listDetailRUser[i]['Status Selesai'] = "true";
-                                  });
-                                }
-                              }
-                            // }
-                          });
-                        }
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 10,),
-          
-                  // RENUNGAN RENCANA BACA
-                  Visibility(
-                    visible: widget.pagefrom == "komunitas" ? globals.listDetailRencana[indexSelect].judulrenungan == "-" ? false : true : globals.listDetailRUser[indexSelect]['Judul Renungan'] == "-" ? false : true,
-                    child: GestureDetector(
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10,),
+              // ignore: sized_box_for_whitespace
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // AYAT BACAAN RENCANA BACA
+                    GestureDetector(
                       // ignore: sized_box_for_whitespace
                       child: Container(
                         width: MediaQuery.of(context).size.width,
@@ -506,31 +423,33 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      "Renungan",
-                                      style: GoogleFonts.nunito(
-                                        textStyle: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(int.parse(globals.defaultcolor))
-                                        )
+                                    Expanded(
+                                      child: Text(
+                                        widget.pagefrom == "komunitas" ? globals.listDetailRencana[indexSelect].kitabbacaan : globals.listDetailRUser[indexSelect]['Kitab Bacaan'],
+                                        style: GoogleFonts.nunito(
+                                          textStyle: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(int.parse(globals.defaultcolor))
+                                          )
+                                        ),
                                       ),
                                     ),
                                     widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
-                                    ? globals.listDetailRUser[indexSelect]['Status Renungan'] == "true"
+                                    ? globals.listDetailRUser[indexSelect]['Status Ayat'] == "true"
                                       ? Container(
-                                        width: 25,
-                                        height: 25,
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.green,
-                                        ),
-                                        child: const Icon(
-                                          Icons.check,
-                                          size: 20,
-                                          color: Colors.white,
-                                        ),
-                                      )
+                                          width: 25,
+                                          height: 25,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.green,
+                                          ),
+                                          child: const Icon(
+                                            Icons.check,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        )
                                       : Container()
                                     : Container()
                                   ],
@@ -544,13 +463,13 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                         if (widget.pagefrom == "user") {
                           final data = await Navigator.push(
                             context, 
-                            MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "renungan", idx: indexSelect,))
+                            MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "ayat", idx: indexSelect,))
                           );
-
+    
                           if (data == "refresh") {
                             setState(() {
                               getDate();
-
+    
                               // if (widget.pagefrom == "isirencanabaca") {
                                 for (int i = 0; i < globals.listDetailRUser.length; i++) {
                                   if (globals.listDetailRUser[i]['Status Ayat'] == "true" && globals.listDetailRUser[i]['Status Renungan'] == "true") {
@@ -565,11 +484,90 @@ class _DetailRencanaBacaState extends State<DetailRencanaBaca> {
                         }
                       },
                     ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                    const SizedBox(height: 10,),
+            
+                    // RENUNGAN RENCANA BACA
+                    Visibility(
+                      visible: widget.pagefrom == "komunitas" ? globals.listDetailRencana[indexSelect].judulrenungan == "-" ? false : true : globals.listDetailRUser[indexSelect]['Judul Renungan'] == "-" ? false : true,
+                      child: GestureDetector(
+                        // ignore: sized_box_for_whitespace
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Card(
+                            elevation: 4,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Renungan",
+                                        style: GoogleFonts.nunito(
+                                          textStyle: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(int.parse(globals.defaultcolor))
+                                          )
+                                        ),
+                                      ),
+                                      widget.pagefrom == "user" || widget.pagefrom == "isirencanabaca"
+                                      ? globals.listDetailRUser[indexSelect]['Status Renungan'] == "true"
+                                        ? Container(
+                                          width: 25,
+                                          height: 25,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.green,
+                                          ),
+                                          child: const Icon(
+                                            Icons.check,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                        : Container()
+                                      : Container()
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () async {
+                          if (widget.pagefrom == "user") {
+                            final data = await Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (context) => IsiRencanaBaca(isicontent: "renungan", idx: indexSelect,))
+                            );
+    
+                            if (data == "refresh") {
+                              setState(() {
+                                getDate();
+    
+                                // if (widget.pagefrom == "isirencanabaca") {
+                                  for (int i = 0; i < globals.listDetailRUser.length; i++) {
+                                    if (globals.listDetailRUser[i]['Status Ayat'] == "true" && globals.listDetailRUser[i]['Status Renungan'] == "true") {
+                                      setState(() {
+                                        globals.listDetailRUser[i]['Status Selesai'] = "true";
+                                      });
+                                    }
+                                  }
+                                // }
+                              });
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
