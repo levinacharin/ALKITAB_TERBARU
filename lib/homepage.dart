@@ -404,6 +404,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   cAyat Ayat_ = new cAyat();
 
   // // SHARED PREFERENCES AYAT RANDOM BACAAN
+  //sumber ada di drive magang ayat.txt
   List listAyatBacaanRandomLokal = [
     "TUHAN akan menuntun engkau senantiasadan akan memuaskan hatimu di tanah yang kering, dan akan membaharui kekuatanmu;engkau akan seperti taman yang diairi dengan baik dan seperti mata air yang tidak pernah mengecewakan. Yesaya 58 : 11",
     "Dengan panjang umur akan Kukenyangkan dia, dan akan Kuperlihatkan kepadanya keselamatan dari pada-Ku. Mazmur 91 : 16",
