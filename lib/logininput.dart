@@ -129,14 +129,13 @@ class _LoginInputState extends State<LoginInput> {
     if (directoryExists == false) {
       // ignore: unnecessary_new
       await new Directory(path).create();
-
-      getFileCatatan();
-      getFileHighlight();
-      getFileStiker();
-      getFileRencana();
-      getFileRenungan();
-      getFileUnderline();
     }
+    getFileCatatan();
+    getFileHighlight();
+    getFileStiker();
+    getFileRencana();
+    getFileRenungan();
+    getFileUnderline();
 
     // ignore: use_build_context_synchronously
     Navigator.push(
