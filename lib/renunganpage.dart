@@ -1108,6 +1108,10 @@ class _RenunganPageState extends State<RenunganPage> {
           }
         }
       });
+    } else if (directoryExists == false) {
+      String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+      // ignore: unnecessary_new
+      await new Directory(newdir).create();
     }
     // end of read data proses
 

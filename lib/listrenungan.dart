@@ -267,16 +267,18 @@ class _ListRenunganState extends State<ListRenungan> {
   }
 
   Future<void> uploadFileLokal() async {
-    String path5 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
-    var url5 = '${globals.urllocal}uploaddatalokal';
-    var request5  = http.MultipartRequest("POST", Uri.parse(url5));
-    request5.fields['id'] = globals.idUser;
-    request5.fields['folder'] = 'Renunganjson';
-    request5.files.add(
-      await http.MultipartFile.fromPath('filejson', path5)
-    );
-    // ignore: unused_local_variable
-    var res5 = await request5.send();
+    if (globals.idUser != "") {
+      String path5 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Renunganjson.txt';
+      var url5 = '${globals.urllocal}uploaddatalokal';
+      var request5  = http.MultipartRequest("POST", Uri.parse(url5));
+      request5.fields['id'] = globals.idUser;
+      request5.fields['folder'] = 'Renunganjson';
+      request5.files.add(
+        await http.MultipartFile.fromPath('filejson', path5)
+      );
+      // ignore: unused_local_variable
+      var res5 = await request5.send();
+    }
   }
 
   @override

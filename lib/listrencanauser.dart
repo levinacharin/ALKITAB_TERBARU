@@ -229,6 +229,21 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
     });
   }
 
+  Future<void> uploadFileLokal() async {
+    if (globals.idUser != "") {
+      String path4 = '/storage/emulated/0/Download/Alkitab Renungan Mobile/Rencanajson.txt';
+      var url4 = '${globals.urllocal}uploaddatalokal';
+      var request4  = http.MultipartRequest("POST", Uri.parse(url4));
+      request4.fields['id'] = globals.idUser;
+      request4.fields['folder'] = 'Rencanajson';
+      request4.files.add(
+        await http.MultipartFile.fromPath('filejson', path4)
+      );
+      // ignore: unused_local_variable
+      var res4 = await request4.send();
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -284,6 +299,7 @@ class _ListRencanaUserState extends State<ListRencanaUser> {
           elevation: 0,
           leading: IconButton(
             onPressed: () {
+              uploadFileLokal();
               if (widget.pagefrom == "komunitas") {
                 Navigator.pop(context, "refresh");
               } else {

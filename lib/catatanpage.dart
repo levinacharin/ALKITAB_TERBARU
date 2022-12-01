@@ -295,18 +295,22 @@ class _CatatanPageState extends State<CatatanPage> {
     
     if(mauapa!="resetcatatan"){
       if (directoryExists || fileExists) {
-      final contents = await File(path).readAsString(encoding: utf8);
-      listTempData = [];
-      setState(() {
-        if (contents.isNotEmpty) {
-        listTempData = json.decode(contents);
-        // replace 'br' to '\n'
-        for (int i = 0; i < listTempData.length; i++) {
-          listTempData[i]['Bacaan'] = listTempData[i]['Bacaan'].toString().replaceAll("<br>", "\n");
-        }
+        final contents = await File(path).readAsString(encoding: utf8);
+        listTempData = [];
+        setState(() {
+          if (contents.isNotEmpty) {
+            listTempData = json.decode(contents);
+            // replace 'br' to '\n'
+            for (int i = 0; i < listTempData.length; i++) {
+              listTempData[i]['Bacaan'] = listTempData[i]['Bacaan'].toString().replaceAll("<br>", "\n");
+            }
+          }
+        });
+      } else if (directoryExists == false) {
+        String newdir = '/storage/emulated/0/Download/Alkitab Renungan Mobile';
+        // ignore: unnecessary_new
+        await new Directory(newdir).create();
       }
-      });
-    }
     }
     
     // END OF READ FILE / PATH
@@ -391,11 +395,7 @@ class _CatatanPageState extends State<CatatanPage> {
     
     // WIRTE STRING OF JSON TO FILE
 
-    if(mauapa!="resetcatatan"){
-      await File(path).writeAsString(dataCatatan);
-    } else {
-      await File(path).writeAsString("");
-    }
+    await File(path).writeAsString(dataCatatan);
     
 
     if (widget.darimana == "detailcatatan") {
