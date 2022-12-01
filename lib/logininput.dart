@@ -130,12 +130,12 @@ class _LoginInputState extends State<LoginInput> {
       // ignore: unnecessary_new
       await new Directory(path).create();
     }
-    getFileCatatan();
-    getFileHighlight();
-    getFileStiker();
-    getFileRencana();
-    getFileRenungan();
-    getFileUnderline();
+    await getFileCatatan();
+    await getFileHighlight();
+    await getFileStiker();
+    await getFileRencana();
+    await getFileRenungan();
+    await getFileUnderline();
 
     // ignore: use_build_context_synchronously
     Navigator.push(
