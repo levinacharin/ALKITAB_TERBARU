@@ -312,7 +312,7 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                     ),
                     const SizedBox(height: 25,),
                     Text(
-                      "Topik Bacaan",
+                      "Ayat Bacaan",
                       style: GoogleFonts.nunito(
                         textStyle: const TextStyle(
                           fontSize: 18, 
@@ -333,28 +333,28 @@ class _DetailRefleksiUserState extends State<DetailRefleksiUser> {
                       ),
                     ),
                     const SizedBox(height: 25,),
-                    Text(
-                      "Ayat Bacaan",
-                      style: GoogleFonts.nunito(
-                        textStyle: const TextStyle(
-                          fontSize: 18, 
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 113, 9, 49)
-                        )
-                      ),
-                    ),
-                    const SizedBox(height: 5,),
-                    Text(
-                      globals.ayatbacaan,
-                      style: GoogleFonts.nunito(
-                        textStyle: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.black
-                        )
-                      ),
-                    ),
-                    const SizedBox(height: 25,),
+                    // Text(
+                    //   "Ayat Bacaan",
+                    //   style: GoogleFonts.nunito(
+                    //     textStyle: const TextStyle(
+                    //       fontSize: 18, 
+                    //       fontWeight: FontWeight.bold,
+                    //       color: Color.fromARGB(255, 113, 9, 49)
+                    //     )
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 5,),
+                    // Text(
+                    //   globals.ayatbacaan,
+                    //   style: GoogleFonts.nunito(
+                    //     textStyle: const TextStyle(
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w300,
+                    //       color: Colors.black
+                    //     )
+                    //   ),
+                    // // ),
+                    // const SizedBox(height: 25,),
                     Text(
                       "Renungan",
                       style: GoogleFonts.nunito(
