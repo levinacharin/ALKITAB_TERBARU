@@ -14,6 +14,7 @@ class ListDoa {
   String namadepan;
   String namabelakang;
   String isidoa;
+  String imagepath;
 
   ListDoa({
     required this.iddoa,
@@ -21,7 +22,8 @@ class ListDoa {
     required this.idkomunitas,
     required this.namadepan,
     required this.namabelakang,
-    required this.isidoa
+    required this.isidoa,
+    required this.imagepath
   });
 
   factory ListDoa.createData(Map<String, dynamic> object) {
@@ -31,7 +33,8 @@ class ListDoa {
       idkomunitas: object['idkomunitas'].toString(),
       namadepan: object['namadepan'],
       namabelakang: object['namabelakang'],
-      isidoa: object['isidoa']
+      isidoa: object['isidoa'],
+      imagepath: object['imagepath']
     );
   }
 
@@ -69,6 +72,10 @@ class _ListDoaPageState extends State<ListDoaPage> {
     ListDoa.getAllData().then((value) async {
       setState(() {
         listDoa = value;
+        
+        for (int i = 0; i < listDoa.length; i++) {
+          print("data: ${listDoa[i].imagepath}");
+        }
       });
     });
   }
@@ -110,15 +117,21 @@ class _ListDoaPageState extends State<ListDoaPage> {
                     children: [
                       Row(
                         children: [
-                          ClipOval(
-                            child: Image.asset(
-                              'assets/images/pp1.jpg',
+                          listDoa[index].imagepath != "-"
+                          ? ClipOval(
+                            child: Image.network(
+                              '${globals.urllocal}getimage?id=${listDoa[index].iduser}&folder=user',
                               width: 60,
                               height: 60,
                               fit: BoxFit.cover,
                             ),
+                          )
+                          : Icon(
+                            Icons.account_circle_outlined,
+                            color: Color(int.parse(globals.defaultcolor)),
+                            size: 60,
                           ),
-                          const SizedBox(width: 5,),
+                          const SizedBox(width: 10,),
                           Text(
                             "${listDoa[index].namadepan} ${listDoa[index].namabelakang}",
                             style: GoogleFonts.nunito(
